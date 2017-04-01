@@ -5,9 +5,12 @@ Web app for sharing and archiving web content
 
 ### Prerequisites
 Assuming you are on OSX...
-If you do not have Node.js, install Node.js
-If you do not have VirtualBox, install VirtualBox
-If you do not have Vagrant, install Vagrant
+
+If you do not have Node.js, download & install [Node.js](https://nodejs.org/en/download/)
+
+If you do not have VirtualBox, download & install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+
+If you do not have Vagrant, download & install [Vagrant](https://www.vagrantup.com/downloads.html)
 
 ### Installing on your machine
 

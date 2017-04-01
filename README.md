@@ -27,9 +27,9 @@ $ touch secret/config-maria.json
 In the maria config, add this json object, filling in the blanks
 ```
 {
-	"host": 127.0.0.1,
-	"user": [user],
-	"password": [password]
+    "host": 127.0.0.1,
+    "user": [user],
+    "password": [password]
 }
 ```
 

@@ -55,8 +55,7 @@ passport.use(new LocalStrategy({usernameField: 'email'}, function (email, passwo
 				console.log('password is good, life is good');
 				return done(null, dbUser);
 			});
-		})
-		.catch(err => console.log(err));
+		}).catch(err => console.log(err));
 }));
 
 passport.serializeUser(function (user, done) {

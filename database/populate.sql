@@ -7,24 +7,18 @@ DROP PROCEDURE IF EXISTS insert_mc;
 
 DELIMITER //
 CREATE PROCEDURE insert_link (
-	domainName VARCHAR(127), 
-	url VARCHAR(2083), 
 	title VARCHAR(127), 
 	description VARCHAR(255),
-	imgUrl VARCHAR(2083)
+	url VARCHAR(2083)
 )
 	BEGIN
-		DECLARE domainId INT;
-
-		SELECT id INTO domainId FROM domain WHERE name = domainName LIMIT 1;
-
-		INSERT INTO link (domainId, url, title, description, imgUrl)
-		VALUES (domainId, url, title, description, imgUrl);
+		INSERT INTO link (title, description, url)
+		VALUES (title, description, url);
 	END
 //
 DELIMITER ;
 
-DELIMITER //
+/* DELIMITER //
 CREATE PROCEDURE insert_message (	
 	linkUrl VARCHAR(2083),
 	senderEmail VARCHAR(127),
@@ -65,6 +59,7 @@ CREATE PROCEDURE insert_mc (
 //
 DELIMITER ;
 
+
 INSERT INTO domain (name) VALUES 
 	('facebook'), 
 	('reddit'), 
@@ -82,21 +77,23 @@ INSERT INTO category (name) VALUES
 	('programming'), 
 	('tips');
 
-INSERT INTO user (firstName, lastName, email, passwordHash, imgUrl)
+*/
+
+INSERT INTO USERS (first_name, last_name, email, passwordHash)
 VALUES
 									-- enamark
-	('ena', 'mark', 'ena@gmail.com', '$2a$10$Gw4PvGXCE8cLy9OJHZpdYe97VsRAvujxEAeJGLCBzTo5Txgf25AUO', 'img/placeholder.png'),
+	('ena', 'mark', 'ena@gmail.com', '$2a$10$Gw4PvGXCE8cLy9OJHZpdYe97VsRAvujxEAeJGLCBzTo5Txgf25AUO'),
 									-- alexburn
-	('alex', 'burn', 'alex@gmail.com', '$2a$10$C1X3bAKWxB4lcjbiFKWvK.lZq6HvIzf8HZmZJOJaW8tOqclj2/Z3K', 'img/placeholder.png'),
+	('alex', 'burn', 'alex@gmail.com', '$2a$10$C1X3bAKWxB4lcjbiFKWvK.lZq6HvIzf8HZmZJOJaW8tOqclj2/Z3K'),
 									-- amycool
-	('amy', 'cool', 'amy@gmail.com', '$2a$10$t3leXbZZ7Scv.NpOdLsvVOCMyDixhFnVIBXjcPvnwPMT6MeYwKuCK', 'img/placeholder.png'),
+	('amy', 'cool', 'amy@gmail.com', '$2a$10$t3leXbZZ7Scv.NpOdLsvVOCMyDixhFnVIBXjcPvnwPMT6MeYwKuCK'),
 									-- jeffcool
-	('jeff', 'cool', 'jeff@gmail.com', '$2a$10$rfTsiXqhZbTxFyudNuXGQ.6o8YaaaxE2qg5K7bXJi91H0vjHxtiWO', 'img/placeholder.png'),
+	('jeff', 'cool', 'jeff@gmail.com', '$2a$10$rfTsiXqhZbTxFyudNuXGQ.6o8YaaaxE2qg5K7bXJi91H0vjHxtiWO'),
 									-- davestearns
-	('dave', 'stearns', 'stearns@gmail.com', '$2a$10$2TFIOXQh.XG/N4hxyJkXyuttrcWzcKoGvjVAtgsARdrG63FXU4BNm', 'img/placeholder.png');
+	('dave', 'stearns', 'stearns@gmail.com', '$2a$10$2TFIOXQh.XG/N4hxyJkXyuttrcWzcKoGvjVAtgsARdrG63FXU4BNm');
 
 	
-
+/*
 CALL insert_link (
 	'facebook', 
 	'www.facebook.com', 
@@ -226,3 +223,4 @@ CALL insert_mc (
 	'Become addicted to facebook please.',
 	'crazy'
 );
+*/

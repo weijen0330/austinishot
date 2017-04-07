@@ -168,6 +168,6 @@ app.use(function (err, req, res, next) {
 	res.status(err.status || 500).send({message: err.message});
 });
 
-var server = app.listen(80, function () {
-	console.log('listening at http://localhost:80');
+var server = app.listen(8080, function () {
+	console.log('listening at http://localhost:8080');
 });

@@ -1,21 +1,37 @@
 // if "EADDRINUSE", do: $ sudo kill $(sudo lsof -t -i:80)
 global.__base = __dirname + '/';
 
-var dbConfig = require(__base + 'secret/config-maria.json');
+var dbConfig = require(__base + 'secret/config-db.json');
 
 var express = require('express'),
 	app = express(),
 	session = require('express-session'),
 	RedisStore = require('connect-redis')(session);
 
-var bcrypt = require('bcrypt'),
+var bcrypt = require('bcryptjs'),
 	bodyParser = require('body-parser'),
 	morgan = require('morgan');
 
-var Maria = require('mariasql'),
+var MySQL = require('mysql'),
 	bluebird = require('bluebird'),
-	connection = bluebird.promisifyAll(new Maria(dbConfig)),
-	UserDB = require(__base + '/database/user-db')(connection),
+	connection = bluebird.promisifyAll(MySQL.createConnection(dbConfig));
+
+connection.config.queryFormat = function (query, values) {
+  if (!values) return query;
+  return query.replace(/\:(\w+)/g, function (txt, key) {
+    if (values.hasOwnProperty(key)) {
+      return this.escape(values[key]);
+    }
+    return txt;
+  }.bind(this));
+};
+
+connection.connectAsync()
+	.catch(err => {
+		console.error('error connecting: ' + err.stack)
+	})
+
+var UserDB = require(__base + '/database/user-db')(connection),
 	CategoryDB = require(__base + '/database/category-db')(connection),
 	DomainDB = require(__base + '/database/domain-db')(connection),
 	MessageDB = require(__base + '/database/message-db')(connection),
@@ -151,6 +167,6 @@ app.use(function (err, req, res, next) {
 	res.status(err.status || 500).send({message: err.message});
 });
 
-var server = app.listen(80, function () {
-	console.log('listening at http://localhost:80');
+var server = app.listen(8080, function () {
+	console.log('listening at http://localhost:8080');
 });

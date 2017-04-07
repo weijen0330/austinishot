@@ -101,7 +101,7 @@ var UserDB = {
 }
 
 module.exports = function (connection) {
-	var userDD = Object.create(UserDB);
-	userDD._connection = connection;
-	return userDD;
+	var userDB = Object.create(UserDB);
+	userDB._connection = connection;
+	return userDB;
 }

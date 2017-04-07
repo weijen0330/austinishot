@@ -4,7 +4,6 @@ DROP PROCEDURE IF EXISTS insert_link;
 DROP PROCEDURE IF EXISTS insert_message;
 DROP PROCEDURE IF EXISTS insert_mc;
 
-
 DELIMITER //
 CREATE PROCEDURE insert_link (
 	title VARCHAR(127), 
@@ -12,7 +11,7 @@ CREATE PROCEDURE insert_link (
 	url VARCHAR(2083)
 )
 	BEGIN
-		INSERT INTO link (title, description, url)
+		INSERT INTO LINKS (title, description, url)
 		VALUES (title, description, url);
 	END
 //
@@ -93,43 +92,34 @@ VALUES
 	('dave', 'stearns', 'stearns@gmail.com', '$2a$10$2TFIOXQh.XG/N4hxyJkXyuttrcWzcKoGvjVAtgsARdrG63FXU4BNm');
 
 	
-/*
+
 CALL insert_link (
-	'facebook', 
-	'www.facebook.com', 
 	'Facebook', 
 	'Social media site. Connect with old friends, new friends and complete strangers!',
-	'https://www.facebookbrand.com/img/fb-art.jpg'
+	'www.facebook.com'
 );
 CALL insert_link (
-	'reddit',
-	'www.reddit.com',
 	'Reddit',
 	'The front page of the internet',
-	'https://fh-uploads-addressreport.netdna-ssl.com/582ab36d-a58b-449e-8e57-784dea3eeb09'
+	'www.reddit.com'
 );
 CALL insert_link (
-	'buzzfeed',
-	'www.buzzfeed.com',
 	'Buzzfeed',
 	'Website that has mastered the art of distracting people',
-	'http://14575-presscdn-0-73.pagely.netdna-cdn.com/wp-content/uploads/2015/01/buzzfeed-logo.jpg'
+	'www.buzzfeed.com'
 );
 CALL insert_link (
-	'twitter',
-	'www.twitter.com',
 	'Twitter',
 	'Share every moment of your life with people who care.',
-	'https://pmcdeadline2.files.wordpress.com/2014/06/twitter-logo.png?w=970'
+	'www.twitter.com'
 );
 CALL insert_link (
-	'yahoo',
-	'www.yahoo.com',
 	'Yahoo!',
 	'Jack of all trades, master of none',
-	'http://l2.yimg.com/bt/api/res/1.2/rt4LYW.WMjOpof_ahsTcjA--/YXBwaWQ9eW5ld3M7cT04NQ--/http://mit.zenfs.com/1776/2013/04/Yahoo_Logo.png'
+	'www.yahoo.com'
 );
 
+/*
 CALL insert_message (
 	'www.yahoo.com',
 	'ena@gmail.com',

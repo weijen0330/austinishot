@@ -29,6 +29,7 @@ In the db config, add this json object, filling in the blanks
 {
     "host": 127.0.0.1,
     "user": "host",
+    "port" : 8080,
     "password": "",
     "database": "lynx"
 }

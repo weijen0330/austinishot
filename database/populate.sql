@@ -1,8 +1,6 @@
 USE lynx;
 
 DROP PROCEDURE IF EXISTS insert_link;
-DROP PROCEDURE IF EXISTS insert_message;
-DROP PROCEDURE IF EXISTS insert_mc;
 
 DELIMITER //
 CREATE PROCEDURE insert_link (
@@ -17,6 +15,29 @@ CREATE PROCEDURE insert_link (
 //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE populate_user_links (
+	user_id INT,
+	link_id INT
+)
+	BEGIN
+		INSERT INTO USER_LINKS (user_id, link_id)
+		VALUES (user_id, link_id);
+	END
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE populate_links_tags (
+	link_id INT,
+	tag_id INT
+)
+	BEGIN
+		INSERT INTO LINKS_TAGS (link_id, tag_id)
+		VALUES (link_id, tag_id);
+	END
+//
+DELIMITER ;
 /* DELIMITER //
 CREATE PROCEDURE insert_message (	
 	linkUrl VARCHAR(2083),
@@ -65,8 +86,9 @@ INSERT INTO domain (name) VALUES
 	('buzzfeed'), 
 	('twitter'), 
 	('yahoo');
+*/
 
-INSERT INTO category (name) VALUES 
+INSERT INTO TAGS (tag_text) VALUES 
 	('funny'), 
 	('science'), 
 	('tech'), 
@@ -76,7 +98,6 @@ INSERT INTO category (name) VALUES
 	('programming'), 
 	('tips');
 
-*/
 
 INSERT INTO USERS (first_name, last_name, email, passwordHash)
 VALUES
@@ -91,7 +112,6 @@ VALUES
 									-- davestearns
 	('dave', 'stearns', 'stearns@gmail.com', '$2a$10$2TFIOXQh.XG/N4hxyJkXyuttrcWzcKoGvjVAtgsARdrG63FXU4BNm');
 
-	
 
 CALL insert_link (
 	'Facebook', 
@@ -119,6 +139,35 @@ CALL insert_link (
 	'www.yahoo.com'
 );
 
+CALL populate_user_links (
+	1,
+	1
+);
+
+CALL populate_user_links (
+	2,
+	1
+);
+
+CALL populate_user_links (
+	1,
+	3
+);
+
+CALL populate_user_links (
+	4,
+	5
+);
+
+CALL populate_user_links (
+	2,
+	3
+);
+
+CALL populate_user_links (
+	5,
+	2
+);
 /*
 CALL insert_message (
 	'www.yahoo.com',

@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
       override.vm.box = "digital_ocean"
       override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
       provider.token = "d9a684f0b711e13c31c5a7a0eaa62b72609f517d221d5d89b56e5d3f7a01a1f9"
-      provider.image = "ubuntu-16-04-x64"
+      provider.image = "ubuntu-14-04-x64"
       provider.region = "SFO1"
       provider.size = "512mb"
       provider.ssh_key_name = "lynx"

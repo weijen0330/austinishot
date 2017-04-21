@@ -22,14 +22,16 @@ $ npm install
 Add project secrets:
 ```
 $ mkdir secret
-$ touch secret/config-maria.json
+$ touch secret/config-db.json
 ```
-In the maria config, add this json object, filling in the blanks
+In the db config, add this json object, filling in the blanks
 ```
 {
     "host": 127.0.0.1,
-    "user": [user],
-    "password": [password]
+    "user": "host",
+    "port" : 8080,
+    "password": "",
+    "database": "lynx"
 }
 ```
 
@@ -47,13 +49,6 @@ $ vagrant ssh
 ```
 $ cd /vagrant
 $ export SIGSECRET=$(uuidgen)
-```
-
-Some things don't transfer well between osx & ubuntu, so we gotta install these again:
-
-```
-$ npm install bcrypt
-$ npm install mariasql
 ```
 
 Now we're ready for the good stuff:

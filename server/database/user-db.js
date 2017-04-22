@@ -4,7 +4,7 @@ var UserDB = {
 	getUserByEmail(email) { //singleton!
 		return this._getSingleObject(
 			(
-				'SELECT * FROM user ' + 
+				'SELECT * FROM USERS ' + 
 				'WHERE email = :email'
 			), 
 			{
@@ -18,7 +18,7 @@ var UserDB = {
 	getUserById(userId) { //singleton!
 		return this._getSingleObject(
 			(
-				'SELECT * FROM user u ' + 
+				'SELECT * FROM USERS u ' + 
 				'WHERE u.id = :id'
 			), 
 			{
@@ -61,7 +61,7 @@ var UserDB = {
 					return _this._connection
 						.queryAsync(
 							(
-								'INSERT INTO user (firstName, lastName, email, passwordHash) ' + 
+								'INSERT INTO USERS (first_name, last_name, email, passwordHash) ' + 
 								'VALUES (:firstName, :lastName, :email, :passwordHash)'
 							), 
 							{

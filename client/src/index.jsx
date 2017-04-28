@@ -7,7 +7,7 @@ import Nav from "./nav.jsx";
 
 
 
-React.RenderComponent(<App/>, document.getElementById("app"));
+render(<App />, document.getElementById("app"));
 
 render(<Nav home="active" search="" settings="" />, document.getElementById("nav-area"));
 

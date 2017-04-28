@@ -7,6 +7,25 @@ export default class extends React.Component {
     }
 
     render() {
-        return <p>Hello world</p>
+        return (
+        		<div className="container">
+        			<div className="row">
+		        		<div className="col-xs-2">
+		        		</div>
+		        		
+		        		<div className="col-xs-8">
+		        			<div id="nav-area">
+		        			</div>
+
+		        			<div id="main">
+							</div>
+			        		
+			        	</div>
+			        	<div className="col-xs-2">
+		        		</div>
+			        </div>
+	        	</div>
+        		)
+
     }
 }

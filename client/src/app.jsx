@@ -14,8 +14,7 @@ export default class extends React.Component {
 		        		</div>
 		        		
 		        		<div className="col-xs-8">
-		        			<div id="nav-area">
-		        			</div>
+		        			
 
 		        			<div id="main">
 							</div>

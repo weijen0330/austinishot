@@ -16,25 +16,12 @@ li {
 	font-size: 20pt;
 	overflow: hidden;
 	margin-bottom: 5px;
-}
+} 
 
-#app {
-	width: 80%;
-	margin:auto;
+/*notification*/
+.mdl-chip__text {
+  font-size: 18pt;
 }
-
-.demo-card-wide.mdl-card {
-  width: 50%;
-  margin: auto;
-  margin-bottom: 30px;
-}
-
-.demo-card-wide > .mdl-card__title {
-  color: #fff;
-  height: 30px;
-}
-.demo-card-wide > .mdl-card__menu {
-  color: #fff;
 
 /*Navbar*/
 .mdl-layout__tab-bar {

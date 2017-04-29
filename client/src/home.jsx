@@ -14,14 +14,16 @@ export default class extends React.Component {
 
 	render(){
 		return (
-				<div>
+				<div className="container">
 	    	
-			    	<div className="alert alert-info">
-					  <i className="fa fa-bell" aria-hidden="true"></i> You have 15 new links
-						<button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-							dismiss
-						</button>
-					</div>
+			    	
+					  
+					
+						<span className="mdl-chip mdl-chip--deletable">
+						    <span className="mdl-chip__text"> <i className="fa fa-bell" aria-hidden="true"></i> You have 15 new links</span>
+						    <button type="button" className="mdl-chip__action"><i className="material-icons">cancel</i></button>
+						</span>
+					
 
 
 			    	<h2>Recent Activity</h2>

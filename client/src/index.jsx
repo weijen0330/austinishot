@@ -8,7 +8,3 @@ import Nav from "./nav.jsx";
 
 
 render(<App />, document.getElementById("app"));
-
-
-
-

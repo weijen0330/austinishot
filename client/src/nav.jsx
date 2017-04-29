@@ -21,11 +21,3 @@ export default class extends React.Component {
 				)
     }
 }
-/*return (
-				<ul className="nav nav-pills">
-					<li role="presentation" className={props.home}><a href="#">Home</a></li>
-					<li role="presentation" className={props.search}><a href="#">Search</a></li>
-					<li role="presentation" className={props.settings}><a href="#">Settings</a></li>
-				</ul>
-
-				)*/

@@ -1,0 +1,37 @@
+ul {
+	width: 70%;
+	margin: auto;
+}
+
+li button, .alert button {
+	float: right;
+}
+
+.alert {
+	overflow: hidden;
+}
+
+li {
+	font-size: 20pt;
+	overflow: hidden;
+	margin-bottom: 5px;
+}
+
+#app {
+	width: 80%;
+	margin:auto;
+}
+
+.demo-card-wide.mdl-card {
+  width: 50%;
+  margin: auto;
+  margin-bottom: 30px;
+}
+
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 30px;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}

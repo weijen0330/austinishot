@@ -1,0 +1,17 @@
+/*Navbar*/
+.mdl-layout__tab-bar {
+    height: inherit;
+}
+
+.mdl-layout__tab {
+    margin-top: 10px;
+}
+
+.mdl-layout__tab:hover {
+    cursor: pointer;
+}
+
+.mdl-layout__tab.is-active {
+    color: #fff;
+    border-bottom: solid 7px #FE4081;
+}

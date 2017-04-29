@@ -14,9 +14,7 @@ export default class extends React.Component {
     }
 
     handleTabClick(newTab) {
-        console.log(newTab)
         this.setState({activeTab: newTab})
-        return
     }
 
     render() {

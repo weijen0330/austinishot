@@ -28,24 +28,28 @@ export default class extends React.Component {
 
 			    	<h2>Recent Activity</h2>
 			    	<ul>
+			    		<hr />
 			    		<li>
 			    			<i className="fa fa-video-camera" aria-hidden="true"></i> 
 			    			<button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 							  5 new
 							</button>
 						</li>
+						<hr />
 						<li>
 			    			<i className="fa fa-picture-o" aria-hidden="true"> </i> 
 			    			<button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 							  5 new
 							</button>
 						</li>
+						<hr />
 						<li>
 			    			<i className="fa fa-link" aria-hidden="true"></i> 
 			    			<button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 							  5 new
 							</button>
 						</li>
+						<hr />
 			    	</ul>
 				    
 			    </div>

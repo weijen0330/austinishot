@@ -1,4 +1,6 @@
 var express = require('express');
+var https = require('https');
+var fs = require('fs');
 var app = express();
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
@@ -136,5 +138,12 @@ module.exports.start = function (connection) {
 
     var server = app.listen(80, function () {
         console.log('listening at http://localhost:1234 (mapped from :80)');
-    });    
+    });
+
+    const options = {
+        cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
+        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privatekey.pem')
+    };
+    
+    https.createServer(options, app).listen(8443);   
 };

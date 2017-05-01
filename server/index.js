@@ -5,5 +5,5 @@ var db = require('./db');
 var app = require('./app');
 
 db.init().then(connection => {
-	app.start(connection)
+	app.start(connection);
 });

@@ -54,9 +54,6 @@ add-apt-repository -y ppa:rwky/redis
 apt-get update
 apt-get install -y redis-server
 
-# install letsencrypt
-apt-get install letsencrypt
-
 # Installing java and solr
 # https://www.vultr.com/docs/how-to-install-and-configure-solr-on-ubuntu-14-04
 # 

@@ -114,7 +114,9 @@ module.exports.start = function (connection) {
     // Api endpoints - only authenticated users reach past this point
     //
     app.use(function (req, res, next) {
-        if (req.isAuthenticated()) {
+        if (!req.secure) {
+            return res.redirect(['https://', req.get('Host'), req.url].join(''));
+        } else if (req.isAuthenticated()) {
             return next();
         } else {
             res.status(401).json({message: 'Must sign in.'});		
@@ -136,14 +138,13 @@ module.exports.start = function (connection) {
         res.status(err.status || 500).send({message: err.message});
     });
 
-    var server = app.listen(80, function () {
-        console.log('listening at http://localhost:1234 (mapped from :80)');
-    });
-
     const options = {
         cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
-        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privatekey.pem')
+        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
     };
-    
-    https.createServer(options, app).listen(8443);   
+
+    var server = https.createServer(options, app);
+
+    server.listen(443);
+    app.listen(80);
 };

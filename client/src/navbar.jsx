@@ -23,9 +23,9 @@ export default class extends React.Component {
         return (            
             <header className="mdl-layout__header">
                 <div className="mdl-layout__tab-bar">
-                    <span className={"mdl-layout__tab " + homeClass} onClick={() => this.props.handleTabClick("home")}>Home</span>
-                    <span className={"mdl-layout__tab " + searchClass} onClick={() => this.props.handleTabClick("search")}>Search</span>
-                    <span className={"mdl-layout__tab " + accountClass} onClick={() => this.props.handleTabClick("account")}>Account</span>
+                    <a href="" className={"mdl-layout__tab " + homeClass} onClick={() => this.props.handleTabClick("home")}>Home</a>
+                    <a href="" className={"mdl-layout__tab " + searchClass} onClick={() => this.props.handleTabClick("search")}>Search</a>
+                    <a href="" className={"mdl-layout__tab " + accountClass} onClick={() => this.props.handleTabClick("account")}>Account</a>
                 </div>
             </header>
         )

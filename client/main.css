@@ -4,14 +4,46 @@
 }
 
 .mdl-layout__tab {
-    margin-top: 10px;
+    margin-top: 16px;
 }
 
-.mdl-layout__tab:hover {
-    cursor: pointer;
+.mdl-layout__tab-bar-container {
+    height: 100%
 }
 
-.mdl-layout__tab.is-active {
-    color: #fff;
-    border-bottom: solid 7px #FE4081;
+.mdl-layout.is-upgraded .mdl-layout__tab.is-active::after {
+    height: 5px
+}
+
+/*Content*/
+.mdl-layout__content {
+    width: 80%;
+    margin: 0 auto;
+}
+
+/*Search*/
+.search-option {
+    text-align: center;
+}
+.search-option .header {
+    margin-bottom: 6px;
+}
+
+.search-option .mdl-textfield {
+    width: 90%;
+}
+
+.search-option.sentReceived span {
+    margin: 0 10px;
+}
+
+.search-option.sentReceived {
+    padding-top: 12px;
+}
+
+.mdl-button .fa {
+    font-size: 28pt;
+}
+.mdl-button .fa-slack {
+    font-size: 26pt;
 }

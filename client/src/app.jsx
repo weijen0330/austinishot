@@ -3,12 +3,13 @@ import {render} from "react-dom";
 
 
 import Navbar from './navbar.jsx'
+import SearchPage from './search-page.jsx'
 
 export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: "home" 
+            activeTab: "search" 
         }
 
     }
@@ -24,7 +25,7 @@ export default class extends React.Component {
                 content = <div className="page-content">Home page</div>
                 break;
             case "search":
-                content = <div className="page-content">Search page</div>
+                content = <SearchPage />
                 break;
             case "account":
                 content = <div className="page-content">Account page</div>

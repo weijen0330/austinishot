@@ -23,8 +23,22 @@
 
 /*Search*/
 .search-option {
-    text-align: center;
+    width: 50%;    
 }
+
+.search-option.left {
+    text-align: right;
+    margin-right: 15px;
+}
+.search-option.left .mdl-textfield__label, .search-option.left .mdl-textfield__input {
+    text-align: right;
+}
+
+.search-option.right {
+    text-align: left;
+    margin-left: 15px;
+}
+
 .search-option .header {
     margin-bottom: 6px;
 }
@@ -41,9 +55,21 @@
     padding-top: 12px;
 }
 
-.mdl-button .fa {
-    font-size: 28pt;
+.mdl-button {
+    color: rgba(96, 125, 139, 0.7)
 }
-.mdl-button .fa-slack {
-    font-size: 26pt;
+
+.mdl-button .fa {
+    font-size: 20pt;
+    line-height: 35px;
+}
+
+.btn-selected {
+    background-color: rgba(158,158,158,.2);
+    border: 1px solid rgba(158,158,158,.4)
+}
+
+.mdl-textfield__label {
+    color: rgba(96, 125, 139, 0.7);
+    
 }

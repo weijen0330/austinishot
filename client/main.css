@@ -17,7 +17,7 @@
 
 /*Content*/
 .mdl-layout__content {
-    width: 80%;
+    width: 50%;
     margin: 0 auto;
 }
 
@@ -43,7 +43,7 @@
     margin-bottom: 6px;
 }
 
-.search-option .mdl-textfield {
+.mdl-textfield {
     width: 90%;
 }
 
@@ -71,5 +71,5 @@
 
 .mdl-textfield__label {
     color: rgba(96, 125, 139, 0.7);
-    
+    font-style: italic;
 }

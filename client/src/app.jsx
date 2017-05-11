@@ -1,5 +1,6 @@
 import React from "react";
 import {render} from "react-dom";
+import Home from "./home.jsx";
 
 
 import Navbar from './navbar.jsx'
@@ -19,10 +20,11 @@ export default class extends React.Component {
     }
 
     render() {
+
         let content;
         switch (this.state.activeTab) {
             case "home":
-                content = <div className="page-content">Home page</div>
+                content = <Home />
                 break;
             case "search":
                 content = <SearchPage />
@@ -40,5 +42,6 @@ export default class extends React.Component {
                 </main>
             </div>
         )
+
     }
 }

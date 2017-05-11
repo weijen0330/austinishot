@@ -1,3 +1,28 @@
+
+ul {
+	width: 70%;
+	margin: auto;
+}
+
+li button, .alert button {
+	float: right;
+}
+
+.alert {
+	overflow: hidden;
+}
+
+li {
+	font-size: 20pt;
+	overflow: hidden;
+	margin-bottom: 5px;
+} 
+
+/*notification*/
+.mdl-chip__text {
+  font-size: 18pt;
+}
+
 /*Navbar*/
 .mdl-layout__tab-bar {
     height: inherit;
@@ -72,4 +97,10 @@
 .mdl-textfield__label {
     color: rgba(96, 125, 139, 0.7);
     font-style: italic;
+}
+
+.mdl-layout__tab.is-active {
+    color: #fff;
+    border-bottom: solid 7px #FE4081;
+
 }

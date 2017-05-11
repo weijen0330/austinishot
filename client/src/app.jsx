@@ -10,12 +10,13 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: "search" 
+            activeTab: "home" 
         }
 
     }
 
-    handleTabClick(newTab) {
+    handleTabClick(e, newTab) {
+        e.preventDefault()
         this.setState({activeTab: newTab})
     }
 
@@ -36,7 +37,10 @@ export default class extends React.Component {
 
         return (
             <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
-                <Navbar activeTab={this.state.activeTab} handleTabClick={this.handleTabClick.bind(this)}/>                
+                <Navbar 
+                    activeTab={this.state.activeTab} 
+                    handleTabClick={this.handleTabClick.bind(this)}
+                />                
                 <main className="mdl-layout__content">
                     {content}
                 </main>

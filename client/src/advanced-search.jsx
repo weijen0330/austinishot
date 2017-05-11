@@ -1,6 +1,7 @@
 import React from "react";
 import {render} from "react-dom";
 
+import Textfield from './textfield.jsx'
 
 export default class extends React.Component {
     constructor(props) {
@@ -35,30 +36,24 @@ export default class extends React.Component {
                 <div style={{display: 'flex'}}>                    
                     <div className="search-option left">
                         <p className="header">What keywords might be in your link?</p>
-                        <div className="mdl-textfield mdl-js-textfield">
-                            <input 
-                                className="mdl-textfield__input" 
-                                type="text" 
-                                id="keywords-srch" 
-                                onChange={(e) => this.setSearchOption("keywords", e.target.value)}
-                                value={this.state.keywords}
-                            />
-                            <label className="mdl-textfield__label" htmlFor="keywords-srch">Ex. Seattle activities</label>
-                        </div>
+
+                        <Textfield 
+                            label="Ex. Seattle activities"
+                            propName="keywords"
+                            setSearchOption={(prop, value) => this.setSearchOption(prop, value)}
+                        />
+
                     </div>
                     
                     <div className="search-option right">
                         <p className="header">What tags are attached to your link?</p>
-                        <div className="mdl-textfield mdl-js-textfield">
-                            <input 
-                                className="mdl-textfield__input" 
-                                type="text" 
-                                id="tag-srch" 
-                                onChange={(e) => this.setSearchOption("tags", e.target.value)}
-                                value={this.state.tags}
-                            />
-                            <label className="mdl-textfield__label" htmlFor="tag-srch">Ex. funny, cute</label>
-                        </div>
+                        <Textfield 
+                            label="Ex. funny, cute"
+                            propName="tags"
+                            setSearchOption={(prop, value) => this.setSearchOption(prop, value)}
+                            value={this.state.tags}
+                        />
+
                     </div>
                 </div>
 
@@ -162,30 +157,22 @@ export default class extends React.Component {
                 <div style={{display: 'flex', marginTop: '28px'}}>                    
                     <div className="search-option left">
                         <p className="header">What site was it from?</p>
-                        <div className="mdl-textfield mdl-js-textfield">
-                            <input 
-                                className="mdl-textfield__input" 
-                                type="text" 
-                                id="domain-srch" 
-                                onChange={(e) => this.setSearchOption("domain", e.target.value)}
-                                value={this.state.domain}
-                            />
-                            <label className="mdl-textfield__label" htmlFor="domain-srch">Ex. buzzfeed</label>
-                        </div>
+                        <Textfield 
+                            label="Ex. buzzfeed"
+                            propName="domain"
+                            setSearchOption={(prop, value) => this.setSearchOption(prop, value)}
+                            value={this.state.gomain}
+                        />
                     </div>
                     
                     <div className="search-option right">
                         <p className="header">Who was it to or from?</p>
-                        <div className="mdl-textfield mdl-js-textfield">
-                            <input 
-                                className="mdl-textfield__input" 
-                                type="text" 
-                                id="sr-srch" 
-                                onChange={(e) => this.setSearchOption("people", e.target.value)}
-                                value={this.state.people}
-                            />
-                            <label className="mdl-textfield__label" htmlFor="sr-srch">Ex. Mary</label>
-                        </div>
+                        <Textfield 
+                            label="Ex. Mary"
+                            propName="people"
+                            setSearchOption={(prop, value) => this.setSearchOption(prop, value)}
+                            value={this.state.people}
+                        />
                     </div>
                 </div>
             </div>

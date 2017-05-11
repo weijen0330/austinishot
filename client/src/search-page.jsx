@@ -43,7 +43,7 @@ export default class extends React.Component {
         if (this.state.advancedSearch) {
             search = <AdvancedSearch updateSearchCriteria={(state) => this.updateSearchCriteria(state)}/>
         } else {
-            search = <NormalSearch />
+            search = <NormalSearch updateSearchCriteria={(state) => this.updateSearchCriteria(state)}/>
         }
 
         return (

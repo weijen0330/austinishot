@@ -87,14 +87,3 @@ export default class extends React.Component {
         )
     }
 }
-/*
-                        <div className="mdl-textfield">
-                            <input className="mdl-textfield__input" type="text" id="sample1">
-                            <label className="mdl-textfield__label" for="sample1">Text...</label>
-                        </div>
-
-
-                <button className="mdl-button mdl-js-button">
-                    Button
-                </button>
-*/

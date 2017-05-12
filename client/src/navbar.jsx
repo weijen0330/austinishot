@@ -7,10 +7,10 @@ export default class extends React.Component {
     }
 
     render() {
-        let homeClass = "", searchClass = "", accountClass = "";
+        let activityClass = "", searchClass = "", accountClass = "";
         switch (this.props.activeTab) {
-            case "home":
-                homeClass = "is-active";
+            case "activity":
+                activityClass = "is-active";
                 break;
             case "search":
                 searchClass = "is-active";
@@ -25,9 +25,9 @@ export default class extends React.Component {
                 <div className="mdl-layout__tab-bar">
                     <a 
                         href="" 
-                        className={"mdl-layout__tab " + homeClass} 
-                        onClick={(e) => this.props.handleTabClick(e, "home")}
-                    >Home</a>
+                        className={"mdl-layout__tab " + activityClass} 
+                        onClick={(e) => this.props.handleTabClick(e, "activity")}
+                    >Activity</a>
                     <a 
                         href="" 
                         className={"mdl-layout__tab " + searchClass} 

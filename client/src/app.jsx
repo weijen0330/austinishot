@@ -1,6 +1,6 @@
 import React from "react";
 import {render} from "react-dom";
-import Home from "./home.jsx";
+import Activity from "./Activity.jsx";
 
 
 import Navbar from './navbar.jsx'
@@ -10,7 +10,7 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: "home" 
+            activeTab: "activity" 
         }
 
     }
@@ -20,12 +20,12 @@ export default class extends React.Component {
         this.setState({activeTab: newTab})
     }
 
-    render() {
+    render() {        
 
         let content;
         switch (this.state.activeTab) {
-            case "home":
-                content = <Home />
+            case "activity":
+                content = <Activity />
                 break;
             case "search":
                 content = <SearchPage />
@@ -36,14 +36,12 @@ export default class extends React.Component {
         }
 
         return (
-            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
+            <div className="mdl-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
                 <Navbar 
                     activeTab={this.state.activeTab} 
                     handleTabClick={this.handleTabClick.bind(this)}
                 />                
-                <main className="mdl-layout__content">
-                    {content}
-                </main>
+                {content}
             </div>
         )
 

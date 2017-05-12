@@ -13,24 +13,16 @@ export default class extends React.Component {
 		};
     }
 
-    handleBackClick() {
-        this.props.handleBackClick()
-    }
-
 
 	render() {	
-        var title = "", messages = []
-        if (this.props.viewName) {
-            var str = this.props.viewName
-            title = str.charAt(0).toUpperCase() + str.slice(1)
-        }	
-
+        var messages = []
+        
         if (this.props.messages) {
             messages = this.props.messages.map(msg => {
                 return (
                     <Message 
                         key={msg.id}
-                        message={msg}
+                        msg={msg}
                     />
                 )
             })
@@ -38,15 +30,8 @@ export default class extends React.Component {
 
 		return (	
 			<div className="container">
-                <button 
-                    className="mdl-button mdl-js-button mdl-button--primary"
-                    onClick={this.handleBackClick.bind(this)}
-                >
-                    Back
-                </button>
-
-				<h1 style={{textAlign: "center"}}>
-                    {title}
+				<h1 style={{textAlign: "center", fontWeight: "lighter"}}>
+                    {this.props.title}
                 </h1>
 
                 <div className="message-area">

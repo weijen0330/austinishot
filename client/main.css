@@ -1,8 +1,4 @@
 
-li button, .alert button {
-	float: right;
-}
-
 .alert {
 	overflow: hidden;
 }
@@ -22,6 +18,7 @@ li button, .alert button {
 
 .home-not-option .mdl-button {
     padding: 0 10px;
+    float: right;
 }
 
 .home-not-option span {
@@ -51,7 +48,7 @@ li button, .alert button {
 }
 
 /*Content*/
-.mdl-layout__content {
+.page-content {
     width: 50%;
     margin: 0 auto;
 }
@@ -123,6 +120,7 @@ li button, .alert button {
     width: 92%;
     margin: 0 auto;
     margin-bottom: 20px;
+    height: 200px;
 }
 
 .message .content {
@@ -136,17 +134,18 @@ li button, .alert button {
 }
 
 .message .content .content-left {
-    /*align-self: center;*/
-    padding-top: 24px;
     width: 25%;
+    text-align: center;
 }
 .message .content .content-right {
     padding-left: 17.5px;
     width: 75%; 
+    overflow-y: scroll;
 }
 
 .message .content .content-right h2 {
+    margin-top: 0;
     line-height: 25px;
-    font-size: 16pt;
+    font-size: 15pt;
     margin-bottom: 10px;
 }

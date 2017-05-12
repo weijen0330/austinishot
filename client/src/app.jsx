@@ -1,6 +1,6 @@
 import React from "react";
 import {render} from "react-dom";
-import Activity from "./Activity.jsx";
+import Browse from "./browse.jsx";
 
 
 import Navbar from './navbar.jsx'
@@ -11,7 +11,7 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: "activity" 
+            activeTab: "browse" 
         }
 
     }
@@ -25,8 +25,8 @@ export default class extends React.Component {
 
         let content;
         switch (this.state.activeTab) {
-            case "activity":
-                content = <Activity />
+            case "browse":
+                content = <Browse />
                 break;
             case "search":
                 content = <SearchPage />

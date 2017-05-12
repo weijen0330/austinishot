@@ -24,18 +24,38 @@ export default class extends React.Component {
         
         return (            
             <nav className="nav has-shadow">
-                <div className="container" style={{marginLeft: "10px"}}>
                     <div className="nav-left">
-                        <p className="nav-item">
+                        <p className="nav-item" style={{marginLeft: "10px"}}>
                             {/*<img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo" />*/}
                             Our logo
                         </p>
-                        <a style={{width: "20%"}} className={"nav-item is-tab is-hidden-mobile " + browseClass}>Browse</a>
-                        <a style={{width: "20%"}} className={"nav-item is-tab is-hidden-mobile " + searchClass}>Search</a>
-                        <a style={{width: "20%"}} className={"nav-item is-tab is-hidden-mobile " + accountClass}>Account</a>
+                        
+                        <div className="tabs is-centered" style={{margin: '0 auto'}}>
+                            <ul style={{borderBottom: 'none', width: '60vw'}}> 
+                                <li className={browseClass} style={{height: '100%', width: '33%'}}>
+                                    <a 
+                                        style={{height: '100%'}}
+                                        onClick={e => this.props.handleTabClick(e, "browse")}
+                                    >Browse</a>
+                                </li>
+                                <li className={searchClass} style={{height: '100%', width: '33%'}}>
+                                    <a 
+                                        style={{height: '100%'}}
+                                        onClick={e => this.props.handleTabClick(e, "search")}
+                                    >Search</a>
+                                </li>
+                                <li className={accountClass} style={{height: '100%', width: '33%'}}>
+                                    <a 
+                                        style={{height: '100%'}}
+                                        onClick={e => this.props.handleTabClick(e, "account")}
+                                    >Account</a>
+                                </li>
+                            </ul>
+                        </div>    
+                        
 
+                            
                     </div>
-                </div>
             </nav>
         )
     }

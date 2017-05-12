@@ -32,7 +32,6 @@ export default class extends React.Component {
                 content = <SearchPage />
                 break;
             case "account":
-                // content = <div className="page-content">Account page</div>
                 content = <Account />
                 break;
         }

@@ -4,18 +4,18 @@ import "whatwg-fetch";
 
 import RecentActivity from './recent-activity.jsx'
 import MessageArea from './message-area.jsx'
+import Sidebar from './sidebar.jsx'
 
 export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-			view: "all",
+			view: "All",
 			types: {"All" : "fa-link", "Articles" : "fa-file-text-o", "Images": "fa-picture-o", "Videos": "fa-video-camera"}
 		};
     }
 
 	componentDidMount() {
-
 		fetch("src/data.json")
 			.then(response => {
 				if (response.ok) {
@@ -110,87 +110,92 @@ export default class extends React.Component {
 			.catch(err => this.setState({error: err}))
 	}	
 
-	capitalizeString(str) {
-		return str.charAt(0).toUpperCase() + str.slice(1)
+	changeView(view) {
+		this.setState({view: view})
 	}
 
 	render() {
 		var newMessages = [],
 			oldMessages = [],
-			typesArr = [],
-			tagsArr = [],
-			domainsArr = [],
-			allNewCnt, newArtCnt, newImgCnt, newVidCnt
-			
+			content = ""
 
 		switch (this.state.view) {
-			case "all":
+			case "All":			
 				if (this.state.newAll) {
 					newMessages = this.state.newAll					
 				}				
 				if (this.state.oldAll) {
 					oldMessages = this.state.oldAll
 				}
+				content = (
+					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
+						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New links" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older links" /> : ""}
+					</div>
+				)
+
 				break;
-		}
+			case "Articles":
+				if (this.state.newArticles) {
+					newMessages = this.state.newArticles
+				}
+				if (this.state.oldArticles) {
+					oldMessages = this.state.oldArticles
+				}
+				content = (
+					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
+						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New articles" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older articles" /> : ""}
+					</div>
+				)
 
-		if (this.state.types && this.state.newAll && this.state.newArticles && this.state.newImages && this.state.newVideos) {
-			typesArr = Object.keys(this.state.types).map(key => {
-				return (<p key={key} className="home-not-option">
+				break;
+			case "Images":
+				if (this.state.newImages) {
+					newMessages = this.state.newImages
+				}
+				if (this.state.oldImages) {
+					oldMessages = this.state.oldImages
+				}
+				content = (
+					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
+						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New images" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older images" /> : ""}
+					</div>
+				)
 
-					<span className="icon">
-						<i className={"fa " + this.state.types[key]}></i>
-					</span>
-					
-					<span style={{marginLeft: '7px'}}>{key}</span>					
+				break;
+			case "Videos":
+				if (this.state.newVideos) {
+					newMessages = this.state.newVideos
+				}
+				if (this.state.oldVideos) {
+					oldMessages = this.state.oldVideos
+				}
+				content = (
+					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
+						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New videos" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older videos" /> : ""}
+					</div>
+				)
 
-					{this.state['new' + key].length ? (
-						<span className="tag is-info" style={{float: 'right'}}>
-							{this.state['new' + key].length + ' new'}
-						</span>
-					) : ""}					
-				</p>)
-			})
-		}
-
-		if (this.state.tags) {
-			tagsArr = Object.keys(this.state.tags).map(tag => {
-				return <dd style={{marginBottom: "5px"}} key={tag}>{this.capitalizeString(tag)}</dd>
-			})
-		}
-
-		if (this.state.domains) {
-			domainsArr = Object.keys(this.state.domains).map(dom => {
-				return <dd style={{marginBottom: "5px"}} key={dom}>{dom}</dd>
-			})
+				break;
 		}
 		
 		return (
 			<div className="columns is-mobile">
-				<div 
-					className="column is-3" 
-					style={{height: '100vh', overflowY: 'scroll', borderRight: '1px solid #dbdbdb'}}					
-				>
-					<div className="content" style={{padding: '10px'}}>
-						<h2 className="title is-5">Recent Activity</h2>		
-						{typesArr}
-
-						<dl>
-							<dt><h2 className="title is-5">Tags</h2></dt>
-							{tagsArr}
-						</dl>											
-
-						<dl style={{marginTop: '5px'}}>
-							<dt><h2 className="title is-5">Domains</h2></dt>
-							{domainsArr}
-						</dl>
-						
-					</div>
-				</div>
-				<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>
-					<MessageArea messages={newMessages} title="New links" />
-					<MessageArea messages={oldMessages} title="Older links" />
-				</div>
+				<Sidebar 
+					view={this.state.view}
+					types={this.state.types}
+					newAll={this.state.newAll}
+					newArticles={this.state.newArticles}
+					newImages={this.state.newImages}
+					newVideos={this.state.newVideos}
+					tags={this.state.tags}
+					domains={this.state.domains}
+					handleViewChange={(view) => this.changeView(view)}
+				/>
+				{content}
 			</div>
 		)
     }

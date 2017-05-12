@@ -26,9 +26,9 @@ export default class extends React.Component {
             <nav className="nav has-shadow">
                     <div className="nav-left">
                         <p className="nav-item" style={{marginLeft: "10px"}}>
-                            {/*<img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo" />*/}
-                            Our logo
+                            <img src="src/logoGreen.png" alt="lynx logo" />                             
                         </p>
+                        <h1 className="nav-item" style={{marginBottom: 0, paddingTop: '9px'}} className="title">Lynx</h1>
                         
                         <div className="tabs is-centered" style={{margin: '0 auto'}}>
                             <ul style={{borderBottom: 'none', width: '60vw'}}> 

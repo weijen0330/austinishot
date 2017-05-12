@@ -1,151 +1,17 @@
-
-.alert {
-	overflow: hidden;
+.is-selected {
+    background-color: rgba(0, 209, 178, 0.3);
+    border-radius: 14px;
 }
 
-.home-not-option {
-    line-height: 36px;
-	font-size: 16pt;
-	overflow: hidden;
-	margin-bottom: 25px;
-    font-weight: lighter;
-} 
-
-.home-not-option .mdl-button .fa {
-    font-size: 11pt;
-    margin-left: 7px;
+.sidebar-option .is-selected:hover {
+    cursor: pointer;
 }
 
-.home-not-option .mdl-button {
-    padding: 0 10px;
-    float: right;
+.sidebar-option {
+    padding: 5px;
 }
 
-.home-not-option span {
-    margin-left: 10px;
-}
-
-/*notification*/
-.mdl-chip__text {
-  font-size: 18pt;
-}
-
-/*Navbar*/
-.mdl-layout__tab-bar {
-    height: inherit;
-}
-
-.mdl-layout__tab {
-    margin-top: 16px;
-}
-
-.mdl-layout__tab-bar-container {
-    height: 100%
-}
-
-.mdl-layout.is-upgraded .mdl-layout__tab.is-active::after {
-    height: 5px
-}
-
-/*Content*/
-.page-content {
-    width: 50%;
-    margin: 0 auto;
-}
-
-/*Search*/
-.search-option {
-    width: 50%;    
-}
-
-.search-option.left {
-    text-align: right;
-    margin-right: 15px;
-}
-.search-option.left .mdl-textfield__label, .search-option.left .mdl-textfield__input {
-    text-align: right;
-}
-
-.search-option.right {
-    text-align: left;
-    margin-left: 15px;
-}
-
-.search-option .header {
-    margin-bottom: 6px;
-}
-
-.mdl-textfield {
-    width: 90%;
-}
-
-.search-option.sentReceived span {
-    margin: 0 10px;
-}
-
-.search-option.sentReceived {
-    padding-top: 12px;
-}
-
-.mdl-button {
-    color: rgba(96, 125, 139, 0.7)
-}
-
-.mdl-button .fa {
-    font-size: 20pt;
-    line-height: 35px;
-}
-
-.btn-selected {
-    background-color: rgba(158,158,158,.2);
-    border: 1px solid rgba(158,158,158,.4)
-}
-
-.mdl-textfield__label {
-    color: rgba(96, 125, 139, 0.7);
-    font-style: italic;
-}
-
-/*message-area*/
-.message-area {
-    
-}
-
-.message {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-    display: block;
-    padding: 1.25rem;
-    width: 92%;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    height: 200px;
-}
-
-.message .content {
-    display: flex;
-    height: 100%;
-}
-
-.message .content img {
-    max-height: 100%;
-    max-width: 100%;
-}
-
-.message .content .content-left {
-    width: 25%;
-    text-align: center;
-}
-.message .content .content-right {
-    padding-left: 17.5px;
-    width: 75%; 
-    overflow-y: scroll;
-}
-
-.message .content .content-right h2 {
-    margin-top: 0;
-    line-height: 25px;
-    font-size: 15pt;
-    margin-bottom: 10px;
+.sidebar-option:hover {
+    cursor: pointer;
+    color: rgb(0, 209, 178);
 }

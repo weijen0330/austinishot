@@ -5,6 +5,7 @@ import Activity from "./Activity.jsx";
 
 import Navbar from './navbar.jsx'
 import SearchPage from './search-page.jsx'
+import Account from './account.jsx'
 
 export default class extends React.Component {
     constructor(props) {
@@ -31,7 +32,8 @@ export default class extends React.Component {
                 content = <SearchPage />
                 break;
             case "account":
-                content = <div className="page-content">Account page</div>
+                // content = <div className="page-content">Account page</div>
+                content = <Account />
                 break;
         }
 

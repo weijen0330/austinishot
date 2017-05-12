@@ -198,7 +198,7 @@ export default class extends React.Component {
 					style={{width: '75%', height: "100vh", overflowY: "scroll"}}
 				>
 					<MessageArea messages={newMessages} title="New links"/>
-					<MessageArea messages={oldMessages} title="older links"/>
+					<MessageArea messages={oldMessages} title="Older links"/>
 				</div>
 			</div>
 		)

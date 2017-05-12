@@ -1,9 +1,4 @@
 
-ul {
-	width: 70%;
-	margin: auto;
-}
-
 li button, .alert button {
 	float: right;
 }
@@ -12,11 +7,26 @@ li button, .alert button {
 	overflow: hidden;
 }
 
-li {
-	font-size: 20pt;
+.home-not-option {
+    line-height: 36px;
+	font-size: 16pt;
 	overflow: hidden;
-	margin-bottom: 5px;
+	margin-bottom: 25px;
+    font-weight: lighter;
 } 
+
+.home-not-option .mdl-button .fa {
+    font-size: 11pt;
+    margin-left: 7px;
+}
+
+.home-not-option .mdl-button {
+    padding: 0 10px;
+}
+
+.home-not-option span {
+    margin-left: 10px;
+}
 
 /*notification*/
 .mdl-chip__text {
@@ -99,8 +109,44 @@ li {
     font-style: italic;
 }
 
-.mdl-layout__tab.is-active {
-    color: #fff;
-    border-bottom: solid 7px #FE4081;
+/*message-area*/
+.message-area {
+    
+}
 
+.message {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+    display: block;
+    padding: 1.25rem;
+    width: 92%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.message .content {
+    display: flex;
+    height: 100%;
+}
+
+.message .content img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.message .content .content-left {
+    /*align-self: center;*/
+    padding-top: 24px;
+    width: 25%;
+}
+.message .content .content-right {
+    padding-left: 17.5px;
+    width: 75%; 
+}
+
+.message .content .content-right h2 {
+    line-height: 25px;
+    font-size: 16pt;
+    margin-bottom: 10px;
 }

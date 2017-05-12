@@ -166,9 +166,9 @@ export default class extends React.Component {
 		}
 		
 		return (
-			<div className="columns">
+			<div className="columns is-mobile">
 				<div 
-					className="column is-one-quarter" 
+					className="column is-3" 
 					style={{height: '100vh', overflowY: 'scroll', borderRight: '1px solid #dbdbdb'}}					
 				>
 					<div className="content" style={{padding: '10px'}}>
@@ -187,8 +187,9 @@ export default class extends React.Component {
 						
 					</div>
 				</div>
-				<div className="column" style={{height: '100vh', overflowY: 'scroll'}}>
-
+				<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>
+					<MessageArea messages={newMessages} title="New links" />
+					<MessageArea messages={oldMessages} title="Older links" />
 				</div>
 			</div>
 		)

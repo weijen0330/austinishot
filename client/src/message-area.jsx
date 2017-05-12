@@ -29,15 +29,15 @@ export default class extends React.Component {
         }
 
 		return (	
-			<div className="container">
-				<h1 style={{textAlign: "center", fontWeight: "lighter"}}>
+           <div>
+                <h1 className="title is-2" style={{textAlign: "center", fontWeight: "lighter", marginTop: '30px'}}>
                     {this.props.title}
                 </h1>
 
                 <div className="message-area">
                     {messages}
                 </div>
-			</div>					
+            </div>	
 		)
     }
 }

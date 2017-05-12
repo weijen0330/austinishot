@@ -1,3 +1,5 @@
+// done
+
 import React from "react";
 import {render} from "react-dom";
 
@@ -7,10 +9,10 @@ export default class extends React.Component {
     }
 
     render() {
-        let activityClass = "", searchClass = "", accountClass = "";
+        let browseClass = "", searchClass = "", accountClass = "";
         switch (this.props.activeTab) {
-            case "activity":
-                activityClass = "is-active";
+            case "browse":
+                browseClass = "is-active";
                 break;
             case "search":
                 searchClass = "is-active";
@@ -21,25 +23,20 @@ export default class extends React.Component {
         }
         
         return (            
-            <header className="mdl-layout__header">
-                <div className="mdl-layout__tab-bar">
-                    <a 
-                        href="" 
-                        className={"mdl-layout__tab " + activityClass} 
-                        onClick={(e) => this.props.handleTabClick(e, "activity")}
-                    >Activity</a>
-                    <a 
-                        href="" 
-                        className={"mdl-layout__tab " + searchClass} 
-                        onClick={(e) => this.props.handleTabClick(e, "search")}
-                    >Search</a>
-                    <a 
-                        href="" 
-                        className={"mdl-layout__tab " + accountClass} 
-                        onClick={(e) => this.props.handleTabClick(e, "account")}
-                    >Account</a>
+            <nav className="nav has-shadow">
+                <div className="container" style={{marginLeft: "10px"}}>
+                    <div className="nav-left">
+                        <p className="nav-item">
+                            {/*<img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo" />*/}
+                            Our logo
+                        </p>
+                        <a style={{width: "20%"}} className={"nav-item is-tab is-hidden-mobile " + browseClass}>Browse</a>
+                        <a style={{width: "20%"}} className={"nav-item is-tab is-hidden-mobile " + searchClass}>Search</a>
+                        <a style={{width: "20%"}} className={"nav-item is-tab is-hidden-mobile " + accountClass}>Account</a>
+
+                    </div>
                 </div>
-            </header>
+            </nav>
         )
     }
 }

@@ -134,23 +134,20 @@ export default class extends React.Component {
 				break;
 		}
 
-		if (this.state.newAll) allNewCnt = this.state.newAll.length
-		if (this.state.newArticles) newArtCnt = this.state.newArticles.length
-		if (this.state.newImages) newImgCnt = this.state.newImages.length
-		if (this.state.newVideos) newVidCnt = this.state.newVideos.length
-		console.log(this.state.newVideos)
-
 		if (this.state.types && this.state.newAll && this.state.newArticles && this.state.newImages && this.state.newVideos) {
 			typesArr = Object.keys(this.state.types).map(key => {
 				return (<p key={key} className="home-not-option">
-					<i className={"fa " + this.state.types[key]} aria-hidden="true"></i>
+
+					<span className="icon">
+						<i className={"fa " + this.state.types[key]}></i>
+					</span>
 					
-					<span>{key}</span>
+					<span style={{marginLeft: '7px'}}>{key}</span>					
 
 					{this.state['new' + key].length ? (
-						<button className="mdl-button mdl-js-button mdl-button--accent">
+						<span className="tag is-info" style={{float: 'right'}}>
 							{this.state['new' + key].length + ' new'}
-						</button>
+						</span>
 					) : ""}					
 				</p>)
 			})
@@ -158,47 +155,40 @@ export default class extends React.Component {
 
 		if (this.state.tags) {
 			tagsArr = Object.keys(this.state.tags).map(tag => {
-				return <p key={tag}>{this.capitalizeString(tag)}</p>
+				return <dd style={{marginBottom: "5px"}} key={tag}>{this.capitalizeString(tag)}</dd>
 			})
 		}
 
 		if (this.state.domains) {
 			domainsArr = Object.keys(this.state.domains).map(dom => {
-				return <p key={dom}>{dom}</p>
+				return <dd style={{marginBottom: "5px"}} key={dom}>{dom}</dd>
 			})
 		}
 		
 		return (
-			<div style={{display: "flex"}}>
-				{/*side bar*/}
+			<div className="columns">
 				<div 
-					className="right"
-					style={{
-						width: "25%", 
-						height: "100vh", 
-						boxShadow: "0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)", 
-						borderRight: "1px solid #e0e0e0",
-						background: "#fafafa",
-						padding: "10px"
-					}}
+					className="column is-one-quarter" 
+					style={{height: '100vh', overflowY: 'scroll', borderRight: '1px solid #dbdbdb'}}					
 				>
-					<h2 style={{fontWeight: 'lighter', fontSize: '18pt', marginBottom : "5px"}}>Recent Activity</h2>
-					{typesArr}
+					<div className="content" style={{padding: '10px'}}>
+						<h2 className="title is-5">Recent Activity</h2>		
+						{typesArr}
 
-					<h2 style={{fontWeight: 'lighter', fontSize: '18pt', marginBottom : "5px"}}>Tags</h2>
-					{tagsArr}
+						<dl>
+							<dt><h2 className="title is-5">Tags</h2></dt>
+							{tagsArr}
+						</dl>											
 
-					<h2 style={{fontWeight: 'lighter', fontSize: '18pt', marginBottom : "5px"}}>Domains</h2>
-					{domainsArr}
+						<dl style={{marginTop: '5px'}}>
+							<dt><h2 className="title is-5">Domains</h2></dt>
+							{domainsArr}
+						</dl>
+						
+					</div>
 				</div>
+				<div className="column" style={{height: '100vh', overflowY: 'scroll'}}>
 
-				{/*Content*/}
-				<div 
-					className="left"
-					style={{width: '75%', height: "100vh", overflowY: "scroll"}}
-				>
-					<MessageArea messages={newMessages} title="New links"/>
-					<MessageArea messages={oldMessages} title="Older links"/>
 				</div>
 			</div>
 		)

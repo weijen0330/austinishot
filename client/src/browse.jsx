@@ -11,6 +11,7 @@ export default class extends React.Component {
         super(props);
         this.state = {
 			view: "All",
+			viewType: "",
 			types: {"All" : "fa-link", "Articles" : "fa-file-text-o", "Images": "fa-picture-o", "Videos": "fa-video-camera"}
 		};
     }
@@ -89,7 +90,6 @@ export default class extends React.Component {
 						domains[vid.site_name] = true
 					}	
 				})
-				console.log()
 				this.setState({
 					newAll: newAll,
 					oldAll: oldAll,
@@ -110,13 +110,18 @@ export default class extends React.Component {
 			.catch(err => this.setState({error: err}))
 	}	
 
-	changeView(view) {
-		this.setState({view: view})
+	changeView(view, viewType) {
+		if (viewType) {
+			this.setState({view: view, viewType: viewType})
+		} else {
+			this.setState({view: view, viewType: ""})
+		}		
 	}
 
 	render() {
 		var newMessages = [],
 			oldMessages = [],
+			allMessages = [],
 			content = ""
 
 		switch (this.state.view) {
@@ -179,9 +184,55 @@ export default class extends React.Component {
 					</div>
 				)
 
+				break;			
+		}
+		switch (this.state.viewType) {
+			case "tag":
+				if (this.state.newAll) {
+					this.state.newAll.filter(msg => {
+						return msg.tags.includes(this.state.view)
+					}).forEach(msg => allMessages.push(msg))
+				}
+				if (this.state.oldAll) {
+					this.state.oldAll.filter(msg => {
+						return msg.tags.includes(this.state.view)
+					}).forEach(msg => allMessages.push(msg))
+				}
+				content = (
+					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
+							{allMessages.length > 0 ? (
+								<MessageArea messages={allMessages} title={"Links with tag '" + this.state.view + "'"} />
+							) : (
+								"No messages with tag '" + this.state.view + "'"
+							)}
+					</div>
+				)
+
+				break;
+			case "domain":
+				if (this.state.newAll) {
+					this.state.newAll.filter(msg => {
+						return msg.site_name == this.state.view
+					}).forEach(msg => allMessages.push(msg))
+				}
+				if (this.state.oldAll) {
+					this.state.oldAll.filter(msg => {
+						return msg.site_name == this.state.view
+					}).forEach(msg => allMessages.push(msg))
+				}
+				content = (
+					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
+							{allMessages.length > 0 ? (
+								<MessageArea messages={allMessages} title={"Links with domain '" + this.state.view + "'"} />
+							) : (
+								"No messages with domain '" + this.state.view + "'"
+							)}
+					</div>
+				)
+
 				break;
 		}
-		
+
 		return (
 			<div className="columns is-mobile">
 				<Sidebar 
@@ -193,7 +244,7 @@ export default class extends React.Component {
 					newVideos={this.state.newVideos}
 					tags={this.state.tags}
 					domains={this.state.domains}
-					handleViewChange={(view) => this.changeView(view)}
+					handleViewChange={(view, viewType) => this.changeView(view, viewType)}
 				/>
 				{content}
 			</div>

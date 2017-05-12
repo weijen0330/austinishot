@@ -54,7 +54,14 @@ export default class extends React.Component {
                     selected = "is-selected"
                 }
 
-				return <dd className={"sidebar-option " + selected} style={{marginBottom: "5px"}} key={tag}>{this.capitalizeString(tag)}</dd>
+				return (
+                    <dd 
+                        className={"sidebar-option " + selected} 
+                        style={{marginBottom: "5px"}} 
+                        key={tag}
+                        onClick={() => this.props.handleViewChange(tag, "tag")}
+                    >{this.capitalizeString(tag)}</dd>
+                )
 			})
 		}
 
@@ -65,7 +72,14 @@ export default class extends React.Component {
                     selected = "is-selected"
                 }
 
-				return <dd className={"sidebar-option " + selected} style={{marginBottom: "5px"}} key={dom}>{dom}</dd>
+				return (
+                    <dd 
+                        className={"sidebar-option " + selected} 
+                        style={{marginBottom: "5px"}} 
+                        key={dom}
+                        onClick={() => this.props.handleViewChange(dom, "domain")}
+                    >{dom}</dd>
+                )
 			})
 		}
 

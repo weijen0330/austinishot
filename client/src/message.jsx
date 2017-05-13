@@ -7,19 +7,78 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-		};
+            editing: false,
+            tags: (this.props.msg ? this.props.msg.tags : [])
+		}
     }
 
+    componentDidMount() {
+        if (this.addTagInput) {
+            this.addTagInput.focus()
+        }
+    }
+
+    openAddTag() {
+        this.setState({editing: true})
+
+    }
+    closeAddTag() {        
+        var value = (this.addTagInput.value).split(',').map(str => str.trim()).filter(str => str.length)
+        var tags = this.state.tags;
+        tags = tags.concat(value)
+        this.setState({editing: false, tags: tags}) 
+    }
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = []
-        
-        tags = urlData.tags.map(tag => {
-            return (
-                <span key={tag} style={{marginLeft: '5px'}} className="tag is-light">{tag}</span>
+        var tags = [], addTags = ""
+        if (this.state.tags) {
+            tags = this.state.tags.map((tag, i) => {
+                return (
+                    <span key={tag + i} style={{marginLeft: '5px'}} className="tag is-light">{tag}</span>
+                )
+            })
+        }
+
+        if (this.state.editing) {
+            addTags = (
+                <div className="field has-addons" style={{marginLeft: '7px', marginTop: '7px'}}>
+                    <p className="control" style={{width: '100%'}}>
+                        <input 
+                            ref={input => this.addTagInput = input}
+                            className="input" 
+                            type="text" 
+                            placeholder="Find a repository" 
+                            style={{height: '27px', fontSize: '0.75rem'}}
+                        />
+                    </p>
+                    <p className="control">
+                        <a 
+                            className="button is-info" 
+                            style={{height: '27px', fontSize: '0.75rem'}}
+                            onClick={this.closeAddTag.bind(this)}
+                        >
+                            Add
+                        </a>
+                    </p>
+                </div>
             )
-        })
+        } else {
+            addTags = (
+                 <a 
+                    className="button is-white is-small" 
+                    style={{marginLeft: '6.5px', marginTop: '10px'}}
+                    onClick={this.openAddTag.bind(this)}
+                >
+                    <span className="icon">
+                        <i className="fa fa-plus-circle"></i>
+                    </span>
+                    &nbsp;
+                    <span>Add tags</span>
+                </a>
+            )
+        }
+
         return (
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
                <article className="media" style={{marginBottom: '5px'}}>
@@ -49,13 +108,7 @@ export default class extends React.Component {
 
                <div>{tags}</div>
 
-                <a className="button is-white is-small" style={{marginLeft: '6.5px', marginTop: '10px'}}>
-                    <span className="icon">
-                        <i className="fa fa-plus-circle"></i>
-                    </span>
-                    &nbsp;
-                    <span>Add tags</span>
-                </a>
+               {addTags}                
            </div>
         )
     }

@@ -15,3 +15,11 @@
     cursor: pointer;
     color: rgb(0, 209, 178);
 }
+
+.button.is-link {
+    text-decoration: none;
+}
+
+.button.is-link.selected {
+    color: #00d1b2;
+}

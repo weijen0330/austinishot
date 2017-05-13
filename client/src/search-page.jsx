@@ -58,7 +58,7 @@ export default class extends React.Component {
                 <div className="columns">
                     <div className="column is-half">
                         <a 
-                            className={this.state.advancedSearch ? "button is-outlined" : "button is-outlined is-primary"}
+                            className={this.state.advancedSearch ? "button is-link" : "button is-link selected"}
                             style={{width: '160px', float: 'right'}}
                             onClick={this.quickSearchClicked.bind(this)}
                         >
@@ -67,7 +67,7 @@ export default class extends React.Component {
                     </div>
                     <div className="column is-half">
                         <a 
-                            className={this.state.advancedSearch ? "button is-outlined is-primary" : "button is-outlined"}
+                            className={this.state.advancedSearch ? "button is-link selected" : "button is-link"}
                             onClick={this.advancedSearchClicked.bind(this)}
                         >
                             Advanced Search

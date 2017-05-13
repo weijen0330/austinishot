@@ -29,11 +29,14 @@ export default class extends React.Component {
         this.setState({search: state})
     }
 
-    switchSearch() {
-        let currSearch = this.state.advancedSearch
-        this.setState({advancedSearch: !currSearch})
+    quickSearchClicked() {
+        this.setState({advancedSearch: false})
     }
 
+    advancedSearchClicked() {    
+        this.setState({advancedSearch: true})
+    }
+    
     handleSubmit() {
         console.log(this.state)
     }
@@ -47,9 +50,49 @@ export default class extends React.Component {
         }
 
         return (
-            <div className="page-content">
-                <h1 style={{textAlign: 'center'}}>Find your links</h1>
+            <div className="page-content" style={{width: '60%', margin: '0 auto'}}>
+                <h1 className="title is-2" style={{textAlign: "center", fontWeight: "lighter", marginTop: '30px'}}>
+                    Find your links
+                </h1>
+
+                <div className="columns">
+                    <div className="column is-half">
+                        <a 
+                            className={this.state.advancedSearch ? "button is-outlined" : "button is-outlined is-primary"}
+                            style={{width: '160px', float: 'right'}}
+                            onClick={this.quickSearchClicked.bind(this)}
+                        >
+                            Quick Search
+                        </a>
+                    </div>
+                    <div className="column is-half">
+                        <a 
+                            className={this.state.advancedSearch ? "button is-outlined is-primary" : "button is-outlined"}
+                            onClick={this.advancedSearchClicked.bind(this)}
+                        >
+                            Advanced Search
+                        </a>
+                    </div>
+                </div>
                 
+                {search}
+
+                {/*submit btn*/}
+                <div style={{textAlign: 'center'}}>
+                    <a 
+                        className="button is-primary"
+                        onClick={this.handleSubmit.bind(this)}
+                    >
+                        Submit
+                    </a> 
+                </div>
+            </div>
+        )
+    }
+}
+
+
+/*
                 <div style={{display: 'flex', marginBottom: '20px'}}>
                     <div className="search-option left">
 
@@ -73,7 +116,7 @@ export default class extends React.Component {
 
                 {search}
 
-                {/*submit btn*/}
+                // submit btn
                 <div style={{display: 'flex', marginTop: '30px'}}>
                     <button 
                         className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" 
@@ -82,8 +125,5 @@ export default class extends React.Component {
                     >
                         Search
                     </button>
-                </div>                
-            </div>
-        )
-    }
-}
+                </div> 
+*/

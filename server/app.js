@@ -1,6 +1,9 @@
 var express = require('express');
 var https = require('https');
 var fs = require('fs');
+var graph = require('fbgraph');
+var request = require('request');
+var authTokens = require(__base + 'secret/auth-tokens.json');
 var app = express();
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
@@ -17,6 +20,28 @@ if (!cookieSigSecret) {
 	console.error('Please set SIGSECRET');
 	process.exit(1);
 }
+
+var authConf = {
+    'facebook' : {
+        'clientID' : authTokens.fbClientID,
+        'clientSecret' : authTokens.fbClientSecret,
+        'scope' : 'email, public_profile, user_friends',
+        'redirectUri' :   'http://localhost:1234/auth/facebook'
+    },
+    'gmail' : {
+        'clientID': authTokens.gmailClientID,
+        'clientSecret' : authTokens.gmailClientSecret,
+        'scope' : [
+            'https://www.googleapis.com/auth/plus.me',
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/gmail.modify']
+    },
+    'slack' : {
+        'clientID' : authTokens.slackClientID,
+        'clientSecret' : authTokens.slackClientSecret,
+        'redirectUri' : ''
+    }
+};
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -91,6 +116,108 @@ module.exports.start = function (connection) {
             console.error("Failed validation. Make sure the validation tokens match.");
             res.sendStatus(403);
         }
+    });
+
+    app.get('/auth/facebook', function(req, res) {
+        // we don't have a code yet
+        // so we'll redirect to the oauth dialog
+        if (!req.query.code) {
+            var authUrl = graph.getOauthUrl({
+                "client_id":     authConf.facebook.clientID,
+                "redirect_uri":  authConf.facebook.redirectUri,
+                "scope":         authConf.facebook.scope
+            });
+
+            if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
+                res.redirect(authUrl);
+            } else {  //req.query.error == 'access_denied'
+                res.send('access denied');
+            }
+            return;
+        }
+
+        // code is set
+        // we'll send that and get the access token
+        graph.authorize({
+            "client_id":      authConf.facebook.clientID,
+            "redirect_uri":   authConf.facebook.redirectUri,
+            "client_secret":  authConf.facebook.clientSecret,
+            "code":           req.query.code
+        }, function (err, facebookRes) {
+            res.redirect('/UserHasLoggedIn');
+        });
+    });
+
+    var options = {
+        timeout:  3000
+        , pool:     { maxSockets:  Infinity }
+        , headers:  { connection:  "keep-alive" }
+    };
+
+    var reqParam = {
+        fields:"type,caption,description,link"
+    };
+
+    // user gets sent here after being authorized
+    app.get('/UserHasLoggedIn', function(req, res) {
+        console.log("Facebook account worked!");
+        graph.setOptions(options).get("/me/feed", reqParam, function(err, res) {
+            console.log(res);
+        });
+    });
+
+    /* Parses a string and returns an array of links if there are any. */
+    function regParser(text) {
+        var re = new RegExp('/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/');
+        var links = [];
+    }
+
+
+    // Gmail
+
+    app.use('/auth/gmail', function() {
+        var scope = authTokens.gmail.scope;
+
+
+    });
+
+    // fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+    //     if (err) {
+    //         console.log('Error loading client secret file: ' + err);
+    //         return;
+    //     }
+    //     // Authorize a client with the loaded credentials, then call the
+    //     // Gmail API.
+    //     authorize(JSON.parse(content), listLabels);
+    // });
+
+    // Slack
+    app.use('/auth/slack', function (req, res) {
+        if (req.method === 'PUT') {
+            res.writeHead((200, {'Content-Type': 'text/plain'}));
+            res.write(req.challenge);
+            res.end();
+        }
+
+        // var options = {
+        //     uri: 'https://slack.com/api/oauth.access?code='
+        //     +req.query.code+
+        //     '&client_id='+ authConf.slack.clientID +
+        //     '&client_secret='+ authConf.slack.clientSecret +
+        //     '&redirect_uri='+ authConf.slack.redirectUri,
+        //     method: 'GET'
+        // };
+        //
+        // request(options, (error, response, body) => {
+        //     var JSONresponse = JSON.parse(body);
+        //     if (!JSONresponse.ok){
+        //         console.log(JSONresponse);
+        //         res.send("Error encountered: \n"+JSON.stringify(JSONresponse)).status(200).end();
+        //     } else {
+        //         console.log(JSONresponse);
+        //         res.send("Success!")
+        //     }
+        // });
     });
 
     // public

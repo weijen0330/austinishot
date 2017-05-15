@@ -1,5 +1,3 @@
-// done
-
 import React from "react";
 import {render} from "react-dom";
 
@@ -9,7 +7,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let browseClass = "", searchClass = "", accountClass = "";
+        let browseClass = "", searchClass = "", settingsClass = "";
         switch (this.props.activeTab) {
             case "browse":
                 browseClass = "is-active";
@@ -17,21 +15,23 @@ export default class extends React.Component {
             case "search":
                 searchClass = "is-active";
                 break;
-            case "account":
-                accountClass = "is-active";
+            case "settings":
+                settingsClass = "is-active";
                 break;
         }
         
         return (            
             <nav className="nav has-shadow">
                     <div className="nav-left">
-                        <p className="nav-item" style={{marginLeft: "10px"}}>
-                            <img src="src/logoGreen.png" alt="lynx logo" />                             
-                        </p>
-                        <h1 className="nav-item" style={{marginBottom: 0, paddingTop: '9px'}} className="title">Lynx</h1>
                         
-                        <div className="tabs is-centered" style={{margin: '0 auto'}}>
-                            <ul style={{borderBottom: 'none', width: '60vw'}}> 
+                            <p className="nav-item" style={{marginLeft: "10px"}}>
+                                <img src="src/logoGreen.png" alt="lynx logo" />                             
+                            </p>
+                            <h1 className="nav-item" style={{marginBottom: 0, paddingTop: '9px', marginRight: '22px'}} className="title">Lynx</h1>
+                        
+                        
+                        <div className="tabs is-centered" style={{width: '100%'}}>
+                            <ul style={{borderBottom: 'none'}}> 
                                 <li className={browseClass} style={{height: '100%', width: '33%'}}>
                                     <a 
                                         style={{height: '100%'}}
@@ -44,11 +44,11 @@ export default class extends React.Component {
                                         onClick={e => this.props.handleTabClick(e, "search")}
                                     >Search</a>
                                 </li>
-                                <li className={accountClass} style={{height: '100%', width: '33%'}}>
+                                <li className={settingsClass} style={{height: '100%', width: '33%'}}>
                                     <a 
                                         style={{height: '100%'}}
-                                        onClick={e => this.props.handleTabClick(e, "account")}
-                                    >Account</a>
+                                        onClick={e => this.props.handleTabClick(e, "settings")}
+                                    >Settings</a>
                                 </li>
                             </ul>
                         </div>    

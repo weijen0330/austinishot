@@ -1,8 +1,6 @@
 import React from "react";
 import {render} from "react-dom";
 
-import Textfield from './textfield.jsx'
-
 export default class extends React.Component {
     constructor(props) {
         super(props);

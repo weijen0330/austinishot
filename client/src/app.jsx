@@ -5,13 +5,13 @@ import Browse from "./browse.jsx";
 
 import Navbar from './navbar.jsx'
 import SearchPage from './search-page.jsx'
-import Account from './account.jsx'
+import Settings from './settings.jsx'
 
 export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: "search" 
+            activeTab: "settings" 
         }
 
     }
@@ -31,8 +31,8 @@ export default class extends React.Component {
             case "search":
                 content = <SearchPage />
                 break;
-            case "account":
-                content = <Account />
+            case "settings":
+                content = <Settings />
                 break;
         }
 

@@ -148,7 +148,7 @@ module.exports.start = function (connection) {
         });
     });
 
-    var options = {
+    var fboptions = {
         timeout:  3000
         , pool:     { maxSockets:  Infinity }
         , headers:  { connection:  "keep-alive" }
@@ -187,16 +187,15 @@ module.exports.start = function (connection) {
     //         return;
     //     }
     //     // Authorize a client with the loaded credentials, then call the
-    //     // Gmail API.
+    //     // Gmail API.   
     //     authorize(JSON.parse(content), listLabels);
     // });
 
     // Slack
     app.use('/auth/slack', function (req, res) {
-        if (req.method === 'PUT') {
-            res.writeHead((200, {'Content-Type': 'text/plain'}));
-            res.write(req.challenge);
-            res.end();
+        if (req.method === 'POST') {
+	    res.type('html');
+            res.status(200).send(req.param('challenge'));
         }
 
         // var options = {

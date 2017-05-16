@@ -194,8 +194,9 @@ module.exports.start = function (connection) {
     // Slack
     app.use('/auth/slack', function (req, res) {
         if (req.method === 'POST') {
-	    res.type('html');
-            res.status(200).send(req.param('challenge'));
+	        res.type('html');
+            res.status(200).send();
+            console.log(req.params.event);
         }
 
         // var options = {

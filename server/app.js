@@ -196,7 +196,9 @@ module.exports.start = function (connection) {
         if (req.method === 'POST') {
 	        res.type('html');
             res.status(200).send();
-            console.log(req.params.event);
+            console.log(req.body);
+            console.log(req.body.event);
+             console.log(req.body.event.text);
         }
 
         // var options = {

@@ -39,7 +39,7 @@ var authConf = {
     'slack' : {
         'clientID' : authTokens.slackClientID,
         'clientSecret' : authTokens.slackClientSecret,
-        'scope': 'identity.basic+channels%3Ahistory+channels%3Aread',
+        'scope': 'channels%3Ahistory+channels%3Aread',
         'redirectUri' : 'https://lynxapp.me/auth/slack_token'
     }
 };
@@ -192,12 +192,14 @@ module.exports.start = function (connection) {
     // });
 
     // Slack
-    app.use('/auth/slack', function (req, res) {
+    app.get('/auth/slack', function (req, res) {
+        console.log("in auth/slack");
         var url = 'https://slack.com/oauth/authorize?client_id='
             + authConf.slack.clientID
             + '&scope=' + authConf.slack.scope
             + '&redirect_uri=' + authConf.slack.redirectUri;
         res.redirect(url);
+
         // var options = {
         //     uri: 'https://slack.com/api/oauth.access?code='
         //     +req.query.code+
@@ -219,7 +221,8 @@ module.exports.start = function (connection) {
         // });
     });
 
-    app.use('/auth/slack_token', function(req, res) {
+    app.get('/auth/slack_token', function(req, res) {
+        console.log("in auth/slack_token");
         var oauthUrl = 'https://slack.com/api/oauth.access?client_id='
             + authConf.slack.clientID
             + '&client_secret=' + authConf.slack.clientSecret
@@ -241,12 +244,12 @@ module.exports.start = function (connection) {
             console.log("getting last 100 messages");
             if (!err && res.statusCode === 200) {
                 var info = JSON.parse(body);
-                console.log(info.messages);
+                console.log("messages: " + info.messages);
             }
         });
     });
 
-    app.use('/auth/slack_incoming', function(req, res) {
+    app.get('/auth/slack_incoming', function(req, res) {
         if (req.method === 'POST') {
             res.type('html');
             res.status(200).send();

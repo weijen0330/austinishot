@@ -222,7 +222,7 @@ module.exports.start = function (connection) {
     });
 
     app.get('/auth/slack_token', function(req, res) {
-        console.log("in auth/slack_token");
+        console.log("in auth/slack_token. Reqest is:" + req);
         var oauthUrl = 'https://slack.com/api/oauth.access?client_id='
             + authConf.slack.clientID
             + '&client_secret=' + authConf.slack.clientSecret

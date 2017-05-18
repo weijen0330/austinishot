@@ -244,6 +244,7 @@ module.exports.start = function (connection) {
             console.log("getting last 100 messages");
             if (!err && res.statusCode === 200) {
                 var info = JSON.parse(body);
+                console.log(info);
                 console.log("messages: " + info.messages);
             }
         });

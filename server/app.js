@@ -222,11 +222,12 @@ module.exports.start = function (connection) {
     });
 
     app.get('/auth/slack_token', function(req, res) {
-        console.log("in auth/slack_token. Reqest is:" + req);
+        console.log("in auth/slack_token");
+
         var oauthUrl = 'https://slack.com/api/oauth.access?client_id='
             + authConf.slack.clientID
             + '&client_secret=' + authConf.slack.clientSecret
-            + '&code=' + req.params.code
+            + '&code=' + req.query.code
             + '&redirect_uri=' + authConf.slack.redirectUri;
 
         request(oauthUrl, function (err, res, body) {
@@ -234,6 +235,17 @@ module.exports.start = function (connection) {
             if (!err && res.statusCode === 200) {
                 var info = JSON.parse(body);
                 authConf.slack.accessToken = info.access_token;
+            }
+        });
+
+        var channelListUrl = 'https://slack.com/api/channels.list?token='
+            + authConf.slack.accessToken;
+
+        request(channelListUrl, function(err, res, body) {
+            console.log("getting channels");
+            if (!err && res.statusCode === 200) {
+                var info = JSON.parse(body);
+                console.log("channels: " + info.channels);
             }
         });
 

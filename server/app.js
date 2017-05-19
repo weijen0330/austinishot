@@ -1,5 +1,6 @@
 var express = require('express');
 var https = require('https');
+var request = require('request');
 var fs = require('fs');
 var graph = require('fbgraph');
 var slackWebClient = require('@slack/client').WebClient;
@@ -175,13 +176,27 @@ module.exports.start = function (connection) {
             word.replace('<>', '');
         });
         var links = [];
+        var results = {};
+        var url = 'https://info344api.enamarkovic.com/v1/summary?url=';
         for (var word in words) {
+            // if it is a link, we will call the link summary API
             if (re.test(word)) {
-               links.append(word);
+                request(url + word, function (error, response, body) {
+                    var JSONresponse = JSON.parse(body);
+                         if (!JSONresponse.ok){
+                             console.log(JSONresponse);
+                             res.send("Error encountered: \n"+JSON.stringify(JSONresponse)).status(200).end();
+                         } else {
+                             console.log(JSONresponse);
+                             res.send("Success!");
+                    }
+                });
+               // links.append(word);
             }
         }
-        return links;
+        return results;
     }
+
 
 
     // Gmail
@@ -202,7 +217,7 @@ module.exports.start = function (connection) {
     // });
 
     // Slack
-    app.get('/auth/slack', function (req, res) {
+    app.get('/api/auth/slack', function (req, res) {
         console.log("in auth/slack");
         var url = 'https://slack.com/oauth/authorize?client_id='
             + authConf.slack.clientID
@@ -231,7 +246,7 @@ module.exports.start = function (connection) {
         // });
     });
 
-    app.get('/auth/slack_token', function(req, res) {
+    app.get('/api/auth/slack_token', function(req, res) {
         console.log("in auth/slack_token");
 
         var oauthUrl = 'https://slack.com/api/oauth.access?client_id='

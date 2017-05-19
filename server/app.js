@@ -2,7 +2,7 @@ var express = require('express');
 var https = require('https');
 var fs = require('fs');
 var graph = require('fbgraph');
-var request = require('request');
+var slackWebClient = require('@slack/client').WebClient;
 var authTokens = require(__base + 'secret/auth-tokens.json');
 var app = express();
 var session = require('express-session');
@@ -233,34 +233,66 @@ module.exports.start = function (connection) {
         request(oauthUrl, function (err, res, body) {
             console.log("getting access token");
             if (!err && res.statusCode === 200) {
-                var info = JSON.parse(body);
                 authConf.slack.accessToken = info.access_token;
             }
         });
 
-        var channelListUrl = 'https://slack.com/api/channels.list?token='
-            + authConf.slack.accessToken;
+        var slackWeb = new slackWebClient(authConf.slack.accessToken);
 
-        request(channelListUrl, function(err, res, body) {
-            console.log("getting channels");
-            if (!err && res.statusCode === 200) {
-                var info = JSON.parse(body);
-                console.log("channels: " + info.channels);
+        var channelIDs = [];
+
+        slackWeb.channels.list(function(channelListErr, channelListInfo) {
+            if (channelListErr) {
+                console.error('Error: Unable to retrieve channel list.');
+            } else {
+                for (var i in channelListInfo.channels) {
+                    slackWeb.channels.history(channelListInfo.channels[i].id, function(channelHistErr, channelHistInfo) {
+                        if (channelHistErr) {
+                            console.error('Error: Unable to retrieve messages for channel with ID: ' + channelListInfo.channels[i].id);
+                        }  else {
+                            console.log(channelHistInfo.messages);
+                        }
+                    });
+                }
             }
         });
 
-        var messagesUrl = 'https://slack.com/api/channels.history?token='
-            + authConf.slack.accessToken;
-
-        request(messagesUrl, function(err, res, body) {
-            console.log("getting last 100 messages");
-            if (!err && res.statusCode === 200) {
-                var info = JSON.parse(body);
-                console.log(info);
-                console.log("messages: " + info.messages);
-            }
-        });
+        // console.log(channelIDs);
+        //
+        // slackWeb.channels.history(function(err, info) {
+        //     if (err) {
+        //         console.error('Error: Unable to retrieve channel messages.');
+        //     } else {
+        //         for (var i in info.) {
+        //
+        //         }
+        //     }
+        // });
     });
+
+    //     var channelListUrl = 'https://slack.com/api/channels.list?token='
+    //         + authConf.slack.accessToken;
+    //
+    //     request(channelListUrl, function(err, res, body) {
+    //         console.log("getting channels");
+    //         if (!err && res.statusCode === 200) {
+    //             var info = JSON.parse(body);
+    //             console.log("channels: " + info.channels);
+    //         }
+    //     });
+    //
+    //     var messagesUrl = 'https://slack.com/api/channels.history?token='
+    //         + authConf.slack.accessToken;
+    //
+    //     request(messagesUrl, function(err, res, body) {
+    //         console.log("getting last 100 messages");
+    //         if (!err && res.statusCode === 200) {
+    //             var info = JSON.parse(body);
+    //             console.log(info);
+    //             console.log("messages: " + info.messages);
+    //         }
+    //     });
+    // });
 
     app.get('/auth/slack_incoming', function(req, res) {
         if (req.method === 'POST') {

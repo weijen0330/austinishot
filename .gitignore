@@ -85,6 +85,7 @@ static/bundle.js.map
 
 #vagrant
 .vagrant/
+Vagrantfile
 #
 
 #intellij

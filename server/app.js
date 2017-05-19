@@ -343,6 +343,10 @@ module.exports.start = function (connection) {
         });
     });
 
+    // MOVE THIS LATER
+    var authApi = require(__base + 'routes/auth-api.js');
+    app.use('/api/auth', authApi.Router());
+
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
     //
@@ -364,7 +368,7 @@ module.exports.start = function (connection) {
     app.use('/api/user', usersApi.Router(UserDB));
     app.use('/api/category', categoryApi.Router(CategoryDB));
     app.use('/api/domain', domainApi.Router(DomainDB));
-    app.use('/api/message', messageApi.Router(MessageDB));
+    app.use('/api/message', messageApi.Router(MessageDB));    
 
     app.use(function (err, req, res, next) {
         console.error(err.stack);

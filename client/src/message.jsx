@@ -48,7 +48,7 @@ export default class extends React.Component {
                             ref={input => this.addTagInput = input}
                             className="input" 
                             type="text" 
-                            placeholder="Find a repository" 
+                            placeholder="ex. Cute, funny" 
                             style={{height: '27px', fontSize: '0.75rem'}}
                         />
                     </p>

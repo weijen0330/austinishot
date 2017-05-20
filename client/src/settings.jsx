@@ -1,6 +1,8 @@
 import React from "react";
 import {render} from "react-dom";
 
+import 'whatwg-fetch';
+
 import AdvancedSearch from "./advanced-search.jsx"
 import NormalSearch from "./normal-search.jsx"
 
@@ -9,13 +11,24 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            view: "integration"
-                          
+            view: "integration",  
+            facebookChecked: false,
+            slackChecked: false,
+            gmailChecked: false
         }
+
+        this.handleIntegrationClick = this.handleIntegrationClick.bind(this)
     }
 
     handleViewChange(view) {
         this.setState({view: view})
+    }
+
+    handleIntegrationClick(integration) {
+        this.setState({[integration + 'Checked']: true});
+        
+        fetch('http://localhost:1234/api/auth/slack')
+            // .then(console.log)
     }
 
     render() {
@@ -32,17 +45,34 @@ export default class extends React.Component {
                         <div className="content">                            
                             <div style={{paddingBottom:'20px'}}>                       
                                 Facebook
-                                <input type="checkbox" id="switch1" className="switch" checked="checked"/>
+                                <input 
+                                    onClick={() => this.handleIntegrationClick('facebook')} 
+                                    type="checkbox" id="switch1" 
+                                    className="switch" 
+                                    checked={this.state.facebookChecked ? "checked" : ""}
+                                />
                                 <label htmlFor="switch1">&nbsp;</label>                            
                             </div>
                             <div style={{paddingBottom:'20px'}}>                       
                                 Slack
-                                <input type="checkbox" id="switch2" className="switch" checked="checked"/>
+                                <input 
+                                    type="checkbox" 
+                                    id="switch2" 
+                                    className="switch" 
+                                    onClick={() => this.handleIntegrationClick('slack')} 
+                                    checked={this.state.slackChecked ? "checked" : ""}
+                                />
                                 <label htmlFor="switch2">&nbsp;</label>                            
                             </div>
                             <div style={{paddingBottom:'20px'}}>                       
                                 Gmail
-                                <input type="checkbox" id="switch3" className="switch"/>
+                                <input 
+                                    type="checkbox" 
+                                    id="switch3" 
+                                    className="switch" 
+                                    onClick={() => this.handleIntegrationClick('gmail')} 
+                                    checked={this.state.gmailChecked ? "checked" : ""}
+                                />
                                 <label htmlFor="switch3">&nbsp;</label>                            
                             </div>
                         </div>                        

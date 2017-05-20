@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "lint": "eslint src",
     "build": "webpack -p --config production.webpack.config.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "dev": "webpack -d --watch"
   },
   "author": "",
   "license": "ISC",

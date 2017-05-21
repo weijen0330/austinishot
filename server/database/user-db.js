@@ -19,7 +19,7 @@ var UserDB = {
 		return this._getSingleObject(
 			(
 				'SELECT * FROM USERS u ' + 
-				'WHERE u.id = :id'
+				'WHERE u.user_id = :id'
 			), 
 			{
 				id: userId
@@ -34,10 +34,10 @@ var UserDB = {
 	getFriends(userId) {
 		return this._getObjects(
 			(
-				'SELECT DISTINCT u.id, u.email, u.imgUrl FROM user u ' + 
-				'JOIN message m1 ON u.id = m1.recipientId ' + 
-				'JOIN message m2 ON u.id = m2.senderId ' +
-				'WHERE m1.senderId = :id AND m2.recipientId = :id'
+				'SELECT DISTINCT u.user_id, u.first_name, u.last_name FROM USERS u ' + 
+				'JOIN MESSAGE m1 ON u.id = m1.recipient_id ' + 
+				'JOIN MESSAGE m2 ON u.id = m2.sender_id ' +
+				'WHERE m1.sender_id = :id AND m2.recipient_id = :id'
 			),
 			{
 				id: userId
@@ -47,7 +47,7 @@ var UserDB = {
 
 	// if user already exists -> promise resolves with null
 	// if not
-	addUser(firstName, lastName, email, passwordHash) {	
+	addUser(first_name, last_name, email, passwordHash) {	
 		var _this = this;
 		//see notes
 		
@@ -62,11 +62,15 @@ var UserDB = {
 						.queryAsync(
 							(
 								'INSERT INTO USERS (first_name, last_name, email, passwordHash) ' + 
+<<<<<<< HEAD:server/database/user-db.js
 								'VALUES (:firstName, :lastName, :email, :passwordHash)'
+=======
+								'VALUES (:first_name, :last_name, :email, :passwordHash)'
+>>>>>>> kimiko:database/user-db.js
 							), 
 							{
-								firstName: firstName,
-								lastName: lastName,
+								first_name: first_name,
+								last_name: last_name,
 								email: email,
 								passwordHash: passwordHash
 							}
@@ -74,7 +78,7 @@ var UserDB = {
 						.then(() => {
 							return _this.getUserById(_this._connection.lastInsertId())
 								.then(rows => {		
-									return rows ? rows : new Error('DB sad');
+									return rows ? rows : new Error('AHHHHHHH!');
 								});
 						});							
 				}

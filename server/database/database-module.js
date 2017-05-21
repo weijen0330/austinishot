@@ -4,7 +4,7 @@ var Database = {
 	getUserByEmail(email) { //singleton!
 		return this._getSingleObject(
 			(
-				'SELECT * FROM user ' + 
+				'SELECT * FROM USERS ' + 
 				'WHERE email = :email'
 			), 
 			{
@@ -18,8 +18,8 @@ var Database = {
 	getUserById(userId) { //singleton!
 		return this._getSingleObject(
 			(
-				'SELECT * FROM user u ' + 
-				'WHERE u.id = :id'
+				'SELECT * FROM USERS u ' + 
+				'WHERE u.user_id = :id'
 			), 
 			{
 				id: userId
@@ -31,13 +31,14 @@ var Database = {
 	// appeared in messages that user has sent/received
 	// If userId does not exist in the db or no categories have been found
 	// in relation to that user, returns a promise containing null
-	getCategories(userId) {
+	getTags(userId) {
 		return this._getObjects(
 			(
-				'SELECT DISTINCT c.name FROM category c ' + 
-				'JOIN message_category mc ON c.id = mc.categoryId ' +
-				'JOIN message m ON mc.messageId = m.id ' + 
-				'WHERE m.senderId = :id OR m.recipientId = :id'
+				'SELECT DISTINCT t.tag_text FROM TAGS t ' + 
+				'JOIN LINKS_TAGS lt ON t.tag_id = lt.tag_id ' +
+				'JOIN LINKS l ON lt.link_id = l.link_id' +
+				'JOIN MESSAGE m ON l.link_id = m.link)id ' + 
+				'WHERE m.sender_id = :id OR m.recipient_id = :id'
 			),
 			{
 				id: userId
@@ -47,37 +48,37 @@ var Database = {
 
 	// Given a messageId, returns a promise containing the categories that 
 	// belong to a message with that message id. 
-	getCategoriesByMessageId(messageId) {
-		return this._getObjects(
-			(
-				'SELECT DISTINCT c.name FROM message m ' + 
-				'JOIN message_category mc ON m.id = mc.messageId ' + 
-				'JOIN category c ON mc.categoryId = c.id ' + 
-				'WHERE m.id = :id'
-			),
-			{
-				id: messageId
-			}
-		)
-	},
+	// getCategoriesByMessageId(messageId) {
+	// 	return this._getObjects(
+	// 		(
+	// 			'SELECT DISTINCT c.name FROM message m ' + 
+	// 			'JOIN message_category mc ON m.id = mc.messageId ' + 
+	// 			'JOIN category c ON mc.categoryId = c.id ' + 
+	// 			'WHERE m.id = :id'
+	// 		),
+	// 		{
+	// 			id: messageId
+	// 		}
+	// 	)
+	// },
 
 	// Given a userId, returns a promise containing the domains that have
 	// appeared in messages that user has sent/received
 	// If userId does not exist in db or no domains have been found in relation
 	// to that user, returns a promise containing null
-	getDomains(userId) {
-		return this._getObjects(
-			(
-				'SELECT DISTINCT d.name FROM domain d ' + 
-				'JOIN link l ON d.id = l.domainId ' +
-				'JOIN message m ON l.id = m.linkId ' +
-				'WHERE m.senderId = :id OR m.recipientId = :id'
-			), 
-			{
-				id: userId
-			}
-		);
-	},
+	// getDomains(userId) {
+	// 	return this._getObjects(
+	// 		(
+	// 			'SELECT DISTINCT d.name FROM domain d ' + 
+	// 			'JOIN link l ON d.id = l.domainId ' +
+	// 			'JOIN message m ON l.id = m.linkId ' +
+	// 			'WHERE m.senderId = :id OR m.recipientId = :id'
+	// 		), 
+	// 		{
+	// 			id: userId
+	// 		}
+	// 	);
+	// },
 
 	// Given a userId, returns a promise containing all users that have send
 	// or received a message from the authenticated user
@@ -86,10 +87,10 @@ var Database = {
 	getFriends(userId) {
 		return this._getObjects(
 			(
-				'SELECT DISTINCT u.id, u.displayName, u.imgUrl FROM user u ' + 
-				'JOIN message m1 ON u.id = m1.recipientId ' + 
-				'JOIN message m2 ON u.id = m2.senderId ' +
-				'WHERE m1.senderId = :id AND m2.recipientId = :id'
+				'SELECT DISTINCT u.user_id, u.first_name, u.last_name FROM USERS u ' + 
+				'JOIN MESSAGES m1 ON u.id = m1.recipient_id ' + 
+				'JOIN MESSAGES m2 ON u.id = m2.sender_id ' +
+				'WHERE m1.sender_id = :id AND m2.recipient_id = :id'
 			),
 			{
 				id: userId
@@ -101,8 +102,8 @@ var Database = {
 		return this._getObjects(
 			(
 				'SELECT ' + 
-					'm.id, ' +
-					'm.linkId, ' +
+					'm.message_id, ' +
+					'm.link_id, ' +
 					'm.note, ' +
 					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
 					'm.isRead, ' + 
@@ -110,14 +111,12 @@ var Database = {
 					'l.url, ' + 
 					'l.title, ' + 
 					'l.description, ' + 
-					'l.imgUrl, ' + 
 					'sender.email AS senderEmail, ' + 
 					'sender.displayName AS senderName, ' +
-					'sender.imgUrl AS senderImg ' +
 				'FROM message m ' + 
-				'JOIN link l on m.linkId = l.id ' + 
-				'JOIN user sender on m.senderId = sender.id ' + 
-				'WHERE m.senderId = :id OR m.recipientId = :id'
+				'JOIN link l on m.link_id = l.link_id ' + 
+				'JOIN USERS sender on m.sender_id = sender.user_id ' + 
+				'WHERE m.sender_id = :id OR m.recipient_id = :id'
 			),
 			{
 				id: userId
@@ -132,8 +131,8 @@ var Database = {
 		return this._getObjects(
 			(
 				'SELECT ' + 
-					'm.id, ' +
-					'm.linkId, ' +
+					'm.message_id, ' +
+					'm.link_id, ' +
 					'm.note, ' +
 					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
 					'm.isRead, ' + 
@@ -141,14 +140,13 @@ var Database = {
 					'l.url, ' + 
 					'l.title, ' + 
 					'l.description, ' + 
-					'l.imgUrl, ' + 
 					'sender.email AS senderEmail, ' + 
 					'sender.displayName AS senderName, ' +
 					'sender.imgUrl AS senderImg ' +
 				'FROM message m ' + 
-				'JOIN link l on m.linkId = l.id ' + 
-				'JOIN user sender on m.senderId = sender.id ' + 
-				'WHERE m.recipientId = :id' 
+				'JOIN link l on m.link_id = l.link_id ' + 
+				'JOIN USERS sender on m.sender_id = sender.user_id ' + 
+				'WHERE m.recipient_id = :id'
 			),
 			{
 				id: userId
@@ -164,8 +162,8 @@ var Database = {
 		return this._getObjects(
 			(
 				'SELECT ' + 
-					'm.id, ' +
-					'm.linkId, ' +
+					'm.message_id, ' +
+					'm.link_id, ' +
 					'm.note, ' +
 					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
 					'm.isRead, ' + 
@@ -173,14 +171,13 @@ var Database = {
 					'l.url, ' + 
 					'l.title, ' + 
 					'l.description, ' + 
-					'l.imgUrl, ' + 
 					'sender.email AS senderEmail, ' + 
 					'sender.displayName AS senderName, ' +
 					'sender.imgUrl AS senderImg ' +
 				'FROM message m ' + 
-				'JOIN link l on m.linkId = l.id ' + 
-				'JOIN user sender on m.recipientId = sender.id ' + 
-				'WHERE senderId = :id'	
+				'JOIN link l on m.link_id = l.link_id ' + 
+				'JOIN USERS sender on m.sender_id = sender.user_id ' + 
+				'WHERE m.sender_id = :id'	
 			),
 			{
 				id: userId
@@ -191,7 +188,7 @@ var Database = {
 	favoriteMessage(messageId) {
 		return this._connection
 			.queryAsync(
-				'UPDATE message SET favorited = NOT favorited WHERE id = :id', 
+				'UPDATE message SET favorited = NOT favorited WHERE message_id = :id', 
 				{id: messageId}
 			);
 	},
@@ -199,7 +196,7 @@ var Database = {
 
 	// if user already exists -> promise resolves with null
 	// if not
-	addUser(displayName, email, passwordHash) {	
+	addUser(first_name, last_name, email, passwordHash) {	
 		var _this = this;
 		//see notes
 		
@@ -213,11 +210,12 @@ var Database = {
 					return _this._connection
 						.queryAsync(
 							(
-								'INSERT INTO user (displayName, email, passwordHash) ' + 
-								'VALUES (:displayName, :email, :passwordHash)'
+								'INSERT INTO user (first_name, last_name, email, passwordHash) ' + 
+								'VALUES (:first_name, :last_name, :email, :passwordHash)'
 							), 
 							{
-								displayName: displayName,
+								first_name: first_name,
+								last_name: last_name,
 								email: email,
 								passwordHash: passwordHash
 							}
@@ -232,56 +230,56 @@ var Database = {
 			});
 	},
 
-	// check this
-	getDomain(domainName) {
-		// if domainName already exists, return id
-		// else add that domain name.
-		var _this = this;
+	// // check this
+	// getDomain(domainName) {
+	// 	// if domainName already exists, return id
+	// 	// else add that domain name.
+	// 	var _this = this;
 		
-		return _this._connection
-			.queryAsync(
-				(
-					'SELECT id FROM domain ' +
-					'WHERE name LIKE :name ' + 
-					'LIMIT 1'
-				),
-				{
-					name: domainName
-				}
-			)
-			.then(rows => {
-				if (rows && rows.length) {
-					return rows[0].id;
-				} else {
-					return _this._connection
-						.queryAsync(
-							(
-								'INSERT INTO domain (name) ' +
-								'VALUES (:name)'  
-							),
-							{
-								name: domainName
-							}
-						)
-						.then(() => {
-							return _this._connection.lastInsertId()
-						});
-				}
-			});	
-	},
+	// 	return _this._connection
+	// 		.queryAsync(
+	// 			(
+	// 				'SELECT id FROM domain ' +
+	// 				'WHERE name LIKE :name ' + 
+	// 				'LIMIT 1'
+	// 			),
+	// 			{
+	// 				name: domainName
+	// 			}
+	// 		)
+	// 		.then(rows => {
+	// 			if (rows && rows.length) {
+	// 				return rows[0].id;
+	// 			} else {
+	// 				return _this._connection
+	// 					.queryAsync(
+	// 						(
+	// 							'INSERT INTO domain (name) ' +
+	// 							'VALUES (:name)'  
+	// 						),
+	// 						{
+	// 							name: domainName
+	// 						}
+	// 					)
+	// 					.then(() => {
+	// 						return _this._connection.lastInsertId()
+	// 					});
+	// 			}
+	// 		});	
+	// },
 
-	getCategory(categoryName) {
+	getTag(tagName) {
 		var _this = this;
 
 		return _this._connection
 			.queryAsync(
 				(
-					'SELECT id FROM category ' + 
-					'WHERE name LIKE :name ' + 
+					'SELECT tag_id FROM TAG ' + 
+					'WHERE tag_text LIKE :name ' + 
 					'LIMIT 1'
 				),
 				{
-					name : categoryName
+					name : tagName
 				}
 			)
 			.then(rows => {
@@ -291,11 +289,11 @@ var Database = {
 					return _this._connection
 						.queryAsync(
 							(
-								'INSERT INTO category (name)' + 
+								'INSERT INTO TAG (tag_text)' + 
 								'VALUES (:name)'
 							),
 							{
-								name: categoryName
+								name: tagName
 							}
 						)
 						.then(() => {

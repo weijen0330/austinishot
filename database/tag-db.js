@@ -1,15 +1,16 @@
-var CategoryDB = {
+var TagDB = {
 	// Given a userId, returns a promise containing the categories that have 
 	// appeared in messages that user has sent/received
 	// If userId does not exist in the db or no categories have been found
 	// in relation to that user, returns a promise containing null
-	getCategories(userId) {
+	getTags(userId) {
 		return this._getObjects(
 			(
-				'SELECT DISTINCT c.name FROM category c ' + 
-				'JOIN message_category mc ON c.id = mc.categoryId ' +
-				'JOIN message m ON mc.messageId = m.id ' + 
-				'WHERE m.senderId = :id OR m.recipientId = :id'
+				'SELECT DISTINCT t.tag_text FROM TAGS t ' + 
+				'JOIN LINKS_TAGS lt ON t.tag_id = lt.tag_id ' +
+				'JOIN LINKS l ON lt.link_id = l.link_id ' +
+				'JOIN MESSAGE m ON l.link_id = m.link_id ' + 
+				'WHERE m.sender_id = :id OR m.recipient_id = :id'
 			),
 			{
 				id: userId
@@ -19,13 +20,14 @@ var CategoryDB = {
 
 	// Given a messageId, returns a promise containing the categories that 
 	// belong to a message with that message id. 
-	getCategoriesByMessageId(messageId) {
+	getTagsByMessageId(messageId) {
 		return this._getObjects(
 			(
-				'SELECT DISTINCT c.name FROM message m ' + 
-				'JOIN message_category mc ON m.id = mc.messageId ' + 
-				'JOIN category c ON mc.categoryId = c.id ' + 
-				'WHERE m.id = :id'
+				'SELECT DISTINCT t.tag_text FROM MESSAGE m ' + 
+				'JOIN LINKS l ON m.link_id = l.link_id ' +
+				'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
+				'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
+				'WHERE m.message_id = :id'
 			),
 			{
 				id: messageId
@@ -33,18 +35,18 @@ var CategoryDB = {
 		)
 	},
 
-	getCategory(categoryName) {
+	getTag(tagName) {
 		var _this = this;
 
 		return _this._connection
 			.queryAsync(
 				(
-					'SELECT id FROM category ' + 
-					'WHERE name LIKE :name ' + 
+					'SELECT tag_id FROM TAGS ' + 
+					'WHERE tag_text LIKE :name ' + 
 					'LIMIT 1'
 				),
 				{
-					name : categoryName
+					name : tagName
 				}
 			)
 			.then(rows => {
@@ -54,11 +56,11 @@ var CategoryDB = {
 					return _this._connection
 						.queryAsync(
 							(
-								'INSERT INTO category (name)' + 
+								'INSERT INTO TAGS (tag_text) ' + 
 								'VALUES (:name)'
 							),
 							{
-								name: categoryName
+								name: tagName
 							}
 						)
 						.then(() => {
@@ -68,6 +70,7 @@ var CategoryDB = {
 			});
 
 	},
+
 
 	// Given connection, query and params, returns a promise containing query contents
 	// If query returns no results, returns a promise containing null
@@ -89,7 +92,7 @@ var CategoryDB = {
 }
 
 module.exports = function (connection) {
-	var categoryDB = Object.create(CategoryDB);
-	categoryDB._connection = connection;
-	return categoryDB;
+	var TagDB = Object.create(TagDB);
+	TagDB._connection = connection;
+	return TagDB;
 }

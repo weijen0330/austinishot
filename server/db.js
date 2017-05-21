@@ -6,12 +6,10 @@ var connection = bluebird.promisifyAll(new MariaSql(dbConfig));
 module.exports.init = function () {
     return connection.queryAsync('use lynx')
 		.catch(err => { 
-            console.log("connection error")
             if (err) throw err; 
         })
         .then(() => {
             connection.end()
             return connection
-        })
-        .then(connection);
+        });
 };

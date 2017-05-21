@@ -1,6 +1,7 @@
 import React from "react";
 import {render} from "react-dom";
 import Browse from "./browse.jsx";
+// import * as Socket from 'socket.io-client';
 
 
 import Navbar from './navbar.jsx'
@@ -14,6 +15,34 @@ export default class extends React.Component {
             activeTab: "settings" 
         }
 
+    }
+
+    componentDidMount() {
+        console.log(io)
+        let ws = io("http://localhost:1234")
+        ws.emit("message", "this is some data")
+        console.log(ws)
+        // let ws = new WebSocket("ws://127.0.0.1:1234")
+        // // ws.send("kjhgjhgkhj")
+        
+        // ws.onopen = () => {
+        //     console.log("opened connection")
+        //     ws.send("hello")
+        // }
+
+        // ws.onmessage = (e) => {
+        //     console.log('ws message', e.data)
+        // };
+
+        // let intervalId = setInterval(() => {
+        //     if (ws.readyState === 1) {
+        //         console.log("ws ready");
+        //         ws.send("hello")
+        //         clearInterval(intervalId);
+        //     } else {
+        //         console.log('ws.readyState', ws.readyState)
+        //     }
+        // }, 10);
     }
 
     handleTabClick(e, newTab) {

@@ -1,16 +1,19 @@
-var express = require('express');
-var app = express();
-var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
+const express = require('express');
+const app = express();
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 
-var bcrypt = require('bcryptjs');
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
+const bcrypt = require('bcryptjs');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
-var cookieSigSecret = process.env.SIGSECRET;
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+
+const cookieSigSecret = process.env.SIGSECRET;
 if (!cookieSigSecret) {
 	console.error('Please set SIGSECRET');
 	process.exit(1);
@@ -27,7 +30,7 @@ app.use(session({
 app.use(express.static(__base + '../client'));
 
 module.exports.start = function (connection) {
-    var	UserDB = require(__base + '/database/user-db')(connection),
+    const UserDB = require(__base + '/database/user-db')(connection),
         CategoryDB = require(__base + '/database/category-db')(connection),
         DomainDB = require(__base + '/database/domain-db')(connection),
         MessageDB = require(__base + '/database/message-db')(connection),
@@ -109,7 +112,7 @@ module.exports.start = function (connection) {
     });
 
     // MOVE THIS LATER
-    var authApi = require(__base + 'routes/auth-api.js');
+    const authApi = require(__base + 'routes/auth-api.js');
     app.use('/api/auth', authApi.Router());
 
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +126,7 @@ module.exports.start = function (connection) {
         }
     });
 
-    var usersApi = require(__base + 'routes/user-api.js'),
+    const usersApi = require(__base + 'routes/user-api.js'),
         categoryApi = require(__base + 'routes/category-api.js'),
         domainApi = require(__base + 'routes/domain-api.js'),
         messageApi = require(__base + 'routes/message-api.js');
@@ -138,7 +141,15 @@ module.exports.start = function (connection) {
         res.status(err.status || 500).send({message: err.message});
     });
 
-    var server = app.listen(80, function () {
+    
+    io.on('connection', socket => {
+        socket.on('message', data => {
+            console.log(data)
+        })
+    })
+    
+
+    server.listen(80, () => {
         console.log('listening at http://localhost:1234 (mapped from :80)');
     });    
 };

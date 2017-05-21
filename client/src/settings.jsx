@@ -27,8 +27,8 @@ export default class extends React.Component {
     handleIntegrationClick(integration) {
         this.setState({[integration + 'Checked']: true});
         
-        fetch('http://localhost:1234/api/auth/slack')
-            // .then(console.log)
+        fetch('http://localhost:1234/api/auth/' + integration)
+            .then(console.log)
     }
 
     render() {

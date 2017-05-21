@@ -62,11 +62,7 @@ var UserDB = {
 						.queryAsync(
 							(
 								'INSERT INTO USERS (first_name, last_name, email, passwordHash) ' + 
-<<<<<<< HEAD:server/database/user-db.js
-								'VALUES (:firstName, :lastName, :email, :passwordHash)'
-=======
 								'VALUES (:first_name, :last_name, :email, :passwordHash)'
->>>>>>> kimiko:database/user-db.js
 							), 
 							{
 								first_name: first_name,

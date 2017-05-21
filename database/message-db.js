@@ -3,31 +3,21 @@ var MessageDB = {
 		return this._getObjects(
 			(
 				'SELECT ' + 
-					'm.id, ' +
-					'm.linkId, ' +
+					'm.message_id, ' +
+					'm.link_id, ' +
 					'm.note, ' +
 					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
-					'm.isRead, ' + 
-					'm.favorited, ' +
+					'm.is_read, ' + 
 					'l.url, ' + 
+					'l.img_url ' +
 					'l.title, ' + 
 					'l.description, ' + 
-					'l.imgUrl, ' + 
 					'sender.email AS senderEmail, ' + 
-					// 'sender.displayName AS senderName, ' +
-					'sender.firstName AS senderFirstName, ' +
-					'sender.lastName AS senderLastName, ' +
-					
-					'sender.imgUrl AS senderImg, ' +
-					'c.name AS categoryName ' +
-				'FROM message m ' + 
-				'JOIN link l on m.linkId = l.id ' + 
-				'JOIN user sender on m.senderId = sender.id ' +
-				'JOIN message_category mc on mc.messageId = m.id ' + 
-				'JOIN category c on mc.categoryId = c.id ' +  
-				'WHERE (m.senderId = :id OR m.recipientId = :id) ' +
-					'AND m.deleted = 0 ' +
-				'ORDER BY timeSent DESC'
+					'sender.first_name AS senderName ' +
+				'FROM MESSAGE m ' + 
+				'JOIN LINKS l on m.link_id = l.link_id ' + 
+				'JOIN USERS sender on m.sender_id = sender.user_id ' + 
+				'WHERE m.sender_id = :id OR m.recipient_id = :id'
 			),
 			{
 				id: userId
@@ -42,31 +32,21 @@ var MessageDB = {
 		return this._getObjects(
 			(
 				'SELECT ' + 
-					'm.id, ' +
-					'm.linkId, ' +
+					'm.message_id, ' +
+					'm.link_id, ' +
 					'm.note, ' +
 					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
-					'm.isRead, ' + 
-					'm.favorited, ' +
+					'm.is_read, ' + 
 					'l.url, ' + 
+					'l.img_url ' +
 					'l.title, ' + 
 					'l.description, ' + 
-					'l.imgUrl, ' + 
-					'sender.email AS senderEmail, ' +
-					// 'sender.displayName AS senderName, ' +
-					'sender.firstName AS senderFirstName, ' +
-					'sender.lastName AS senderLastName, ' +
-
-					'sender.imgUrl AS senderImg, ' +
-					'c.name AS categoryName ' +
-				'FROM message m ' + 
-				'JOIN link l on m.linkId = l.id ' + 
-				'JOIN user sender on m.senderId = sender.id ' + 
-				'JOIN message_category mc on mc.messageId = m.id ' + 
-				'JOIN category c on mc.categoryId = c.id ' + 
-				'WHERE senderId = :id ' +
-					'AND m.deleted = 0 ' +
-				'ORDER BY timeSent DESC'	
+					'sender.email AS senderEmail, ' + 
+					'sender.first_name AS senderName ' +
+				'FROM MESSAGE m ' + 
+				'JOIN LINKS l on m.link_id = l.link_id ' + 
+				'JOIN USERS sender on m.sender_id = sender.user_id ' + 
+				'WHERE m.sender_id = :id'	
 			),
 			{
 				id: userId
@@ -81,88 +61,32 @@ var MessageDB = {
 		return this._getObjects(
 			(
 				'SELECT ' + 
-					'm.id, ' +
-					'm.linkId, ' +
+					'm.message_id, ' +
+					'm.link_id, ' +
 					'm.note, ' +
 					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
 					'm.isRead, ' + 
-					'm.favorited, ' +
 					'l.url, ' + 
+					'l.img_url ' +
 					'l.title, ' + 
 					'l.description, ' + 
-					'l.imgUrl, ' + 
 					'sender.email AS senderEmail, ' + 
-					// 'sender.displayName AS senderName, ' +
-					'sender.firstName AS senderFirstName, ' +
-					'sender.lastName AS senderLastName, ' +
-
-					'sender.imgUrl AS senderImg, ' +
-					'c.name AS categoryName ' +
-				'FROM message m ' + 
-				'JOIN link l on m.linkId = l.id ' + 
-				'JOIN user sender on m.senderId = sender.id ' + 
-				'JOIN message_category mc on mc.messageId = m.id ' + 
-				'JOIN category c on mc.categoryId = c.id ' + 
-				'WHERE m.recipientId = :id ' +
-					'AND m.deleted = 0 ' +
-				'ORDER BY timeSent DESC'  
+					'sender.first_name AS senderName ' +
+				'FROM MESSAGE m ' + 
+				'JOIN LINKS l on m.link_id = l.link_id ' + 
+				'JOIN USERS sender on m.sender_id = sender.user_id ' + 
+				'WHERE m.recipient_id = :id'
 			),
 			{
 				id: userId
 			}
 		);
-	},	
-
-	getStarredMessages(userId) {
-		return this._getObjects(
-			(
-				'SELECT ' + 
-					'm.id, ' +
-					'm.linkId, ' +
-					'm.note, ' +
-					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
-					'm.isRead, ' + 
-					'm.favorited, ' +
-					'l.url, ' + 
-					'l.title, ' + 
-					'l.description, ' + 
-					'l.imgUrl, ' + 
-					'sender.email AS senderEmail, ' + 
-					// 'sender.displayName AS senderName, ' +
-					'sender.firstName AS senderFirstName, ' +
-					'sender.lastName AS senderLastName, ' +
-					
-					'sender.imgUrl AS senderImg, ' +
-					'c.name AS categoryName ' +
-				'FROM message m ' + 
-				'JOIN link l on m.linkId = l.id ' + 
-				'JOIN user sender on m.senderId = sender.id ' +
-				'JOIN message_category mc on mc.messageId = m.id ' + 
-				'JOIN category c on mc.categoryId = c.id ' +  
-				'WHERE (m.senderId = :id OR m.recipientId = :id) ' + 
-					'AND m.favorited = 1 ' +
-					'AND m.deleted = 0 ' +
-				'ORDER BY timeSent DESC'
-			),
-			{
-				id: userId
-			}
-		);
-	},
-
-	favoriteMessage(messageId) {
-		var hello, goodbye;
-		return this._connection
-			.queryAsync(
-				'UPDATE message SET favorited = NOT favorited WHERE id = :id', 
-				{id: messageId}
-			);
 	},
 
 	markDeleted(messageId) {
 		return this._connection
 			.queryAsync(
-				'UPDATE message SET deleted = 1 WHERE id = :id',
+				'UPDATE MESSAGE SET deleted = 1 WHERE id = :id',
 				{id: messageId}
 			);
 	},
@@ -170,8 +94,8 @@ var MessageDB = {
 	newMessage(data) {
 		//data =>senderId, url, recipientEmail, note, imgUrl, title, domain, description
 		var recipientId,
-			checkLink = this._connection.queryAsync('SELECT id FROM link WHERE url = :url', {url: data.url}),
-			getRecipient = this._connection.queryAsync('SELECT id FROM user WHERE email = :email', {email: data.recipientEmail});
+			checkLink = this._connection.queryAsync('SELECT link_id FROM LINKS WHERE url = :url', {url: data.url}),
+			getRecipient = this._connection.queryAsync('SELECT user_id FROM USERS WHERE email = :email', {email: data.recipientEmail});
 
 		return Promise.all([checkLink, getRecipient])
 			.then(values => {
@@ -181,7 +105,7 @@ var MessageDB = {
 
 				if (link && link.length > 0) {
 					return this._connection.queryAsync(
-						'INSERT INTO message (linkId, senderId, recipientId, note) ' +
+						'INSERT INTO MESSAGE (link_id, sender_id, recipient_id, note) ' +
 						'VALUES (:linkId, :senderId, :recipientId, :note)',
 						{
 							linkId: link[0].id,
@@ -258,3 +182,37 @@ module.exports = function (connection) {
 	messageDB._connection = connection;
 	return messageDB;
 }
+
+
+	getSearchResults (keyword, platform, direction, type, time, domain, friend, tags)
+		return this._getObjects(
+			(
+				SELECT * FROM MESSAGE m
+				JOIN LINKS l ON m.link_id = l.link_id
+				JOIN LINKS_TAGS lt ON l.link_id = lt.link_id
+				JOIN TAGS t ON lt.tag_id = t.tag_link 
+				JOIN DOMAIN d ON l.domain_id = d.domain_id
+				JOIN PLATFORM p ON l.platform_id = p.platform_id
+				WHERE CONTAINS(m.note, :key)
+				AND CONTAINS (t.tag_text, @tags)
+				AND p.platform_id = :platform_id
+				//Need to get platform id
+				//direction
+				AND l.type == :type 
+				//time
+				AND d.domain_name = :domain
+				AND m.sender_id = :friend OR m.recipient_id = :friend
+				// Need to retrieve friend id
+			),
+			{
+				keyword: keyword,
+				platform: platform,
+				direction: direction,
+				type: type,
+				time: time,
+				domain: domain,
+				friend: friend,
+				tags: tags
+			}
+		);
+	},

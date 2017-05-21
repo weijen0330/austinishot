@@ -6,11 +6,12 @@ DELIMITER //
 CREATE PROCEDURE insert_link (
 	title VARCHAR(127), 
 	description VARCHAR(255),
+	type VARCHAR(127),
 	url VARCHAR(2083)
 )
 	BEGIN
-		INSERT INTO LINKS (title, description, url)
-		VALUES (title, description, url);
+		INSERT INTO LINKS (title, description, type, url)
+		VALUES (title, description, type, url);
 	END
 //
 DELIMITER ;
@@ -38,29 +39,30 @@ CREATE PROCEDURE populate_links_tags (
 	END
 //
 DELIMITER ;
-/* DELIMITER //
+
+DELIMITER //
 CREATE PROCEDURE insert_message (	
-	linkUrl VARCHAR(2083),
+	senturl VARCHAR(2083),
 	senderEmail VARCHAR(127),
 	recipientEmail VARCHAR(127),
 	note VARCHAR(511)
 )
 	BEGIN
-		DECLARE linkid INT;
-		DECLARE senderId INT;
-		DECLARE recipientId INT;
+		DECLARE link_id INT;
+		DECLARE sender_id INT;
+		DECLARE recipient_id INT;
 
-		SELECT id INTO linkid FROM link WHERE url = linkUrl LIMIT 1;
-		SELECT id INTO senderId FROM user WHERE email = senderEmail LIMIT 1;
-		SELECT id INTO recipientId FROM user WHERE email = recipientEmail LIMIT 1;
+		SELECT l.link_id INTO link_id FROM LINKS l WHERE url = senturl LIMIT 1;
+		SELECT user_id INTO sender_id FROM USERS WHERE email = senderEmail LIMIT 1;
+		SELECT user_id INTO recipient_id FROM USERS WHERE email = recipientEmail LIMIT 1;
 
-		INSERT INTO message (linkid, senderId, recipientId, note)
-		VALUES (linkid, senderId, recipientId, note);
+		INSERT INTO MESSAGE (link_id, sender_id, recipient_id, note)
+		VALUES (link_id, sender_id, recipient_id, note);
 	END;
 //
 DELIMITER ;
 
-
+/*
 DELIMITER //
 CREATE PROCEDURE insert_mc (
 	noteIn VARCHAR(511),
@@ -73,20 +75,20 @@ CREATE PROCEDURE insert_mc (
 		SELECT id INTO messageId FROM message WHERE note = noteIn LIMIT 1;
 		SELECT id INTO categoryId FROM category WHERE name = categoryName LIMIT 1;
 
-		INSERT INTO message_category (messageId, categoryId)		
+		INSERT INTO message_category (message_id, category_d)		
 		VALUES (messageId, categoryId);
 	END;
 //
 DELIMITER ;
+*/
 
-
-INSERT INTO domain (name) VALUES 
+INSERT INTO DOMAIN (domain_name) VALUES 
 	('facebook'), 
 	('reddit'), 
 	('buzzfeed'), 
 	('twitter'), 
 	('yahoo');
-*/
+
 
 INSERT INTO TAGS (tag_text) VALUES 
 	('funny'), 
@@ -116,26 +118,31 @@ VALUES
 CALL insert_link (
 	'Facebook', 
 	'Social media site. Connect with old friends, new friends and complete strangers!',
+	'Web Page',
 	'www.facebook.com'
 );
 CALL insert_link (
 	'Reddit',
 	'The front page of the internet',
+	'Web Page',
 	'www.reddit.com'
 );
 CALL insert_link (
 	'Buzzfeed',
 	'Website that has mastered the art of distracting people',
+	'Web Page',
 	'www.buzzfeed.com'
 );
 CALL insert_link (
 	'Twitter',
 	'Share every moment of your life with people who care.',
+	'Web Page',
 	'www.twitter.com'
 );
 CALL insert_link (
 	'Yahoo!',
 	'Jack of all trades, master of none',
+	'Web Page',
 	'www.yahoo.com'
 );
 
@@ -168,7 +175,33 @@ CALL populate_user_links (
 	5,
 	2
 );
-/*
+
+
+CALL populate_links_tags (
+	5,
+	2
+);
+
+CALL populate_links_tags (
+	3,
+	2
+);
+
+CALL populate_links_tags (
+	2,
+	4
+);
+
+CALL populate_links_tags (
+	1,
+	5
+);
+
+CALL populate_links_tags (
+	4,
+	3
+);
+
 CALL insert_message (
 	'www.yahoo.com',
 	'ena@gmail.com',
@@ -206,6 +239,7 @@ CALL insert_message (
 	'Become addicted to facebook please.'
 );
 
+/*
 CALL insert_mc (
 	'check this out, its pretty cool!',
 	'funny'

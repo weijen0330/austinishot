@@ -1,71 +1,40 @@
-// const express = require('express');
-// const app = express();
-// const session = require('express-session');
-// const RedisStore = require('connect-redis')(session);
+const express = require('express');
+const app = express();
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 
-// const bcrypt = require('bcryptjs');
-// const bodyParser = require('body-parser');
-// const morgan = require('morgan');
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
-// const passport = require('passport');
-// const LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
-// const server = require('http').createServer(app)
-// const io = require('socket.io')(server)
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
 
-// const cookieSigSecret = process.env.SIGSECRET;
-// if (!cookieSigSecret) {
-// 	console.error('Please set SIGSECRET');
-// 	process.exit(1);
-// }
+const cookieSigSecret = process.env.SIGSECRET;
+if (!cookieSigSecret) {
+	console.error('Please set SIGSECRET');
+	process.exit(1);
+}
 
-// app.use(morgan('dev'));
-// app.use(bodyParser.json());
-// app.use(session({
-//     secret: cookieSigSecret,
-//     resave: false,
-//     saveUninitialized: false,
-//     store: new RedisStore()
-// }));
-// app.use(express.static(__base + '../client'));
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(session({
+    secret: cookieSigSecret,
+    resave: false,
+    saveUninitialized: false,
+    store: new RedisStore()
+}));
+app.use(express.static(__base + '../client'));
 
 module.exports.start = function (connection) {
-    const express = require('express');
-    const app = express();
-    const session = require('express-session');
-    const RedisStore = require('connect-redis')(session);
-
-    const bcrypt = require('bcrypt');
-    const bodyParser = require('body-parser');
-    const morgan = require('morgan');
-
-    const server = require('http').createServer(app)
-    const io = require('socket.io')(server)
-
-
     const UserDB = require(__base + '/database/user-db')(connection),
         DomainDB = require(__base + '/database/domain-db')(connection),
         MessageDB = require(__base + '/database/message-db')(connection),
         Database = require(__base + '/database/database-module')(connection);
     
-    const passport = require('passport');
-    const LocalStrategy = require('passport-local').Strategy; 
-
-    const cookieSigSecret = process.env.SIGSECRET;
-    if (!cookieSigSecret) {
-        console.error('Please set SIGSECRET');
-        process.exit(1);
-    }
-
-    app.use(morgan('dev'));
-    app.use(bodyParser.json());
-    app.use(session({
-        secret: cookieSigSecret,
-        resave: false,
-        saveUninitialized: false,
-        store: new RedisStore()
-    }));
-
     app.use(passport.initialize());
     //looks at req.session and pulls data off of it and sets on req.user
     app.use(passport.session());   
@@ -104,9 +73,6 @@ module.exports.start = function (connection) {
             })
             .catch(done);
     });
-
-
-    app.use(express.static(__base + '../client'));
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     // API

@@ -1,5 +1,6 @@
 var express = require('express');
 var https = require('https');
+var fs = require('fs');
 var app = express();
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);

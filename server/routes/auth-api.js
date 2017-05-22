@@ -42,9 +42,8 @@ module.exports.Router = function () {
             + authConf.slack.clientID
             + '&scope=' + authConf.slack.scope
             + '&redirect_uri=' + authConf.slack.redirectUri;
-        res.redirect(url);
-        res.send("turned on slack");
-    });
+        request(url);
+});
 
     // Facebook webhook
     router.get('/api/fbwebhook', function(req, res) {
@@ -183,29 +182,31 @@ module.exports.Router = function () {
 
         request(oauthUrl, function (err, res, body) {
             console.log("getting access token");
-            if (!err && res.statusCode === 200) {
+            if (!err && res.statusCode == 200) {
                 var info = JSON.parse(body);
                 authConf.slack.accessToken = info.access_token;
-            }
-        });
+                var slackWeb = new slackWebClient(authConf.slack.accessToken);
 
-        var slackWeb = new slackWebClient(authConf.slack.accessToken);
+                var channelIDs = [];
 
-        var channelIDs = [];
-
-        slackWeb.channels.list(function(channelListErr, channelListInfo) {
-            if (channelListErr) {
-                console.error('Error: Unable to retrieve channel list.');
-            } else {
-                for (var i in channelListInfo.channels) {
-                    slackWeb.channels.history(channelListInfo.channels[i].id, function(channelHistErr, channelHistInfo) {
-                        if (channelHistErr) {
-                            console.error('Error: Unable to retrieve messages for channel with ID: ' + channelListInfo.channels[i].id);
-                        }  else {
-                            console.log(channelHistInfo.messages);
+                slackWeb.channels.list(function(channelListErr, channelListInfo) {
+                    if (channelListErr) {
+                        console.error('Error: Unable to retrieve channel list.');
+                    } else {
+                        for (var i in channelListInfo.channels) {
+                            slackWeb.channels.history(channelListInfo.channels[i].id, function(channelHistErr, channelHistInfo) {
+                                if (channelHistErr) {
+                                    console.error('Error: Unable to retrieve messages for channel with ID: ' + channelListInfo.channels[i].id);
+                                }  else {
+                                    console.log(channelHistInfo.messages);
+                                    res.redirect('https://lynxapp.me');
+                                }
+                            });
                         }
-                    });
-                }
+                    }
+                });
+            } else {
+                console.error('Error: ' + err.message);
             }
         });
 

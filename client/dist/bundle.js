@@ -24135,43 +24135,6 @@
 	    return _class;
 	}(_react2.default.Component);
 	
-	/*
-	                <div style={{display: 'flex', marginBottom: '20px'}}>
-	                    <div className="search-option left">
-
-	                        <button 
-	                            className={this.state.advancedSearch ? "mdl-button mdl-js-button" : "mdl-button mdl-js-button mdl-button--accent"}
-	                            onClick={this.switchSearch.bind(this)}
-	                        >
-	                            Quick Search
-	                        </button>
-
-	                    </div>
-	                    <div className="search-option right">
-	                        <button 
-	                            className={this.state.advancedSearch ? "mdl-button mdl-js-button mdl-button--accent" : "mdl-button mdl-js-button"}
-	                            onClick={this.switchSearch.bind(this)}
-	                        >
-	                            Advanced Search
-	                        </button>
-	                    </div>
-	                </div>
-
-	                {search}
-
-	                // submit btn
-	                <div style={{display: 'flex', marginTop: '30px'}}>
-	                    <button 
-	                        className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" 
-	                        style={{margin: '0 auto'}}
-	                        onClick={this.handleSubmit.bind(this)}
-	                    >
-	                        Search
-	                    </button>
-	                </div> 
-	*/
-
-
 	exports.default = _class;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "search-page.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }

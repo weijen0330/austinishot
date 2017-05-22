@@ -26,7 +26,7 @@ var authConf = {
     'slack' : {
         'clientID' : authTokens.slackClientID,
         'clientSecret' : authTokens.slackClientSecret,
-        'scope': 'channels%3Ahistory+channels%3Aread',
+        'scope': 'channels%3Ahistory+channels%3Aread+im%3Aread+im%3Ahistory+mpim%3Aread+mpim%3Ahistory',
         'redirectUri' : 'https://lynxapp.me/api/auth/slack'
     }
 };
@@ -41,8 +41,8 @@ module.exports.Router = function () {
             + authConf.slack.clientID
             + '&scope=' + authConf.slack.scope
             + '&redirect_uri=' + authConf.slack.redirectUri;
-        request.get(url);
-});
+        res.redirect(url);
+    });
 
     // Facebook webhook
     router.get('/api/fbwebhook', function(req, res) {
@@ -170,13 +170,13 @@ module.exports.Router = function () {
         //     }
         // });
 
-    router.get('/slack', function(req, res) {
+    router.get('/slack', function(slackReq, slackRes) {
         console.log("in /api/auth/slack");
 
         var oauthUrl = 'https://slack.com/api/oauth.access?client_id='
             + authConf.slack.clientID
             + '&client_secret=' + authConf.slack.clientSecret
-            + '&code=' + req.query.code
+            + '&code=' + slackReq.query.code
             + '&redirect_uri=' + authConf.slack.redirectUri;
 
         request(oauthUrl, function (err, res, body) {
@@ -188,17 +188,52 @@ module.exports.Router = function () {
 
                 var channelIDs = [];
 
+                // all public channels
                 slackWeb.channels.list(function(channelListErr, channelListInfo) {
-                    if (channelListErr) {
-                        console.error('Error: Unable to retrieve channel list.');
+                    if (channelListErr || !channelListInfo.ok) {
+                        console.error('Error: Unable to retrieve public channel list.');
                     } else {
                         for (var i in channelListInfo.channels) {
                             slackWeb.channels.history(channelListInfo.channels[i].id, function(channelHistErr, channelHistInfo) {
-                                if (channelHistErr) {
+                                if (channelHistErr || !channelHistInfo.ok) {
                                     console.error('Error: Unable to retrieve messages for channel with ID: ' + channelListInfo.channels[i].id);
-                                }  else {
+                                } else {
                                     console.log(channelHistInfo.messages);
-                                    res.redirect('https://lynxapp.me');
+                                }
+                            });
+                        }
+                    }
+                });
+
+                // all direct messages
+                slackWeb.im.list(function(imListErr, imListInfo) {
+                    if (imListErr || !imListInfo.ok) {
+                        console.error('Error: Unable to retrieve direct message list.');
+                    } else {
+                        for (var i in imListInfo.ims) {
+                            slackWeb.im.history(imListInfo.ims[i].id, function(imHistErr, imHistInfo) {
+                                if (imHistErr || !imHistInfo.ok) {
+                                    console.error('Error: Unable to retrieve messages for direct message with ID: ' + imListInfo.ims[i].id);
+                                } else {
+                                    console.log(imHistInfo.messages);
+                                }
+                            });
+                        }
+                    }
+
+                });
+
+                // all group direct messages
+                slackWeb.mpim.list(function(mpimListErr, mpimListInfo) {
+                    if (mpimListErr || !mpimListInfo.ok) {
+                        console.error('Error: Unable to retrieve group direct message list.');
+                    } else {
+                        for (var i in mpimListInfo.groups) {
+                            slackWeb.mpim.history(mpimListInfo.groups[i].id, function(mpimHistErr, mpimHistInfo) {
+                                if (mpimHistErr || !mpimHistInfo.ok) {
+                                    console.error('Error: Unable to retrieve messages for group direct message with ID: ' + mpimHistInfo.groups[i].id);
+                                } else {
+                                    console.log(mpimHistInfo.messages);
                                 }
                             });
                         }
@@ -208,6 +243,9 @@ module.exports.Router = function () {
                 console.error('Error: ' + err.message);
             }
         });
+
+        slackRes.redirect('https://lynxapp.me');
+
 
         // console.log(channelIDs);
         //

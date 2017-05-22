@@ -1,8 +1,8 @@
 const path = require("path");
 const webpack = require("webpack");
 
-const SRC_DIR = path.join(__dirname, "src");
-const DIST_DIR = path.join(__dirname, "dist");
+const SRC_DIR = path.join(__dirname, "client/src");
+const DIST_DIR = path.join(__dirname, "client/dist");
 
 var config = {
   entry: SRC_DIR + "/index.jsx",

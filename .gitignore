@@ -90,3 +90,6 @@ static/bundle.js.map
 #intellij
 .idea
 #
+
+#vs code
+.vscode

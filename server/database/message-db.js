@@ -183,7 +183,7 @@ module.exports = function (connection) {
 	return messageDB;
 }
 
-
+/*
 	getSearchResults (keyword, platform, direction, type, time, domain, friend, tags)
 		return this._getObjects(
 			(
@@ -216,3 +216,4 @@ module.exports = function (connection) {
 			}
 		);
 	},
+	*/

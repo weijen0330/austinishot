@@ -1,63 +1,99 @@
-const express = require('express');
-const app = express();
-const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
+// const express = require('express');
+// const app = express();
+// const session = require('express-session');
+// const RedisStore = require('connect-redis')(session);
 
-const bcrypt = require('bcryptjs');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
+// const bcrypt = require('bcryptjs');
+// const bodyParser = require('body-parser');
+// const morgan = require('morgan');
 
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+// const passport = require('passport');
+// const LocalStrategy = require('passport-local').Strategy;
 
-const server = require('http').createServer(app)
-const io = require('socket.io')(server)
+// const server = require('http').createServer(app)
+// const io = require('socket.io')(server)
 
-const cookieSigSecret = process.env.SIGSECRET;
-if (!cookieSigSecret) {
-	console.error('Please set SIGSECRET');
-	process.exit(1);
-}
+// const cookieSigSecret = process.env.SIGSECRET;
+// if (!cookieSigSecret) {
+// 	console.error('Please set SIGSECRET');
+// 	process.exit(1);
+// }
 
-app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(session({
-    secret: cookieSigSecret,
-    resave: false,
-    saveUninitialized: false,
-    store: new RedisStore()
-}));
-app.use(express.static(__base + '../client'));
+// app.use(morgan('dev'));
+// app.use(bodyParser.json());
+// app.use(session({
+//     secret: cookieSigSecret,
+//     resave: false,
+//     saveUninitialized: false,
+//     store: new RedisStore()
+// }));
+// app.use(express.static(__base + '../client'));
 
 module.exports.start = function (connection) {
+    const express = require('express');
+    const app = express();
+    const session = require('express-session');
+    const RedisStore = require('connect-redis')(session);
+
+    const bcrypt = require('bcrypt');
+    const bodyParser = require('body-parser');
+    const morgan = require('morgan');
+
+    const server = require('http').createServer(app)
+    const io = require('socket.io')(server)
+
+
     const UserDB = require(__base + '/database/user-db')(connection),
-        CategoryDB = require(__base + '/database/category-db')(connection),
         DomainDB = require(__base + '/database/domain-db')(connection),
         MessageDB = require(__base + '/database/message-db')(connection),
         Database = require(__base + '/database/database-module')(connection);
+    
+    const passport = require('passport');
+    const LocalStrategy = require('passport-local').Strategy; 
+
+    const cookieSigSecret = process.env.SIGSECRET;
+    if (!cookieSigSecret) {
+        console.error('Please set SIGSECRET');
+        process.exit(1);
+    }
+
+    app.use(morgan('dev'));
+    app.use(bodyParser.json());
+    app.use(session({
+        secret: cookieSigSecret,
+        resave: false,
+        saveUninitialized: false,
+        store: new RedisStore()
+    }));
+
+    app.use(passport.initialize());
+    //looks at req.session and pulls data off of it and sets on req.user
+    app.use(passport.session());   
     
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Authentication
     //
     passport.use(new LocalStrategy({usernameField: 'email'}, function (email, password, done) {
         UserDB.getUserByEmail(email)
-            .then(function (dbUser) {	                
+            .then(function (dbUser) {	                                       
                 if (!dbUser) return done(null, false, {message: 'Incorrect credentials.'});
-                bcrypt.compare(password, dbUser.passwordHash, function (err, matches) {
+                
+                bcrypt.compare(password.trim(), dbUser.passwordHash, function (err, matches) {
                     if (err) return done(err);			
-                    if (!matches) return done(null, false, {message: 'Incorrect credentials'});
+                    
+                    if (!matches) return done(new Error('incorrect creds'), false);
 
                     return done(null, dbUser);
                 });
+
             }).catch(err => console.log(err));
     }));
 
     passport.serializeUser(function (user, done) {
-        return done(null, user.id); 
+        done(null, user.user_id); 
     });
 
     passport.deserializeUser(function (id, done) {
-
         UserDB.getUserById(id)
             .then(function (dbUser) {
                 if (!dbUser) {
@@ -70,9 +106,7 @@ module.exports.start = function (connection) {
     });
 
 
-    app.use(passport.initialize());
-    //looks at req.session and pulls data off of it and sets on req.user
-    app.use(passport.session());   
+    app.use(express.static(__base + '../client'));
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -94,8 +128,8 @@ module.exports.start = function (connection) {
         //might want to do error checking
         //posts new username and new password and other info -> new user obj
         //field validation will be done on the client.
-
-        bcrypt.hash(req.body.password, 10, function (err, passwordHash) {
+        const salt = bcrypt.genSaltSync(10);
+        bcrypt.hash(req.body.password.trim(), salt, function (err, passwordHash) {
             if (err) return next(err);
             // if username is already in db, returns error
             // if not, adds new user to db, returns user information
@@ -127,12 +161,10 @@ module.exports.start = function (connection) {
     });
 
     const usersApi = require(__base + 'routes/user-api.js'),
-        categoryApi = require(__base + 'routes/category-api.js'),
         domainApi = require(__base + 'routes/domain-api.js'),
         messageApi = require(__base + 'routes/message-api.js');
 
     app.use('/api/user', usersApi.Router(UserDB));
-    app.use('/api/category', categoryApi.Router(CategoryDB));
     app.use('/api/domain', domainApi.Router(DomainDB));
     app.use('/api/message', messageApi.Router(MessageDB));    
 

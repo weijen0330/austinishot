@@ -42,8 +42,8 @@ export default class extends React.Component {
                             </div>
                             <div style={{paddingBottom:'20px'}}>                       
                                 Gmail
-                                <input type="checkbox" id="switch3" className="switch"/>
-                                <label htmlFor="switch3">&nbsp;</label>                            
+                                <a href="https://slack.com/oauth/authorize?scope=channels%3Ahistory+channels%3Aread&client_id=169651652005.182345008019&redirect_uri=https://lynxapp.me/api/auth/slack">
+                                <input type="checkbox" id="switch3" className="switch"/><label htmlFor="switch3">&nbsp;</label></a>>
                             </div>
                         </div>                        
                     </div>

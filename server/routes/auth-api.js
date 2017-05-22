@@ -31,7 +31,6 @@ var authConf = {
     }
 };
 
-
 module.exports.Router = function () {
 	var router = express.Router();
 
@@ -42,7 +41,7 @@ module.exports.Router = function () {
             + authConf.slack.clientID
             + '&scope=' + authConf.slack.scope
             + '&redirect_uri=' + authConf.slack.redirectUri;
-        request(url);
+        request.get(url);
 });
 
     // Facebook webhook

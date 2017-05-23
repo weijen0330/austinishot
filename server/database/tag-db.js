@@ -1,8 +1,4 @@
 var TagDB = {
-	// Given a userId, returns a promise containing the categories that have 
-	// appeared in messages that user has received
-	// If userId does not exist in the db or no categories have been found
-	// in relation to that user, returns a promise containing null
 	getTags(userId) {
 		return this._getObjects(
 			(
@@ -14,9 +10,7 @@ var TagDB = {
 				userId: userId
 			}
 		)
-	},
-
-
+	},	
 
 	// Given connection, query and params, returns a promise containing query contents
 	// If query returns no results, returns a promise containing null
@@ -38,7 +32,7 @@ var TagDB = {
 }
 
 module.exports = function (connection) {
-	var TagDB = Object.create(TagDB);
-	TagDB._connection = connection;
-	return TagDB;
+	var tagDB = Object.create(TagDB);
+	tagDB._connection = connection;
+	return tagDB;
 }

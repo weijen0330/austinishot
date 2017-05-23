@@ -33,7 +33,8 @@ module.exports.start = function (connection) {
     const UserDB = require(__base + '/database/user-db')(connection),
         DomainDB = require(__base + '/database/domain-db')(connection),
         MessageDB = require(__base + '/database/message-db')(connection),
-        Database = require(__base + '/database/database-module')(connection);
+        TagDB = require(__base + '/database/tag-db')(connection)            
+    
     
     app.use(passport.initialize());
     //looks at req.session and pulls data off of it and sets on req.user
@@ -126,13 +127,15 @@ module.exports.start = function (connection) {
         }
     });
 
-    const usersApi = require(__base + 'routes/user-api.js'),
-        domainApi = require(__base + 'routes/domain-api.js'),
-        messageApi = require(__base + 'routes/message-api.js');
+    const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
+        domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
+        messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
+        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB);
 
-    app.use('/api/user', usersApi.Router(UserDB));
-    app.use('/api/domain', domainApi.Router(DomainDB));
-    app.use('/api/message', messageApi.Router(MessageDB));    
+    app.use('/api/user', usersApi);
+    app.use('/api/domain', domainApi);
+    app.use('/api/message', messageApi);    
+    app.use('/api/tag', tagApi);
 
     app.use(function (err, req, res, next) {
         console.error(err.stack);

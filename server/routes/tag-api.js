@@ -1,7 +1,7 @@
 var express = require('express');
 var _ = require('lodash');
 
-module.exports.Router = function (CategoryDB) {
+module.exports.Router = function (TagDB) {
 	var router = express.Router();
 
 	/*
@@ -22,17 +22,13 @@ module.exports.Router = function (CategoryDB) {
 	 */
 
 
-	router.get('/', (req, res, next) => {
-		CategoryDB.getCategories(req.user.id)
-			.then(rows => res.json(_.map(rows, 'name')))
-			.catch(next);
-	});	
-
-	router.get('/:messageId', (req, res, next) => {
-		CategoryDB.getCategoriesByMessageId(req.params.messageId)
-		.then(rows => res.json(_.map(rows, 'name')))
-		.catch(next);
-	});
+	// router.get('/', (req, res, next) => {
+	// 	// CategoryDB.getCategories(req.user.id)
+	// 	// 	.then(rows => res.json(_.map(rows, 'name')))
+	// 	// 	.catch(next);
+	// 	console.log(req.user)
+	// 	// TagDB.getTags(req.user.id)
+	// });	
 
 	return router;
 }

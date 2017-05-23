@@ -14,10 +14,10 @@ var slackWebClient = require('@slack/client').WebClient;
 var authTokens = require(__base + 'secret/auth-tokens.json');
 var authConf = {
     'facebook' : {
-        'clientID' : authTokens.fbClientID,
+        'clientID' : authTokens.fbClientID, // also refer to as app-ID
         'clientSecret' : authTokens.fbClientSecret,
         'scope' : 'email, public_profile, user_friends',
-        'redirectUri' :   'https://lynxapp.me'
+        'redirectUri' :   'https://lynxapp.me/api/auth/facebook'
     },
     'gmail' : {
         'clientID': authTokens.gmailClientID,
@@ -50,55 +50,48 @@ module.exports.Router = function () {
         // }
     });
 
-    router.get('/facebook', function(req, res) {
-        // we don't have a code yet
-        // so we'll redirect to the oauth dialog
-        console.log("in facebook oauth");
-        if (!req.query.code) {
-            console.log("no query code");
-            var authUrl = graph.getOauthUrl({
-                "client_id":     authConf.facebook.clientID,
-                "redirect_uri":  authConf.facebook.redirectUri,
-                "scope":         authConf.facebook.scope
-            });
-            if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
-                console.log("redirecting to facebook");
-                res.redirect(authUrl);
-            } else {  //req.query.error == 'access_denied'
-                res.send('access denied');
-            }
-
-        } else {
-            console.log("Oauth successful, the code (whatever it is) is: " + req.query.code);
-            // code is set
-            // we'll send that and get the access token
-            graph.authorize({
-                "client_id":      authConf.facebook.clientID,
-                "redirect_uri":   authConf.facebook.redirectUri,
-                "client_secret":  authConf.facebook.clientSecret,
-                "code":           req.query.code
-            }, function (err, facebookRes) {
-                console.log("redirect to user has logged in");
-                res.redirect('/UserHasLoggedIn');
-            });
-        }
+    router.get('/facebook_oauth', function(req, res) {
+        var oauthUrl = 'https://www.facebook.com/v2.9/dialog/oauth?client_id='
+            + authConf.facebook.clientID
+            + '&scope=' + authConf.facebook.scope
+            + '&redirect_uri=' + authConf.facebook.redirectUri;
+        res.redirect(oauthUrl);
     });
 
-    // user gets sent here after being authorized
-    router.get('/UserHasLoggedIn', function(req, res) {
-        console.log("Facebook account worked!");
-        var fboptions = {
-            timeout:  3000
-            , pool:     { maxSockets:  Infinity }
-            , headers:  { connection:  "keep-alive" }
-        };
+    router.get('/facebook', function(facebookReq, facebookRes) {
+        // we don't have a code yet
+        // so we'll redirect to the oauth dialog
 
-        var reqParam = {
-            fields:"type,caption,description,link"
-        };
-        graph.setOptions(fboptions).get("/me/feed", reqParam, function(err, res) {
-            console.log(res);
+        var apiTokenUrl = 'https://graph.facebook.com/v2.9/oauth/access_token?client_id='
+            + authConf.facebook.clientID
+            + '&redirect_uri=' + authConf.facebook.redirectUri
+            + '&client_secret=' + authConf.facebook.clientSecret
+            + '&code=' + facebookReq.query.code;
+        console.log("in facebook");
+
+        request(apiTokenUrl, function (err, res, body) {
+            if (!err && res.statusCode == 200) {
+                var info = JSON.parse(body);
+                graph.setAccessToken(info.access_token);
+
+                var fboptions = {
+                    timeout:  3000
+                    , pool:     { maxSockets:  Infinity }
+                    , headers:  { connection:  "keep-alive" }
+                };
+
+                var reqParam = {
+                    fields:"type,caption,description,link"
+                };
+
+                graph.setOptions(fboptions).get("/me/feed", reqParam, function(err, res) {
+                    console.log(res);
+                });
+            } else {
+                console.error('Facebook API call error: ' + err.message);
+            }
         });
+        facebookRes.redirect('https://lynxapp.me');
     });
 
     // Gmail
@@ -119,25 +112,23 @@ module.exports.Router = function () {
     // });
 
     router.get('/slack_oauth', (req, res, next) => {
-        // talk to slack here
-        console.log("/slack");
-        var url = 'https://slack.com/oauth/authorize?client_id='
+        var oauthUrl = 'https://slack.com/oauth/authorize?client_id='
             + authConf.slack.clientID
             + '&scope=' + authConf.slack.scope
             + '&redirect_uri=' + authConf.slack.redirectUri;
-        res.redirect(url);
+        res.redirect(oauthUrl);
     });
 
     router.get('/slack', function(slackReq, slackRes) {
         console.log("in /api/auth/slack");
 
-        var oauthUrl = 'https://slack.com/api/oauth.access?client_id='
+        var apiTokenUrl = 'https://slack.com/api/oauth.access?client_id='
             + authConf.slack.clientID
             + '&client_secret=' + authConf.slack.clientSecret
             + '&code=' + slackReq.query.code
             + '&redirect_uri=' + authConf.slack.redirectUri;
 
-        request(oauthUrl, function (err, res, body) {
+        request(apiTokenUrl, function (err, res, body) {
             console.log("getting access token");
             if (!err && res.statusCode == 200) {
                 var info = JSON.parse(body);
@@ -198,7 +189,7 @@ module.exports.Router = function () {
                     }
                 });
             } else {
-                console.error('Error: ' + err.message);
+                console.error('Slack API call error: ' + err.message);
             }
         });
         slackRes.redirect('https://lynxapp.me');

@@ -16,7 +16,7 @@ var authConf = {
     'facebook' : {
         'clientID' : authTokens.fbClientID, // also refer to as app-ID
         'clientSecret' : authTokens.fbClientSecret,
-        'scope' : 'email, public_profile, user_friends',
+        'scope' : 'email, public_profile, user_friends, user_posts',
         'redirectUri' :   'https://lynxapp.me/api/auth/facebook'
     },
     'gmail' : {
@@ -87,8 +87,9 @@ module.exports.Router = function () {
                 graph.setOptions(fboptions).get("/me/feed", reqParam, function(err, res) {
                     console.log(res);
                 });
+
             } else {
-                console.error('Facebook API call error: ' + err.message);
+                console.error('Facebook API call error: ' + err);
             }
         });
         facebookRes.redirect('https://lynxapp.me');
@@ -189,7 +190,7 @@ module.exports.Router = function () {
                     }
                 });
             } else {
-                console.error('Slack API call error: ' + err.message);
+                console.error('Slack API call error: ' + err);
             }
         });
         slackRes.redirect('https://lynxapp.me');

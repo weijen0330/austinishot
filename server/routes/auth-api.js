@@ -53,7 +53,9 @@ module.exports.Router = function () {
     router.get('/facebook', function(req, res) {
         // we don't have a code yet
         // so we'll redirect to the oauth dialog
+        console.log("in facebook oauth");
         if (!req.query.code) {
+            console.log("no query code");
             var authUrl = graph.getOauthUrl({
                 "client_id":     authConf.facebook.clientID,
                 "redirect_uri":  authConf.facebook.redirectUri,
@@ -61,38 +63,40 @@ module.exports.Router = function () {
             });
 
             if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
+                console.log("redirecting to facebook");
                 res.redirect(authUrl);
             } else {  //req.query.error == 'access_denied'
                 res.send('access denied');
             }
-            return;
+
+        } else {
+            console.log("else case");
+            // code is set
+            // we'll send that and get the access token
+            graph.authorize({
+                "client_id":      authConf.facebook.clientID,
+                "redirect_uri":   authConf.facebook.redirectUri,
+                "client_secret":  authConf.facebook.clientSecret,
+                "code":           req.query.code
+            }, function (err, facebookRes) {
+                console.log("redirect to user has logged in");
+                res.redirect('/UserHasLoggedIn');
+            });
         }
-
-        // code is set
-        // we'll send that and get the access token
-        graph.authorize({
-            "client_id":      authConf.facebook.clientID,
-            "redirect_uri":   authConf.facebook.redirectUri,
-            "client_secret":  authConf.facebook.clientSecret,
-            "code":           req.query.code
-        }, function (err, facebookRes) {
-            res.redirect('/UserHasLoggedIn');
-        });
     });
-
-    var fboptions = {
-        timeout:  3000
-        , pool:     { maxSockets:  Infinity }
-        , headers:  { connection:  "keep-alive" }
-    };
-
-    var reqParam = {
-        fields:"type,caption,description,link"
-    };
 
     // user gets sent here after being authorized
     router.get('/UserHasLoggedIn', function(req, res) {
         console.log("Facebook account worked!");
+        var fboptions = {
+            timeout:  3000
+            , pool:     { maxSockets:  Infinity }
+            , headers:  { connection:  "keep-alive" }
+        };
+
+        var reqParam = {
+            fields:"type,caption,description,link"
+        };
         graph.setOptions(fboptions).get("/me/feed", reqParam, function(err, res) {
             console.log(res);
         });

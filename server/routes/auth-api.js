@@ -65,6 +65,15 @@ module.exports.Router = function () {
             if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
                 console.log("redirecting to facebook");
                 res.redirect(authUrl);
+                graph.authorize({
+                    "client_id":      authConf.facebook.clientID,
+                    "redirect_uri":   authConf.facebook.redirectUri,
+                    "client_secret":  authConf.facebook.clientSecret,
+                    "code":           req.query.code
+                }, function (err, facebookRes) {
+                    console.log("redirect to user has logged in");
+                    res.redirect('/UserHasLoggedIn');
+                });
             } else {  //req.query.error == 'access_denied'
                 res.send('access denied');
             }
@@ -73,15 +82,6 @@ module.exports.Router = function () {
             console.log("else case");
             // code is set
             // we'll send that and get the access token
-            graph.authorize({
-                "client_id":      authConf.facebook.clientID,
-                "redirect_uri":   authConf.facebook.redirectUri,
-                "client_secret":  authConf.facebook.clientSecret,
-                "code":           req.query.code
-            }, function (err, facebookRes) {
-                console.log("redirect to user has logged in");
-                res.redirect('/UserHasLoggedIn');
-            });
         }
     });
 

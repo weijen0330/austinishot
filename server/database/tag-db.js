@@ -1,75 +1,21 @@
 var TagDB = {
 	// Given a userId, returns a promise containing the categories that have 
-	// appeared in messages that user has sent/received
+	// appeared in messages that user has received
 	// If userId does not exist in the db or no categories have been found
 	// in relation to that user, returns a promise containing null
 	getTags(userId) {
 		return this._getObjects(
 			(
-				'SELECT DISTINCT t.tag_text FROM TAGS t ' + 
-				'JOIN LINKS_TAGS lt ON t.tag_id = lt.tag_id ' +
-				'JOIN LINKS l ON lt.link_id = l.link_id ' +
-				'JOIN MESSAGE m ON l.link_id = m.link_id ' + 
-				'WHERE m.sender_id = :id OR m.recipient_id = :id'
+				'SELECT DISTINCT t.tag_text AD tag FROM TAGS t ' +
+				'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
+				'WHERE ur.user_id = :userId'
 			),
 			{
-				id: userId
-			}
-		);
-	},
-
-	// Given a messageId, returns a promise containing the categories that 
-	// belong to a message with that message id. 
-	getTagsByMessageId(messageId) {
-		return this._getObjects(
-			(
-				'SELECT DISTINCT t.tag_text FROM MESSAGE m ' + 
-				'JOIN LINKS l ON m.link_id = l.link_id ' +
-				'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
-				'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
-				'WHERE m.message_id = :id'
-			),
-			{
-				id: messageId
+				userId: userId
 			}
 		)
 	},
 
-	getTag(tagName) {
-		var _this = this;
-
-		return _this._connection
-			.queryAsync(
-				(
-					'SELECT tag_id FROM TAGS ' + 
-					'WHERE tag_text LIKE :name ' + 
-					'LIMIT 1'
-				),
-				{
-					name : tagName
-				}
-			)
-			.then(rows => {
-				if (rows && rows.length) {
-					return rows[0].id;
-				} else {
-					return _this._connection
-						.queryAsync(
-							(
-								'INSERT INTO TAGS (tag_text) ' + 
-								'VALUES (:name)'
-							),
-							{
-								name: tagName
-							}
-						)
-						.then(() => {
-							return _this._connection.lastInsertId();
-						});
-				}
-			});
-
-	},
 
 
 	// Given connection, query and params, returns a promise containing query contents

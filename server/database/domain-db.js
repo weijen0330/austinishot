@@ -6,53 +6,14 @@ var DomainDB = {
 	getDomains(userId) {
 		return this._getObjects(
 			(
-				'SELECT DISTINCT d.name FROM domain d ' + 
-				'JOIN link l ON d.id = l.domainId ' +
-				'JOIN message m ON l.id = m.linkId ' +
-				'WHERE m.senderId = :id OR m.recipientId = :id'
-			), 
+				'SELECT d.domain_name AS domain FROM DOMAIN d ' +
+				'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
+				'WHERE ud.user_id = :userId'
+			),
 			{
-				id: userId
+				userId: userId
 			}
-		);
-	},
-
-	// check this
-	getDomain(domainName) {
-		// if domainName already exists, return id
-		// else add that domain name.
-		var _this = this;
-		
-		return _this._connection
-			.queryAsync(
-				(
-					'SELECT id FROM domain ' +
-					'WHERE name LIKE :name ' + 
-					'LIMIT 1'
-				),
-				{
-					name: domainName
-				}
-			)
-			.then(rows => {
-				if (rows && rows.length) {
-					return rows[0].id;
-				} else {
-					return _this._connection
-						.queryAsync(
-							(
-								'INSERT INTO domain (name) ' +
-								'VALUES (:name)'  
-							),
-							{
-								name: domainName
-							}
-						)
-						.then(() => {
-							return _this._connection.lastInsertId()
-						});
-				}
-			});	
+		)
 	},
 
 	// Given connection, query and params, returns a promise containing query contents

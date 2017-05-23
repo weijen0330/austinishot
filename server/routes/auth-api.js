@@ -17,7 +17,7 @@ var authConf = {
         'clientID' : authTokens.fbClientID,
         'clientSecret' : authTokens.fbClientSecret,
         'scope' : 'email, public_profile, user_friends',
-        'redirectUri' :   'http://localhost:1234/auth/facebook'
+        'redirectUri' :   'https://lynxapp.me'
     },
     'gmail' : {
         'clientID': authTokens.gmailClientID,
@@ -40,16 +40,17 @@ module.exports.Router = function () {
 
     // Facebook webhook
     router.get('/facebook_incoming', function(req, res) {
-        if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
-            console.log("Validating webhook");
-            res.status(200).send(req.query['hub.challenge']);
-        } else {
-            console.error("Failed validation. Make sure the validation tokens match.");
-            res.sendStatus(403);
-        }
+        // Facebook challenge. Saving just in case.
+        // if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
+        //     console.log("Validating webhook");
+        //     res.status(200).send(req.query['hub.challenge']);
+        // } else {
+        //     console.error("Failed validation. Make sure the validation tokens match.");
+        //     res.sendStatus(403);
+        // }
     });
 
-    router.get('/auth/facebook', function(req, res) {
+    router.get('/facebook', function(req, res) {
         // we don't have a code yet
         // so we'll redirect to the oauth dialog
         if (!req.query.code) {
@@ -92,7 +93,7 @@ module.exports.Router = function () {
     // user gets sent here after being authorized
     router.get('/UserHasLoggedIn', function(req, res) {
         console.log("Facebook account worked!");
-        graph.setOptions(options).get("/me/feed", reqParam, function(err, res) {
+        graph.setOptions(fboptions).get("/me/feed", reqParam, function(err, res) {
             console.log(res);
         });
     });

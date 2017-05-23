@@ -2,12 +2,16 @@ var express = require('express');
 var _ = require('lodash');
 var request = require('request');
 var fs = require('fs');
+
+var google = require('googleapis');
+var googleAuth = require('google-auth-library');
+
 var graph = require('fbgraph');
+
 var slackWebClient = require('@slack/client').WebClient;
+
+
 var authTokens = require(__base + 'secret/auth-tokens.json');
-
-// put stuff here
-
 var authConf = {
     'facebook' : {
         'clientID' : authTokens.fbClientID,
@@ -34,18 +38,8 @@ var authConf = {
 module.exports.Router = function () {
 	var router = express.Router();
 
-    router.get('/slack_oauth', (req, res, next) => {
-        // talk to slack here
-        console.log("/slack");
-        var url = 'https://slack.com/oauth/authorize?client_id='
-            + authConf.slack.clientID
-            + '&scope=' + authConf.slack.scope
-            + '&redirect_uri=' + authConf.slack.redirectUri;
-        res.redirect(url);
-    });
-
     // Facebook webhook
-    router.get('/api/fbwebhook', function(req, res) {
+    router.get('/facebook_incoming', function(req, res) {
         if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
             console.log("Validating webhook");
             res.status(200).send(req.query['hub.challenge']);
@@ -103,36 +97,6 @@ module.exports.Router = function () {
         });
     });
 
-    /* Parses a string and returns an array of links if there are any. */
-    function regParser(text) {
-        // Resource: https://gist.github.com/dperini/729294
-        // Mmight need to remove escape slashes
-        var re = new RegExp('^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$');
-        var words = text.split().map(function(word) {
-            word.replace('<>', '');
-        });
-        var links = [];
-        var results = {};
-        var url = 'https://info344api.enamarkovic.com/v1/summary?url=';
-        for (var word in words) {
-            // if it is a link, we will call the link summary API
-            if (re.test(word)) {
-                request(url + word, function (error, response, body) {
-                    var JSONresponse = JSON.parse(body);
-                    if (!JSONresponse.ok){
-                        console.log(JSONresponse);
-                        res.send("Error encountered: \n"+JSON.stringify(JSONresponse)).status(200).end();
-                    } else {
-                        console.log(JSONresponse);
-                        res.send("Success!");
-                    }
-                });
-                // links.append(word);
-            }
-        }
-        return results;
-    }
-
     // Gmail
     router.use('/auth/gmail', function() {
         var scope = authTokens.gmail.scope;
@@ -150,25 +114,15 @@ module.exports.Router = function () {
     //     authorize(JSON.parse(content), listLabels);
     // });
 
-        // var options = {
-        //     uri: 'https://slack.com/api/oauth.access?code='
-        //     +req.query.code+
-        //     '&client_id='+ authConf.slack.clientID +
-        //     '&client_secret='+ authConf.slack.clientSecret +
-        //     '&redirect_uri='+ authConf.slack.redirectUri,
-        //     method: 'GET'
-        // };
-        //
-        // request(options, (error, response, body) => {
-        //     var JSONresponse = JSON.parse(body);
-        //     if (!JSONresponse.ok){
-        //         console.log(JSONresponse);
-        //         res.send("Error encountered: \n"+JSON.stringify(JSONresponse)).status(200).end();
-        //     } else {
-        //         console.log(JSONresponse);
-        //         res.send("Success!")
-        //     }
-        // });
+    router.get('/slack_oauth', (req, res, next) => {
+        // talk to slack here
+        console.log("/slack");
+        var url = 'https://slack.com/oauth/authorize?client_id='
+            + authConf.slack.clientID
+            + '&scope=' + authConf.slack.scope
+            + '&redirect_uri=' + authConf.slack.redirectUri;
+        res.redirect(url);
+    });
 
     router.get('/slack', function(slackReq, slackRes) {
         console.log("in /api/auth/slack");
@@ -243,56 +197,23 @@ module.exports.Router = function () {
                 console.error('Error: ' + err.message);
             }
         });
-
         slackRes.redirect('https://lynxapp.me');
-
-
-        // console.log(channelIDs);
-        //
-        // slackWeb.channels.history(function(err, info) {
-        //     if (err) {
-        //         console.error('Error: Unable to retrieve channel messages.');
-        //     } else {
-        //         for (var i in info.) {
-        //
-        //         }
-        //     }
-        // });
     });
 
-    //     var channelListUrl = 'https://slack.com/api/channels.list?token='
-    //         + authConf.slack.accessToken;
-    //
-    //     request(channelListUrl, function(err, res, body) {
-    //         console.log("getting channels");
-    //         if (!err && res.statusCode === 200) {
-    //             var info = JSON.parse(body);
-    //             console.log("channels: " + info.channels);
-    //         }
-    //     });
-    //
-    //     var messagesUrl = 'https://slack.com/api/channels.history?token='
-    //         + authConf.slack.accessToken;
-    //
-    //     request(messagesUrl, function(err, res, body) {
-    //         console.log("getting last 100 messages");
-    //         if (!err && res.statusCode === 200) {
-    //             var info = JSON.parse(body);
-    //             console.log(info);
-    //             console.log("messages: " + info.messages);
-    //         }
-    //     });
-    // });
-
-    router.get('/auth/slack_incoming', function(req, res) {
+    router.get('/slack_incoming', function(req, res) {
+        // This is used to respond to slack challenges. Saved in case
+        // the verification expires in the future.
         if (req.method === 'POST') {
             res.type('html');
-            res.status(200).send();
+            res.status(200).send(req.body.challenge);
             console.log(req.body);
+
+
             console.log(req.body.event);
-            console.log(req.body.event.text);
         }
     });
+
+
 
 	return router;
 };

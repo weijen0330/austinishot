@@ -218,6 +218,10 @@ module.exports.Router = function (MessageDB) {
 		// MessageDb.markRead(messageId)
 		res.send("marking message with id: " + messageId + " as read")
 	})
+
+	router.post('/search', (req, res, next) => {
+		res.json(req.body)
+	})
 	
 
 	return router;

@@ -1,6 +1,9 @@
 var express = require('express');
 var _ = require('lodash');
 
+const fs = require("fs")
+const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).messages
+
 module.exports.Router = function (DomainDB) {
 	var router = express.Router();
 
@@ -9,7 +12,11 @@ module.exports.Router = function (DomainDB) {
 		// 	.then(rows => res.json(_.map(rows, 'name')))
 		// 	.catch(next);
 
-		res.send("sending all domains the user has sent")
+		let domains = []
+		messages.forEach(msg => {
+			domains.push(msg.domainName)
+		})
+		res.json(domains)
 	});
 
 	return router;

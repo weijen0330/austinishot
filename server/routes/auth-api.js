@@ -45,31 +45,33 @@ module.exports.Router = function () {
 	var router = express.Router();
 
     /* Parses a string and returns an array of links if there are any. */
-    var regParser = function(text) {
+    function regParser(text) {
         // Resource: https://gist.github.com/dperini/729294
         // Might need to remove escape slashes
-        console.log('The test is: ' + text);
-        var re = new RegExp('^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$');
-        var words = text.replace(/[<>]/g,'').split(' ');
-        console.log(words);
-        var results = {};
-        var url = 'https://info344api.enamarkovic.com/v1/summary?url=';
-        for (var word in words) {
-            // if it is a link, we will call the link summary API
-            if (re.test(word)) {
-                console.log("Yep! it's a link!");
-                request(url + word, function (error, response, body) {
-                    var JSONresponse = JSON.parse(body);
-                    if (!error){
-                        console.log(JSONresponse);
-                    } else {
-                        console.log(error);
-                    }
-                });
+        if (text) {
+            console.log('The test is: ' + text);
+            var re = new RegExp('^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$');
+            var words = text.replace(/[<>]/g,'').split(' ');
+            console.log(words);
+            var results = {};
+            var url = 'https://info344api.enamarkovic.com/v1/summary?url=';
+            for (var word in words) {
+                // if it is a link, we will call the link summary API
+                if (re.test(word)) {
+                    console.log("Yep! it's a link!");
+                    request(url + word, function (error, response, body) {
+                        var JSONresponse = JSON.parse(body);
+                        if (!error){
+                            console.log(JSONresponse);
+                        } else {
+                            console.log(error);
+                        }
+                    });
+                }
             }
+            return results;    
         }
-        return results;
-    };
+    }
 
     // Facebook oauth: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
     router.get('/facebook_oauth', function(req, res) {
@@ -306,10 +308,12 @@ module.exports.Router = function () {
         //            ts: '1495684015.632873',
         //            channel: 'D51MCEQ1M',
         //            event_ts: '1495684015.632873' },
-        res.status(200);
-        console.log('The test is: ' + req.body.event.text);
-        return regParser(req.body.event.text);
 
+        if (req.body.event.text) {
+            res.status(200).send(regParser(req.body.event.text));
+        } else {
+            res.status(200).send("non-text event");
+        }
     });
 
 	return router;

@@ -27,7 +27,6 @@ function mergeOnCategory(rows) {
 
 const fs = require("fs")
 const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).messages
-console.log(messages)
 
 module.exports.Router = function (MessageDB) {
 	var router = express.Router();

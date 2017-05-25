@@ -1,0 +1,48 @@
+.green-section {
+	background-color: #00d1b2;
+
+}
+
+.green-section .title, .green-section .subtitle {
+	color: white;
+}
+
+.white-section {
+	 background-color: white;
+}
+
+nav { 
+	position: fixed !important; 
+	top: 0; 
+	left: 0; 
+	right: 0; 
+	border-bottom: 1px solid lightgray;
+}
+
+#top-section { 
+	text-align: center;
+}
+
+#main-logo {
+	width: 30%;
+}
+
+.integration {
+	width: 80%;
+}
+
+.title-large {
+	font-size: 35pt;
+}
+
+.screenshot {
+	width: 100%;
+}
+
+.column-pic {
+	text-align: center;
+}
+
+.column-pic > img{
+	width: 50%;
+}

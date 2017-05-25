@@ -130,10 +130,10 @@ module.exports.start = function (connection) {
         tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
         authApi = require(__base + 'routes/auth-api.js');
 
-    app.use('/api/user', usersApi);
-    app.use('/api/domain', domainApi);
-    app.use('/api/message', messageApi);    
-    app.use('/api/tag', tagApi);
+    app.use('/api/users', usersApi);
+    app.use('/api/domains', domainApi);
+    app.use('/api/messages', messageApi);    
+    app.use('/api/tags', tagApi);
     app.use('/api/auth', authApi.Router());
 
     app.use(function (err, req, res, next) {

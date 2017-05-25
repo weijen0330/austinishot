@@ -22420,110 +22420,165 @@
 			_this.state = {
 				view: "All",
 				viewType: "",
-				types: { "All": "fa-link", "Articles": "fa-file-text-o", "Images": "fa-picture-o", "Videos": "fa-video-camera" }
+				types: { "all": "fa-link", "articles": "fa-file-text-o", "images": "fa-picture-o", "videos": "fa-video-camera" },
+	
+				allNew: null,
+				allOld: null,
+				articlesNew: null,
+				articlesOld: null,
+				imagesNew: null,
+				imagesOld: null,
+				videosNew: null,
+				videosOld: null,
+				tags: null,
+				domains: null
 			};
 			return _this;
 		}
+		/*
+	 	componentDidMount() {
+	 		
+	 		fetch("src/data.json")
+	 			.then(response => {
+	 				if (response.ok) {
+	 					return response.json()
+	 				}
+	 				throw new Error("error getting data")
+	 			})
+	 			.then(respData => {
+	 				var articles = respData.articles,
+	 					images = respData.images,
+	 					videos = respData.videos				
+	 				var newAll = [],
+	 					oldAll = [],
+	 					newArticles = [],
+	 					oldArticles = [],					
+	 					newImages = [],
+	 					oldImages = [],
+	 					newVideos = [],
+	 					oldVideos = []				
+	 				
+	 				var tags = {},
+	 					domains = {}
+	 				
+	 							
+	 				articles.forEach(article => {					
+	 					if (article.new) {
+	 						newArticles.push(article)
+	 						newAll.push(article)
+	 					} else {
+	 						oldArticles.push(article)
+	 						oldAll.push(article)
+	 					}					
+	 
+	 					if (article.tags) {						
+	 						(article.tags).forEach(tag => tags[tag] = true)
+	 					}
+	 
+	 					if (article.site_name) {
+	 						domains[article.site_name] = true
+	 					}									
+	 				})	
+	 				images.forEach(img => {
+	 					if (img.new) {
+	 						newImages.push(img)
+	 						newAll.push(img)						
+	 					} else {
+	 						oldImages.push(img)
+	 						oldAll.push(img)
+	 					}
+	 					
+	 					if (img.tags) {
+	 						(img.tags).forEach(tag => tags[tag] = true)
+	 					}					
+	 					if (img.site_name) {
+	 						domains[img.site_name] = true
+	 					}	
+	 				})
+	 				videos.forEach(vid => {
+	 					if (vid.new) {
+	 						newVideos.push(vid)
+	 						newAll.push(vid)
+	 					} else {
+	 						newVideos.push(vid)
+	 						oldAll.push(vid)
+	 					}
+	 
+	 					if (vid.tags) {
+	 						(vid.tags).forEach(tag => tags[tag] = true)
+	 					}					
+	 					if (vid.site_name) {
+	 						domains[vid.site_name] = true
+	 					}	
+	 				})
+	 				this.setState({
+	 					newAll: newAll,
+	 					oldAll: oldAll,
+	 
+	 					newArticles: newArticles,
+	 					oldArticles: oldArticles,
+	 
+	 					newImages: newImages,
+	 					oldImages: oldImages,
+	 
+	 					newVideos: newVideos,
+	 					oldVideos: oldVideos,
+	 
+	 					tags: tags,
+	 					domains: domains
+	 				})
+	 			})
+	 			.catch(err => this.setState({error: err}))
+	 	}	
+	 */
 	
 		_createClass(_class, [{
 			key: "componentDidMount",
 			value: function componentDidMount() {
 				var _this2 = this;
 	
-				fetch("src/data.json").then(function (response) {
-					if (response.ok) {
-						return response.json();
-					}
-					throw new Error("error getting data");
-				}).then(function (respData) {
-					var articles = respData.articles,
-					    images = respData.images,
-					    videos = respData.videos;
-					var newAll = [],
-					    oldAll = [],
-					    newArticles = [],
-					    oldArticles = [],
-					    newImages = [],
-					    oldImages = [],
-					    newVideos = [],
-					    oldVideos = [];
-	
-					var tags = {},
-					    domains = {};
-	
-					articles.forEach(function (article) {
-						if (article.new) {
-							newArticles.push(article);
-							newAll.push(article);
-						} else {
-							oldArticles.push(article);
-							oldAll.push(article);
-						}
-	
-						if (article.tags) {
-							article.tags.forEach(function (tag) {
-								return tags[tag] = true;
-							});
-						}
-	
-						if (article.site_name) {
-							domains[article.site_name] = true;
-						}
-					});
-					images.forEach(function (img) {
-						if (img.new) {
-							newImages.push(img);
-							newAll.push(img);
-						} else {
-							oldImages.push(img);
-							oldAll.push(img);
-						}
-	
-						if (img.tags) {
-							img.tags.forEach(function (tag) {
-								return tags[tag] = true;
-							});
-						}
-						if (img.site_name) {
-							domains[img.site_name] = true;
-						}
-					});
-					videos.forEach(function (vid) {
-						if (vid.new) {
-							newVideos.push(vid);
-							newAll.push(vid);
-						} else {
-							newVideos.push(vid);
-							oldAll.push(vid);
-						}
-	
-						if (vid.tags) {
-							vid.tags.forEach(function (tag) {
-								return tags[tag] = true;
-							});
-						}
-						if (vid.site_name) {
-							domains[vid.site_name] = true;
-						}
-					});
+				fetch("http://localhost:1234/api/messages/new").then(function (response) {
+					return response.json();
+				}).then(function (data) {
 					_this2.setState({
-						newAll: newAll,
-						oldAll: oldAll,
-	
-						newArticles: newArticles,
-						oldArticles: oldArticles,
-	
-						newImages: newImages,
-						oldImages: oldImages,
-	
-						newVideos: newVideos,
-						oldVideos: oldVideos,
-	
-						tags: tags,
-						domains: domains
+						allNew: data,
+						articlesNew: data.filter(function (msg) {
+							return msg.type == "article";
+						}),
+						imagesNew: data.filter(function (msg) {
+							return msg.type == "image";
+						}),
+						videosNew: data.filter(function (msg) {
+							return msg.type == "videos";
+						})
 					});
-				}).catch(function (err) {
-					return _this2.setState({ error: err });
+				});
+				fetch("http://localhost:1234/api/messages/old").then(function (response) {
+					return response.json();
+				}).then(function (data) {
+					_this2.setState({
+						allOld: data,
+						articlesOld: data.filter(function (msg) {
+							return msg.type == "article";
+						}),
+						imagesOld: data.filter(function (msg) {
+							return msg.type == "image";
+						}),
+						videosOld: data.filter(function (msg) {
+							return msg.type == "videos";
+						})
+					});
+				});
+	
+				fetch("http://localhost:1234/api/domains/").then(function (response) {
+					return response.json();
+				}).then(function (data) {
+					return _this2.setState({ domains: data });
+				});
+				fetch("http://localhost:1234/api/tags/").then(function (response) {
+					return response.json();
+				}).then(function (data) {
+					return _this2.setState({ tags: data });
 				});
 			}
 		}, {
@@ -22547,12 +22602,13 @@
 	
 				switch (this.state.view) {
 					case "All":
-						if (this.state.newAll) {
-							newMessages = this.state.newAll;
+						if (this.state.allNew) {
+							newMessages = this.state.allNew;
 						}
-						if (this.state.oldAll) {
-							oldMessages = this.state.oldAll;
+						if (this.state.allOld) {
+							oldMessages = this.state.allOld;
 						}
+	
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
@@ -22562,12 +22618,13 @@
 	
 						break;
 					case "Articles":
-						if (this.state.newArticles) {
-							newMessages = this.state.newArticles;
+						if (this.state.articlesNew) {
+							newMessages = this.state.articlesNew;
 						}
-						if (this.state.oldArticles) {
-							oldMessages = this.state.oldArticles;
+						if (this.state.articlesOld) {
+							oldMessages = this.state.articlesOld;
 						}
+	
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
@@ -22577,12 +22634,13 @@
 	
 						break;
 					case "Images":
-						if (this.state.newImages) {
-							newMessages = this.state.newImages;
+						if (this.state.imagesNew) {
+							newMessages = this.state.imagesNew;
 						}
-						if (this.state.oldImages) {
-							oldMessages = this.state.oldImages;
+						if (this.state.imagesOld) {
+							oldMessages = this.state.imagesOld;
 						}
+	
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
@@ -22592,12 +22650,13 @@
 	
 						break;
 					case "Videos":
-						if (this.state.newVideos) {
-							newMessages = this.state.newVideos;
+						if (this.state.videosNew) {
+							newMessages = this.state.videosNew;
 						}
-						if (this.state.oldVideos) {
-							oldMessages = this.state.oldVideos;
+						if (this.state.videosOld) {
+							oldMessages = this.state.videosOld;
 						}
+	
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
@@ -22607,22 +22666,20 @@
 	
 						break;
 				}
+	
 				switch (this.state.viewType) {
 					case "tag":
-						if (this.state.newAll) {
-							this.state.newAll.filter(function (msg) {
+						if (this.state.allNew) {
+							newMessages = this.state.allNew.filter(function (msg) {
 								return msg.tags.includes(_this3.state.view);
-							}).forEach(function (msg) {
-								return allMessages.push(msg);
 							});
 						}
-						if (this.state.oldAll) {
-							this.state.oldAll.filter(function (msg) {
+						if (this.state.allOld) {
+							oldMessages = this.state.allOld.filter(function (msg) {
 								return msg.tags.includes(_this3.state.view);
-							}).forEach(function (msg) {
-								return allMessages.push(msg);
 							});
 						}
+	
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
@@ -22631,18 +22688,14 @@
 	
 						break;
 					case "domain":
-						if (this.state.newAll) {
-							this.state.newAll.filter(function (msg) {
-								return msg.site_name == _this3.state.view;
-							}).forEach(function (msg) {
-								return allMessages.push(msg);
+						if (this.state.allNew) {
+							newMessages = this.state.allNew.filter(function (msg) {
+								return msg.domainName == _this3.state.view;
 							});
 						}
-						if (this.state.oldAll) {
-							this.state.oldAll.filter(function (msg) {
-								return msg.site_name == _this3.state.view;
-							}).forEach(function (msg) {
-								return allMessages.push(msg);
+						if (this.state.allOld) {
+							newMessages = this.state.allOld.filter(function (msg) {
+								return msg.domainName == _this3.state.view;
 							});
 						}
 						content = _react2.default.createElement(
@@ -22660,10 +22713,10 @@
 					_react2.default.createElement(_sidebar2.default, {
 						view: this.state.view,
 						types: this.state.types,
-						newAll: this.state.newAll,
-						newArticles: this.state.newArticles,
-						newImages: this.state.newImages,
-						newVideos: this.state.newVideos,
+						allNew: this.state.allNew,
+						articlesNew: this.state.articlesNew,
+						imagesNew: this.state.imagesNew,
+						videosNew: this.state.videosNew,
 						tags: this.state.tags,
 						domains: this.state.domains,
 						handleViewChange: function handleViewChange(view, viewType) {
@@ -23681,7 +23734,7 @@
 	                tagsArr = [],
 	                domainsArr = [];
 	
-	            if (this.props.types && this.props.newAll && this.props.newArticles && this.props.newImages && this.props.newVideos) {
+	            if (this.props.types && this.props.allNew && this.props.articlesNew && this.props.imagesNew && this.props.videosNew) {
 	                typesArr = Object.keys(this.props.types).map(function (key) {
 	                    var selected = "";
 	                    if (_this2.props.view === key) {
@@ -23704,21 +23757,21 @@
 	                        _react2.default.createElement(
 	                            "span",
 	                            { style: { marginLeft: '7px' } },
-	                            key
+	                            _this2.capitalizeString(key)
 	                        ),
-	                        _this2.props['new' + key].length ? _react2.default.createElement(
+	                        _this2.props[key + 'New'].length ? _react2.default.createElement(
 	                            "span",
 	                            { className: "tag is-info", style: { float: 'right' } },
-	                            _this2.props['new' + key].length + ' new'
+	                            _this2.props[key + "New"].length + ' new'
 	                        ) : ""
 	                    );
 	                });
 	            }
 	
 	            if (this.props.tags) {
-	                tagsArr = Object.keys(this.props.tags).map(function (tag) {
+	                tagsArr = this.props.tags.map(function (tag) {
 	                    var selected = "";
-	                    if (_this2.props.view === tag) {
+	                    if (_this2.props.view == tag) {
 	                        selected = "is-selected";
 	                    }
 	
@@ -23738,7 +23791,7 @@
 	            }
 	
 	            if (this.props.domains) {
-	                domainsArr = Object.keys(this.props.domains).map(function (dom) {
+	                domainsArr = this.props.domains.map(function (dom) {
 	                    var selected = "";
 	                    if (_this2.props.view === dom) {
 	                        selected = "is-selected";

@@ -12,10 +12,21 @@ export default class extends React.Component {
         this.state = {
 			view: "All",
 			viewType: "",
-			types: {"All" : "fa-link", "Articles" : "fa-file-text-o", "Images": "fa-picture-o", "Videos": "fa-video-camera"}
+			types: {"all" : "fa-link", "articles" : "fa-file-text-o", "images": "fa-picture-o", "videos": "fa-video-camera"},
+			
+			allNew: null,			
+			allOld: null,
+			articlesNew: null,
+			articlesOld: null,
+			imagesNew: null,
+			imagesOld: null,
+			videosNew: null,
+			videosOld: null,
+			tags: null,
+			domains: null
 		};
     }
-
+/*
 	componentDidMount() {
 		
 		fetch("src/data.json")
@@ -110,6 +121,33 @@ export default class extends React.Component {
 			})
 			.catch(err => this.setState({error: err}))
 	}	
+*/
+
+	componentDidMount() {
+		fetch("http://localhost:1234/api/messages/new")
+			.then(response => response.json()).then(data => {
+				this.setState({
+					allNew: data,
+					articlesNew: data.filter(msg => msg.type == "article"),
+					imagesNew: data.filter(msg => msg.type == "image"),
+					videosNew: data.filter(msg => msg.type == "videos")
+				})
+			})
+		fetch("http://localhost:1234/api/messages/old")
+			.then(response => response.json()).then(data => {
+				this.setState({
+					allOld: data,
+					articlesOld: data.filter(msg => msg.type == "article"),
+					imagesOld: data.filter(msg => msg.type == "image"),
+					videosOld: data.filter(msg => msg.type == "videos")
+				})
+		})
+
+		fetch("http://localhost:1234/api/domains/")	
+			.then(response => response.json()).then(data => this.setState({domains: data}))
+		fetch("http://localhost:1234/api/tags/")	
+			.then(response => response.json()).then(data => this.setState({tags: data}))
+	}
 
 	changeView(view, viewType) {
 		if (viewType) {
@@ -127,12 +165,13 @@ export default class extends React.Component {
 
 		switch (this.state.view) {
 			case "All":			
-				if (this.state.newAll) {
-					newMessages = this.state.newAll					
+				if (this.state.allNew) {
+					newMessages = this.state.allNew					
 				}				
-				if (this.state.oldAll) {
-					oldMessages = this.state.oldAll
+				if (this.state.allOld) {
+					oldMessages = this.state.allOld
 				}
+				
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New links" /> : ""}
@@ -142,12 +181,13 @@ export default class extends React.Component {
 
 				break;
 			case "Articles":
-				if (this.state.newArticles) {
-					newMessages = this.state.newArticles
+				if (this.state.articlesNew) {
+					newMessages = this.state.articlesNew
 				}
-				if (this.state.oldArticles) {
-					oldMessages = this.state.oldArticles
+				if (this.state.articlesOld) {
+					oldMessages = this.state.articlesOld
 				}
+
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New articles" /> : ""}
@@ -157,12 +197,13 @@ export default class extends React.Component {
 
 				break;
 			case "Images":
-				if (this.state.newImages) {
-					newMessages = this.state.newImages
+				if (this.state.imagesNew) {
+					newMessages = this.state.imagesNew
 				}
-				if (this.state.oldImages) {
-					oldMessages = this.state.oldImages
+				if (this.state.imagesOld) {
+					oldMessages = this.state.imagesOld
 				}
+
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New images" /> : ""}
@@ -172,12 +213,13 @@ export default class extends React.Component {
 
 				break;
 			case "Videos":
-				if (this.state.newVideos) {
-					newMessages = this.state.newVideos
+				if (this.state.videosNew) {
+					newMessages = this.state.videosNew
 				}
-				if (this.state.oldVideos) {
-					oldMessages = this.state.oldVideos
+				if (this.state.videosOld) {
+					oldMessages = this.state.videosOld
 				}
+				
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New videos" /> : ""}
@@ -187,18 +229,16 @@ export default class extends React.Component {
 
 				break;			
 		}
+
 		switch (this.state.viewType) {
 			case "tag":
-				if (this.state.newAll) {
-					this.state.newAll.filter(msg => {
-						return msg.tags.includes(this.state.view)
-					}).forEach(msg => allMessages.push(msg))
+				if (this.state.allNew) {
+					newMessages = this.state.allNew.filter(msg => msg.tags.includes(this.state.view))
 				}
-				if (this.state.oldAll) {
-					this.state.oldAll.filter(msg => {
-						return msg.tags.includes(this.state.view)
-					}).forEach(msg => allMessages.push(msg))
+				if (this.state.allOld) {
+					oldMessages = this.state.allOld.filter(msg => msg.tags.includes(this.state.view))
 				}
+
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 							{allMessages.length > 0 ? (
@@ -211,15 +251,11 @@ export default class extends React.Component {
 
 				break;
 			case "domain":
-				if (this.state.newAll) {
-					this.state.newAll.filter(msg => {
-						return msg.site_name == this.state.view
-					}).forEach(msg => allMessages.push(msg))
+				if (this.state.allNew) {
+					newMessages = this.state.allNew.filter(msg => msg.domainName == this.state.view)
 				}
-				if (this.state.oldAll) {
-					this.state.oldAll.filter(msg => {
-						return msg.site_name == this.state.view
-					}).forEach(msg => allMessages.push(msg))
+				if (this.state.allOld) {
+					newMessages = this.state.allOld.filter(msg => msg.domainName == this.state.view)
 				}
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
@@ -239,10 +275,10 @@ export default class extends React.Component {
 				<Sidebar 
 					view={this.state.view}
 					types={this.state.types}
-					newAll={this.state.newAll}
-					newArticles={this.state.newArticles}
-					newImages={this.state.newImages}
-					newVideos={this.state.newVideos}
+					allNew={this.state.allNew}
+					articlesNew={this.state.articlesNew}
+					imagesNew={this.state.imagesNew}
+					videosNew={this.state.videosNew}
 					tags={this.state.tags}
 					domains={this.state.domains}
 					handleViewChange={(view, viewType) => this.changeView(view, viewType)}

@@ -110,32 +110,31 @@ module.exports.start = function (connection) {
                 })
                 .catch(next);
         });
-    });
-
-    // MOVE THIS LATER
-    const authApi = require(__base + 'routes/auth-api.js');
-    app.use('/api/auth', authApi.Router());
+    });    
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
-    //
-    app.use(function (req, res, next) {
-        if (req.isAuthenticated()) {
-            return next();
-        } else {
-            res.status(401).json({message: 'Must sign in.'});		
-        }
-    });
+    
+    // un comment this later
+    // app.use(function (req, res, next) {
+    //     if (req.isAuthenticated()) {
+    //         return next();
+    //     } else {
+    //         res.status(401).json({message: 'Must sign in.'});		
+    //     }
+    // });
 
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
         messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
-        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB);
+        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
+        authApi = require(__base + 'routes/auth-api.js');
 
     app.use('/api/user', usersApi);
     app.use('/api/domain', domainApi);
     app.use('/api/message', messageApi);    
     app.use('/api/tag', tagApi);
+    app.use('/api/auth', authApi.Router());
 
     app.use(function (err, req, res, next) {
         console.error(err.stack);

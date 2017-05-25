@@ -17,6 +17,7 @@ export default class extends React.Component {
     }
 
 	componentDidMount() {
+		
 		fetch("src/data.json")
 			.then(response => {
 				if (response.ok) {

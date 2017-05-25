@@ -1,0 +1,64 @@
+{
+    "messages" : [
+        {
+            "messageId" : 1,
+            "sender" : "You",            
+            "note": "lol",
+            "timeSent": "2d",
+            "isRead": false,
+            "platformName" : "facebook",
+            "title" : "One of my favorite jokes from the show, often overlooked.",
+            "description":"Imgur: The most awesome images on the Internet.",
+            "type": "image",        
+            "url" : "https://imgur.com/iKxpRVp",
+            "imageUrl" : "http://i.imgur.com/iKxpRVp.jpg?fb",
+            "domainName" : "Imgur",            
+            "tags" : ["jokes"]            
+        },
+        {
+            "messageId": 4,
+            "sender": "Austin",
+            "note": "look at this cat!",
+            "timeSent": "1w",
+            "isRead": true,
+            "platformName": "slack",
+            "title":"This cat fully shaved... except for its face • r/pics",
+            "description":"69573 points and 1779 comments so far on reddit",
+            "type": "image",
+            "url" : "https://www.reddit.com/r/pics/comments/6aldyx/this_cat_fully_shaved_except_for_its_face/",
+            "imageUrl":"https://i.redditmedia.com/zllR2Yt8livwRfXSuS5rbboBK6OtAGHUQxto9pNqTfM.jpg?w=320&s=9ac436c44065c5804cc7c8c5948a4b55",
+            "domainName": "reddit",
+            "tags" : ["cat", "weird"]
+        },
+        {
+            "messageId": 2,
+            "sender": "Wei-jen",
+            "note": "good to see positive changes",
+            "timeSent": "20min",
+            "isRead": false,
+            "platformName": "slack",
+            "title": "New Amazon Building In Seattle Will Include A Homeless Shelter",
+            "description" : "The company is donating about half the space in a six-story building to a shelter with room for 65 families. Housing prices in Seattle have skyrocketed, along with the city's business fortunes.",
+            "type" : "article",
+            "url" : "http://www.npr.org/sections/thetwo-way/2017/05/10/527801805/new-amazon-building-in-seattle-will-include-a-homeless-shelter",
+            "imageUrl": "https://media.npr.org/assets/img/2017/05/10/gettyimages-528252944_wide-d99acf240d2afca560422bf640c3eeaf8cff4441.jpg?s=1400",
+            "domainName": "NPR.org",    
+            "tags" : ["tech", "amazon", "social-good"]
+        },
+        {   
+            "messageId" : 3,
+            "sender" : "Kimiko",            
+            "note": "lol",
+            "timeSent": "1yr",            
+            "isRead": false,
+            "platformName" : "facebook",
+            "title":"Zach Woods' Silicon Valley Stand-In Is Cooler Than Him",
+            "description":"Zach Woods thinks Silicon Valley's second team stand-ins are too good-looking and cooler than the cast. » Subscribe to Late Night: http://bit.ly/LateNightSet...",
+            "type": "video",   
+            "url" : "https://www.youtube.com/watch?v=BtTLX2J4PF8",
+            "imageUrl":"https://i.ytimg.com/vi/BtTLX2J4PF8/maxresdefault.jpg",
+            "domainName":"YouTube",
+            "tags" : ["funny"]
+        }
+    ]
+}

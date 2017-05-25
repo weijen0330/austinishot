@@ -50,26 +50,32 @@ module.exports.Router = function () {
         // Might need to remove escape slashes
         if (text) {
             console.log('The test is: ' + text);
-            var re = new RegExp('^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$');
+            var re = new RegExp('^(?:(?:https?|ftp|http):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$');
             var words = text.replace(/[<>]/g,'').split(' ');
             console.log(words);
-            var results = {};
+            var results = [];
             var url = 'https://info344api.enamarkovic.com/v1/summary?url=';
-            for (var word in words) {
+            for (var i in words) {
+                console.log('The word is: ' + word);
+                console.log(re.test(word));
                 // if it is a link, we will call the link summary API
                 if (re.test(word)) {
                     console.log("Yep! it's a link!");
                     request(url + word, function (error, response, body) {
-                        var JSONresponse = JSON.parse(body);
                         if (!error){
+                            body.service = "slack";
+                            body.from = "wei-jen";
+                            body.time = Date.now();
+                            var JSONresponse = JSON.parse(body);
                             console.log(JSONresponse);
+                            results.push(JSONresponse);
                         } else {
                             console.log(error);
                         }
                     });
                 }
             }
-            return results;    
+            return results;
         }
     }
 

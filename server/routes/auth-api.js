@@ -56,12 +56,12 @@ module.exports.Router = function () {
             var results = [];
             var url = 'https://info344api.enamarkovic.com/v1/summary?url=';
             for (var i in words) {
-                console.log('The word is: ' + word);
-                console.log(re.test(word));
+                console.log('The word is: ' + words[i]);
+                console.log(re.test(words[i]));
                 // if it is a link, we will call the link summary API
-                if (re.test(word)) {
+                if (re.test(words[i])) {
                     console.log("Yep! it's a link!");
-                    request(url + word, function (error, response, body) {
+                    request(url + words[i], function (error, response, body) {
                         if (!error){
                             body.service = "slack";
                             body.from = "wei-jen";

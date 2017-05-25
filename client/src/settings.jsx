@@ -25,10 +25,19 @@ export default class extends React.Component {
     }
 
     handleIntegrationClick(integration) {
-        this.setState({[integration + 'Checked']: true});
-        
-        fetch('http://localhost:1234/api/auth/' + integration)
-            .then(console.log)
+        let clickedOn = !this.state[integration + 'Checked']
+        this.setState({[integration + 'Checked']: clickedOn});
+        // turned on integration 
+        if (clickedOn) {
+            fetch('http://localhost:1234/api/auth/' + integration)
+                .then(response => {
+                    return response.text()
+                })
+                .then(console.log)
+                .catch(console.log)
+        } else { // turned off
+            // call another endpoint to turn off
+        }
     }
 
     render() {

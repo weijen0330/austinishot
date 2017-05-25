@@ -24724,9 +24724,16 @@
 	    }, {
 	        key: "handleIntegrationClick",
 	        value: function handleIntegrationClick(integration) {
-	            this.setState(_defineProperty({}, integration + 'Checked', true));
-	
-	            fetch('http://localhost:1234/api/auth/' + integration).then(console.log);
+	            var clickedOn = !this.state[integration + 'Checked'];
+	            this.setState(_defineProperty({}, integration + 'Checked', clickedOn));
+	            // turned on integration 
+	            if (clickedOn) {
+	                fetch('http://localhost:1234/api/auth/' + integration).then(function (response) {
+	                    return response.text();
+	                }).then(console.log).catch(console.log);
+	            } else {// turned off
+	                // call another endpoint to turn off
+	            }
 	        }
 	    }, {
 	        key: "render",

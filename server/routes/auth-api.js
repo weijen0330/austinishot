@@ -8,10 +8,19 @@ module.exports.Router = function () {
 	var router = express.Router();
 
     router.get('/slack', (req, res, next) => {        
-        // talk to slack here
+        // authorrize slack
 
         res.send("turned on slack")
     });
+
+    router.get('/facebook', (req, res, next) => {
+        // authorize facebook
+        res.send("turned on facebook")
+    });
+
+    router.get('/gmail', (req, res, next) => {
+        res.send("turned on gmail")
+    })
 
 	return router;
 }

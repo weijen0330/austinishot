@@ -22309,7 +22309,7 @@
 	        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 	
 	        _this.state = {
-	            activeTab: "settings"
+	            activeTab: "browse"
 	        };
 	
 	        return _this;
@@ -22318,31 +22318,9 @@
 	    _createClass(_class, [{
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
-	            console.log(io);
 	            var ws = io("http://localhost:1234");
+	            // example of how to send data - if needed
 	            ws.emit("message", "this is some data");
-	            console.log(ws);
-	            // let ws = new WebSocket("ws://127.0.0.1:1234")
-	            // // ws.send("kjhgjhgkhj")
-	
-	            // ws.onopen = () => {
-	            //     console.log("opened connection")
-	            //     ws.send("hello")
-	            // }
-	
-	            // ws.onmessage = (e) => {
-	            //     console.log('ws message', e.data)
-	            // };
-	
-	            // let intervalId = setInterval(() => {
-	            //     if (ws.readyState === 1) {
-	            //         console.log("ws ready");
-	            //         ws.send("hello")
-	            //         clearInterval(intervalId);
-	            //     } else {
-	            //         console.log('ws.readyState', ws.readyState)
-	            //     }
-	            // }, 10);
 	        }
 	    }, {
 	        key: "handleTabClick",

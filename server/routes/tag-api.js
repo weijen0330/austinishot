@@ -22,13 +22,10 @@ module.exports.Router = function (TagDB) {
 	 */
 
 
-	// router.get('/', (req, res, next) => {
-	// 	// CategoryDB.getCategories(req.user.id)
-	// 	// 	.then(rows => res.json(_.map(rows, 'name')))
-	// 	// 	.catch(next);
-	// 	console.log(req.user)
-	// 	// TagDB.getTags(req.user.id)
-	// });	
+	router.get('/', (req, res, next) => {
+		// TagDB.getTags(req.user.user_id)
+				
+	});	
 
 	return router;
 }

@@ -8,7 +8,8 @@ module.exports.init = async function () {
 		.catch(err => { 
             if (err) throw err; 
         })
-        .then(() => {            
+        .then(() => {        
+            connection.end();    
             return connection
         });
 };

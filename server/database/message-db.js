@@ -88,6 +88,40 @@ var MessageDB = {
 		)
 	},
 
+	getNewMessagesWithType(userId, type) {
+		return this.getMessages(
+			(
+				'WHERE m.recipient_id = :userId ' +
+				'AND m.is_read = :isRead ' + 
+				'AND l.type = :type ' + 
+				'AND m.deleted = :isDeleted'
+			),
+			{
+				userId: userId,
+				isRead: false,
+				type: type,
+				isDeleted: false
+			}
+		)
+	},
+
+	getOldMessagesWithType(userId, type) {
+		return this.getMessages(
+			(
+				'WHERE m.recipient_id = :userId ' +
+				'AND m.is_read = :isRead ' + 
+				'AND l.type = :type ' + 
+				'AND m.deleted = :isDeleted'
+			),
+			{
+				userId: userId,
+				isRead: true,
+				type: type,
+				isDeleted: false
+			}
+		)
+	},
+
 	markRead(messageId) {
 		return this._connection.queryAsync(
 			'UPDATE MESSAGE SET is_read = 1 WHERE message_id = :messageId',

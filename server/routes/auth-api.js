@@ -6,13 +6,6 @@ var fs = require('fs');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
-var oauth2 = google.auth.OAuth2;
-var oauth2Client = new oauth2(
-    authConf.gmail.clientID,
-    authConf.gmail.clientSecret,
-    authConf.gmail.redirectUri
-);
-
 var graph = require('fbgraph');
 
 var slackWebClient = require('@slack/client').WebClient;
@@ -40,6 +33,13 @@ var authConf = {
         'redirectUri' : 'https://lynxapp.me/api/auth/slack'
     }
 };
+
+var oauth2 = google.auth.OAuth2;
+var oauth2Client = new oauth2(
+    authConf.gmail.clientID,
+    authConf.gmail.clientSecret,
+    authConf.gmail.redirectUri
+);
 
 /* Parses a string and returns an array of links if there are any. */
 function regParser(text) {

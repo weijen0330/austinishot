@@ -39,6 +39,7 @@ export default class extends React.Component {
     
     handleSubmit() {
         console.log(this.state)
+        
     }
 
     render() {

@@ -23943,6 +23943,8 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 32);
 	
+	__webpack_require__(/*! whatwg-fetch */ 184);
+	
 	var _advancedSearch = __webpack_require__(/*! ./advanced-search.jsx */ 191);
 	
 	var _advancedSearch2 = _interopRequireDefault(_advancedSearch);
@@ -24004,7 +24006,16 @@
 	    }, {
 	        key: "handleSubmit",
 	        value: function handleSubmit() {
-	            console.log(this.state);
+	            var headers = new Headers();
+	            headers.append("Content-Type", "application/json");
+	
+	            fetch("http://localhost:1234/api/messages/search", {
+	                method: "POST",
+	                headers: headers,
+	                body: JSON.stringify(this.state.search)
+	            }).then(function (response) {
+	                return response.json();
+	            }).then(console.log);
 	        }
 	    }, {
 	        key: "render",

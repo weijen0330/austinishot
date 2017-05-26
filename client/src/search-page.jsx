@@ -1,5 +1,6 @@
 import React from "react";
 import {render} from "react-dom";
+import "whatwg-fetch";
 
 import AdvancedSearch from "./advanced-search.jsx"
 import NormalSearch from "./normal-search.jsx"
@@ -38,8 +39,14 @@ export default class extends React.Component {
     }
     
     handleSubmit() {
-        console.log(this.state)
-        
+        var headers = new Headers()
+        headers.append("Content-Type", "application/json")
+
+        fetch("http://localhost:1234/api/messages/search", {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(this.state.search)
+        }).then(response => response.json()).then(console.log)
     }
 
     render() {

@@ -10,7 +10,7 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-			view: "All",
+			view: "all",
 			viewType: "",
 			types: {"all" : "fa-link", "articles" : "fa-file-text-o", "images": "fa-picture-o", "videos": "fa-video-camera"},
 			
@@ -26,103 +26,6 @@ export default class extends React.Component {
 			domains: null
 		};
     }
-/*
-	componentDidMount() {
-		
-		fetch("src/data.json")
-			.then(response => {
-				if (response.ok) {
-					return response.json()
-				}
-				throw new Error("error getting data")
-			})
-			.then(respData => {
-				var articles = respData.articles,
-					images = respData.images,
-					videos = respData.videos				
-				var newAll = [],
-					oldAll = [],
-					newArticles = [],
-					oldArticles = [],					
-					newImages = [],
-					oldImages = [],
-					newVideos = [],
-					oldVideos = []				
-				
-				var tags = {},
-					domains = {}
-				
-							
-				articles.forEach(article => {					
-					if (article.new) {
-						newArticles.push(article)
-						newAll.push(article)
-					} else {
-						oldArticles.push(article)
-						oldAll.push(article)
-					}					
-
-					if (article.tags) {						
-						(article.tags).forEach(tag => tags[tag] = true)
-					}
-
-					if (article.site_name) {
-						domains[article.site_name] = true
-					}									
-				})	
-				images.forEach(img => {
-					if (img.new) {
-						newImages.push(img)
-						newAll.push(img)						
-					} else {
-						oldImages.push(img)
-						oldAll.push(img)
-					}
-					
-					if (img.tags) {
-						(img.tags).forEach(tag => tags[tag] = true)
-					}					
-					if (img.site_name) {
-						domains[img.site_name] = true
-					}	
-				})
-				videos.forEach(vid => {
-					if (vid.new) {
-						newVideos.push(vid)
-						newAll.push(vid)
-					} else {
-						newVideos.push(vid)
-						oldAll.push(vid)
-					}
-
-					if (vid.tags) {
-						(vid.tags).forEach(tag => tags[tag] = true)
-					}					
-					if (vid.site_name) {
-						domains[vid.site_name] = true
-					}	
-				})
-				this.setState({
-					newAll: newAll,
-					oldAll: oldAll,
-
-					newArticles: newArticles,
-					oldArticles: oldArticles,
-
-					newImages: newImages,
-					oldImages: oldImages,
-
-					newVideos: newVideos,
-					oldVideos: oldVideos,
-
-					tags: tags,
-					domains: domains
-				})
-			})
-			.catch(err => this.setState({error: err}))
-	}	
-*/
-
 	componentDidMount() {
 		fetch("http://localhost:1234/api/messages/new")
 			.then(response => response.json()).then(data => {
@@ -130,7 +33,7 @@ export default class extends React.Component {
 					allNew: data,
 					articlesNew: data.filter(msg => msg.type == "article"),
 					imagesNew: data.filter(msg => msg.type == "image"),
-					videosNew: data.filter(msg => msg.type == "videos")
+					videosNew: data.filter(msg => msg.type == "video")
 				})
 			})
 		fetch("http://localhost:1234/api/messages/old")
@@ -139,7 +42,7 @@ export default class extends React.Component {
 					allOld: data,
 					articlesOld: data.filter(msg => msg.type == "article"),
 					imagesOld: data.filter(msg => msg.type == "image"),
-					videosOld: data.filter(msg => msg.type == "videos")
+					videosOld: data.filter(msg => msg.type == "video")
 				})
 		})
 
@@ -164,7 +67,7 @@ export default class extends React.Component {
 			content = ""
 
 		switch (this.state.view) {
-			case "All":			
+			case "all":			
 				if (this.state.allNew) {
 					newMessages = this.state.allNew					
 				}				
@@ -180,7 +83,7 @@ export default class extends React.Component {
 				)
 
 				break;
-			case "Articles":
+			case "articles":
 				if (this.state.articlesNew) {
 					newMessages = this.state.articlesNew
 				}
@@ -196,7 +99,7 @@ export default class extends React.Component {
 				)
 
 				break;
-			case "Images":
+			case "images":
 				if (this.state.imagesNew) {
 					newMessages = this.state.imagesNew
 				}
@@ -212,7 +115,8 @@ export default class extends React.Component {
 				)
 
 				break;
-			case "Videos":
+			case "videos":
+				console.log(this.state)
 				if (this.state.videosNew) {
 					newMessages = this.state.videosNew
 				}
@@ -233,11 +137,12 @@ export default class extends React.Component {
 		switch (this.state.viewType) {
 			case "tag":
 				if (this.state.allNew) {
-					newMessages = this.state.allNew.filter(msg => msg.tags.includes(this.state.view))
+					newMessages = this.state.allNew.filter(msg => msg.tags.includes(this.state.view))					
 				}
 				if (this.state.allOld) {
 					oldMessages = this.state.allOld.filter(msg => msg.tags.includes(this.state.view))
 				}
+				allMessages = newMessages.concat(oldMessages)
 
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
@@ -255,8 +160,10 @@ export default class extends React.Component {
 					newMessages = this.state.allNew.filter(msg => msg.domainName == this.state.view)
 				}
 				if (this.state.allOld) {
-					newMessages = this.state.allOld.filter(msg => msg.domainName == this.state.view)
+					oldMessages = this.state.allOld.filter(msg => msg.domainName == this.state.view)
 				}
+				allMessages = newMessages.concat(oldMessages)
+
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 							{allMessages.length > 0 ? (

@@ -22418,7 +22418,7 @@
 			var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 	
 			_this.state = {
-				view: "All",
+				view: "all",
 				viewType: "",
 				types: { "all": "fa-link", "articles": "fa-file-text-o", "images": "fa-picture-o", "videos": "fa-video-camera" },
 	
@@ -22435,102 +22435,6 @@
 			};
 			return _this;
 		}
-		/*
-	 	componentDidMount() {
-	 		
-	 		fetch("src/data.json")
-	 			.then(response => {
-	 				if (response.ok) {
-	 					return response.json()
-	 				}
-	 				throw new Error("error getting data")
-	 			})
-	 			.then(respData => {
-	 				var articles = respData.articles,
-	 					images = respData.images,
-	 					videos = respData.videos				
-	 				var newAll = [],
-	 					oldAll = [],
-	 					newArticles = [],
-	 					oldArticles = [],					
-	 					newImages = [],
-	 					oldImages = [],
-	 					newVideos = [],
-	 					oldVideos = []				
-	 				
-	 				var tags = {},
-	 					domains = {}
-	 				
-	 							
-	 				articles.forEach(article => {					
-	 					if (article.new) {
-	 						newArticles.push(article)
-	 						newAll.push(article)
-	 					} else {
-	 						oldArticles.push(article)
-	 						oldAll.push(article)
-	 					}					
-	 
-	 					if (article.tags) {						
-	 						(article.tags).forEach(tag => tags[tag] = true)
-	 					}
-	 
-	 					if (article.site_name) {
-	 						domains[article.site_name] = true
-	 					}									
-	 				})	
-	 				images.forEach(img => {
-	 					if (img.new) {
-	 						newImages.push(img)
-	 						newAll.push(img)						
-	 					} else {
-	 						oldImages.push(img)
-	 						oldAll.push(img)
-	 					}
-	 					
-	 					if (img.tags) {
-	 						(img.tags).forEach(tag => tags[tag] = true)
-	 					}					
-	 					if (img.site_name) {
-	 						domains[img.site_name] = true
-	 					}	
-	 				})
-	 				videos.forEach(vid => {
-	 					if (vid.new) {
-	 						newVideos.push(vid)
-	 						newAll.push(vid)
-	 					} else {
-	 						newVideos.push(vid)
-	 						oldAll.push(vid)
-	 					}
-	 
-	 					if (vid.tags) {
-	 						(vid.tags).forEach(tag => tags[tag] = true)
-	 					}					
-	 					if (vid.site_name) {
-	 						domains[vid.site_name] = true
-	 					}	
-	 				})
-	 				this.setState({
-	 					newAll: newAll,
-	 					oldAll: oldAll,
-	 
-	 					newArticles: newArticles,
-	 					oldArticles: oldArticles,
-	 
-	 					newImages: newImages,
-	 					oldImages: oldImages,
-	 
-	 					newVideos: newVideos,
-	 					oldVideos: oldVideos,
-	 
-	 					tags: tags,
-	 					domains: domains
-	 				})
-	 			})
-	 			.catch(err => this.setState({error: err}))
-	 	}	
-	 */
 	
 		_createClass(_class, [{
 			key: "componentDidMount",
@@ -22549,7 +22453,7 @@
 							return msg.type == "image";
 						}),
 						videosNew: data.filter(function (msg) {
-							return msg.type == "videos";
+							return msg.type == "video";
 						})
 					});
 				});
@@ -22565,7 +22469,7 @@
 							return msg.type == "image";
 						}),
 						videosOld: data.filter(function (msg) {
-							return msg.type == "videos";
+							return msg.type == "video";
 						})
 					});
 				});
@@ -22601,7 +22505,7 @@
 				    content = "";
 	
 				switch (this.state.view) {
-					case "All":
+					case "all":
 						if (this.state.allNew) {
 							newMessages = this.state.allNew;
 						}
@@ -22617,7 +22521,7 @@
 						);
 	
 						break;
-					case "Articles":
+					case "articles":
 						if (this.state.articlesNew) {
 							newMessages = this.state.articlesNew;
 						}
@@ -22633,7 +22537,7 @@
 						);
 	
 						break;
-					case "Images":
+					case "images":
 						if (this.state.imagesNew) {
 							newMessages = this.state.imagesNew;
 						}
@@ -22649,7 +22553,8 @@
 						);
 	
 						break;
-					case "Videos":
+					case "videos":
+						console.log(this.state);
 						if (this.state.videosNew) {
 							newMessages = this.state.videosNew;
 						}
@@ -22679,6 +22584,7 @@
 								return msg.tags.includes(_this3.state.view);
 							});
 						}
+						allMessages = newMessages.concat(oldMessages);
 	
 						content = _react2.default.createElement(
 							"div",
@@ -22694,10 +22600,12 @@
 							});
 						}
 						if (this.state.allOld) {
-							newMessages = this.state.allOld.filter(function (msg) {
+							oldMessages = this.state.allOld.filter(function (msg) {
 								return msg.domainName == _this3.state.view;
 							});
 						}
+						allMessages = newMessages.concat(oldMessages);
+	
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
@@ -23419,7 +23327,7 @@
 	            if (this.props.messages) {
 	                messages = this.props.messages.map(function (msg) {
 	                    return _react2.default.createElement(_message2.default, {
-	                        key: msg.id,
+	                        key: msg.messageId,
 	                        msg: msg
 	                    });
 	                });
@@ -23604,7 +23512,7 @@
 	                        _react2.default.createElement(
 	                            "figure",
 	                            { className: "image", style: { maxHeight: '100%', maxWidth: '100%' } },
-	                            _react2.default.createElement("img", { src: urlData.image, alt: "" })
+	                            _react2.default.createElement("img", { src: urlData.imageUrl, alt: "" })
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -23631,29 +23539,34 @@
 	                                    "small",
 	                                    null,
 	                                    "from ",
-	                                    urlData.site_name
+	                                    urlData.domainName
 	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                "p",
-	                                null,
+	                                { style: { marginBottom: '5px' } },
 	                                _react2.default.createElement(
 	                                    "strong",
 	                                    null,
-	                                    urlData.from
+	                                    urlData.sender
 	                                ),
 	                                _react2.default.createElement(
 	                                    "small",
 	                                    { style: { marginLeft: '5px' } },
 	                                    "via ",
-	                                    urlData.service
+	                                    urlData.platformName
 	                                ),
 	                                _react2.default.createElement(
 	                                    "small",
 	                                    { style: { marginLeft: '5px' } },
-	                                    urlData.time,
+	                                    urlData.timeSent,
 	                                    " ago"
 	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                "p",
+	                                null,
+	                                urlData.note
 	                            )
 	                        )
 	                    )

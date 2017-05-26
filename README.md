@@ -29,7 +29,8 @@ In the db config, add this json object, filling in the blanks
 {
 	"host" : "127.0.0.1",
 	"user" : "root",
-	"password" : ""
+	"password" : "",
+	"db": "lynx"
 }
 ```
 

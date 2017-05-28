@@ -121,15 +121,26 @@ module.exports.start = function (connection) {
         // }
     });
 
+    // Testing w/o routes
+    const fs = require("fs")
+    const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).messages
+    app.get('/api/messages/new', (req, res, next) => {
+		const newMsgs = messages.filter(msg => {
+			return !msg.isRead
+		})
+		res.json(newMsgs)		
+	})
+    //
+
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
-        messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
+        // messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
         tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
         authApi = require(__base + 'routes/auth-api.js').Router();
 
     app.use('/api/users', usersApi);
     app.use('/api/domains', domainApi);
-    app.use('/api/messages', messageApi);    
+    // app.use('/api/messages', messageApi);    
     app.use('/api/tags', tagApi);
     app.use('/api/auth', authApi);
 

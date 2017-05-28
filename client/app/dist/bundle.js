@@ -42,9 +42,9 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!******************************!*\
-  !*** ./client/src/index.jsx ***!
-  \******************************/
+/*!**********************************!*\
+  !*** ./client/app/src/index.jsx ***!
+  \**********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -22253,9 +22253,9 @@
 
 /***/ },
 /* 182 */
-/*!****************************!*\
-  !*** ./client/src/app.jsx ***!
-  \****************************/
+/*!********************************!*\
+  !*** ./client/app/src/app.jsx ***!
+  \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -22366,9 +22366,9 @@
 
 /***/ },
 /* 183 */
-/*!*******************************!*\
-  !*** ./client/src/browse.jsx ***!
-  \*******************************/
+/*!***********************************!*\
+  !*** ./client/app/src/browse.jsx ***!
+  \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -23120,9 +23120,9 @@
 
 /***/ },
 /* 185 */
-/*!****************************************!*\
-  !*** ./client/src/recent-activity.jsx ***!
-  \****************************************/
+/*!********************************************!*\
+  !*** ./client/app/src/recent-activity.jsx ***!
+  \********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -23272,9 +23272,9 @@
 
 /***/ },
 /* 186 */
-/*!*************************************!*\
-  !*** ./client/src/message-area.jsx ***!
-  \*************************************/
+/*!*****************************************!*\
+  !*** ./client/app/src/message-area.jsx ***!
+  \*****************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -23359,9 +23359,9 @@
 
 /***/ },
 /* 187 */
-/*!********************************!*\
-  !*** ./client/src/message.jsx ***!
-  \********************************/
+/*!************************************!*\
+  !*** ./client/app/src/message.jsx ***!
+  \************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -23590,9 +23590,9 @@
 
 /***/ },
 /* 188 */
-/*!********************************!*\
-  !*** ./client/src/sidebar.jsx ***!
-  \********************************/
+/*!************************************!*\
+  !*** ./client/app/src/sidebar.jsx ***!
+  \************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -23782,9 +23782,9 @@
 
 /***/ },
 /* 189 */
-/*!*******************************!*\
-  !*** ./client/src/navbar.jsx ***!
-  \*******************************/
+/*!***********************************!*\
+  !*** ./client/app/src/navbar.jsx ***!
+  \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -23922,9 +23922,9 @@
 
 /***/ },
 /* 190 */
-/*!************************************!*\
-  !*** ./client/src/search-page.jsx ***!
-  \************************************/
+/*!****************************************!*\
+  !*** ./client/app/src/search-page.jsx ***!
+  \****************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -24096,9 +24096,9 @@
 
 /***/ },
 /* 191 */
-/*!****************************************!*\
-  !*** ./client/src/advanced-search.jsx ***!
-  \****************************************/
+/*!********************************************!*\
+  !*** ./client/app/src/advanced-search.jsx ***!
+  \********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -24537,9 +24537,9 @@
 
 /***/ },
 /* 192 */
-/*!**************************************!*\
-  !*** ./client/src/normal-search.jsx ***!
-  \**************************************/
+/*!******************************************!*\
+  !*** ./client/app/src/normal-search.jsx ***!
+  \******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -24633,9 +24633,9 @@
 
 /***/ },
 /* 193 */
-/*!*********************************!*\
-  !*** ./client/src/settings.jsx ***!
-  \*********************************/
+/*!*************************************!*\
+  !*** ./client/app/src/settings.jsx ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {

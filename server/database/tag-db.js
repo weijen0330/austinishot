@@ -1,20 +1,16 @@
-var DomainDB = {
-	// Given a userId, returns a promise containing the domains that have
-	// appeared in messages that user has sent/received
-	// If userId does not exist in db or no domains have been found in relation
-	// to that user, returns a promise containing null
-	getDomains(userId) {
+var TagDB = {
+	getTags(userId) {
 		return this._getObjects(
 			(
-				'SELECT d.domain_name AS domain FROM DOMAIN d ' +
-				'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
-				'WHERE ud.user_id = :userId'
+				'SELECT DISTINCT t.tag_text AD tag FROM TAGS t ' +
+				'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
+				'WHERE ur.user_id = :userId'
 			),
 			{
 				userId: userId
 			}
 		)
-	},
+	},	
 
 	// Given connection, query and params, returns a promise containing query contents
 	// If query returns no results, returns a promise containing null
@@ -36,7 +32,7 @@ var DomainDB = {
 }
 
 module.exports = function (connection) {
-	var domainDB = Object.create(DomainDB);
-	domainDB._connection = connection;
-	return domainDB;
+	var tagDB = Object.create(TagDB);
+	tagDB._connection = connection;
+	return tagDB;
 }

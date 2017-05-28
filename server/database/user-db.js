@@ -19,7 +19,7 @@ var UserDB = {
 		return this._getSingleObject(
 			(
 				'SELECT * FROM USERS u ' + 
-				'WHERE u.id = :id'
+				'WHERE u.user_id = :id'
 			), 
 			{
 				id: userId
@@ -27,27 +27,9 @@ var UserDB = {
 		);
 	},
 
-	// Given a userId, returns a promise containing all users that have send
-	// or received a message from the authenticated user
-	// If userId does not exist in db or no 'friends' have been found, returns
-	// a promise containing null
-	getFriends(userId) {
-		return this._getObjects(
-			(
-				'SELECT DISTINCT u.id, u.email, u.imgUrl FROM user u ' + 
-				'JOIN message m1 ON u.id = m1.recipientId ' + 
-				'JOIN message m2 ON u.id = m2.senderId ' +
-				'WHERE m1.senderId = :id AND m2.recipientId = :id'
-			),
-			{
-				id: userId
-			}
-		);
-	},	
-
 	// if user already exists -> promise resolves with null
 	// if not
-	addUser(firstName, lastName, email, passwordHash) {	
+	addUser(first_name, last_name, email, passwordHash) {	
 		var _this = this;
 		//see notes
 		
@@ -62,11 +44,11 @@ var UserDB = {
 						.queryAsync(
 							(
 								'INSERT INTO USERS (first_name, last_name, email, passwordHash) ' + 
-								'VALUES (:firstName, :lastName, :email, :passwordHash)'
+								'VALUES (:first_name, :last_name, :email, :passwordHash)'
 							), 
 							{
-								firstName: firstName,
-								lastName: lastName,
+								first_name: first_name,
+								last_name: last_name,
 								email: email,
 								passwordHash: passwordHash
 							}
@@ -74,7 +56,7 @@ var UserDB = {
 						.then(() => {
 							return _this.getUserById(_this._connection.lastInsertId())
 								.then(rows => {		
-									return rows ? rows : new Error('DB sad');
+									return rows ? rows : new Error('AHHHHHHH!');
 								});
 						});							
 				}

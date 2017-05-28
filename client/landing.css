@@ -1,0 +1,127 @@
+.arrow {
+  position: fixed;
+
+  bottom: 0;
+  left: 50%;
+  margin-left:-20px;
+}
+
+.bounce {
+	-webkit-animation-name: bounce;
+	-moz-animation-name: bounce;
+	-o-animation-name: bounce;
+	animation-name: bounce;
+}
+.animated{-webkit-animation-fill-mode:both;
+-moz-animation-fill-mode:both;
+-ms-animation-fill-mode:both;
+-o-animation-fill-mode:both;
+
+            animation-iteration-count: infinite;
+       -moz-animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+
+animation-fill-mode:both;
+-webkit-animation-duration:2s;
+-moz-animation-duration:2s;
+-ms-animation-duration:2s;
+-o-animation-duration:2s;
+animation-duration:2s;
+}
+
+
+@-webkit-keyframes bounce {
+	0%, 20%, 50%, 80%, 100% {-webkit-transform: translateY(0);}	40% {-webkit-transform: translateY(-30px);}
+	60% {-webkit-transform: translateY(-15px);}
+}
+
+@-moz-keyframes bounce {
+	0%, 20%, 50%, 80%, 100% {-moz-transform: translateY(0);}
+	40% {-moz-transform: translateY(-30px);}
+	60% {-moz-transform: translateY(-15px);}
+}
+
+@-o-keyframes bounce {
+	0%, 20%, 50%, 80%, 100% {-o-transform: translateY(0);}
+	40% {-o-transform: translateY(-30px);}
+	60% {-o-transform: translateY(-15px);}
+}
+@keyframes bounce {
+	0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+	40% {transform: translateY(-30px);}
+	60% {transform: translateY(-15px);}
+}
+
+section:nth-child(odd) {
+	background-color: #00d1b2;
+
+}
+
+section:nth-child(odd) .title, section:nth-child(odd) .subtitle {
+	color: white;
+}
+
+section:nth-child(even) {
+	 background-color: white;
+}
+
+section:nth-child(odd) p {
+	color: white;
+}
+
+nav { 
+	position: fixed !important; 
+	top: 0; 
+	left: 0; 
+	right: 0; 
+	border-bottom: 1px solid lightgray;
+}
+
+#top-section { 
+	text-align: center;
+}
+
+#main-logo {
+	width: 30%;
+}
+
+.integration {
+	width: 80%;
+}
+
+footer {
+	position: absolute;
+	width: 100%;
+	z-index: 1000;
+}
+
+.title-large {
+	font-weight: 200;
+	color:gray;
+	margin-bottom: 100px;
+	font-size: 60pt;
+}
+
+.screenshot {
+	width: 100%;
+}
+
+.column-pic {
+	text-align: center;
+}
+
+.column-pic > img{
+	width: 50%;
+}
+
+#down-arrow{
+	margin-top: 40px;
+	font-size: 40pt;
+}
+
+.arrow {
+	color: lightgray;
+}
+
+
+

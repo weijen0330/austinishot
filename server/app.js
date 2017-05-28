@@ -1,17 +1,17 @@
-var express = require('express');
-var https = require('https');
-var fs = require('fs');
-var app = express();
-var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
-var bcrypt = require('bcryptjs');
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
+const express = require('express');
+const https = require('https');
+const fs = require('fs');
+const app = express();
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
-var cookieSigSecret = process.env.SIGSECRET;
+const cookieSigSecret = process.env.SIGSECRET;
 if (!cookieSigSecret) {
 	console.error('Please set SIGSECRET');
 	process.exit(1);
@@ -28,22 +28,26 @@ app.use(session({
 app.use(express.static(__base + '../client'));
 
 module.exports.start = function (connection) {
-    var	UserDB = require(__base + '/database/user-db')(connection),
-        CategoryDB = require(__base + '/database/category-db')(connection),
+    const UserDB = require(__base + '/database/user-db')(connection),
         DomainDB = require(__base + '/database/domain-db')(connection),
         MessageDB = require(__base + '/database/message-db')(connection),
-        Database = require(__base + '/database/database-module')(connection);
+        TagDB = require(__base + '/database/tag-db')(connection)            
+    
+    
+    app.use(passport.initialize());
+    //looks at req.session and pulls data off of it and sets on req.user
+    app.use(passport.session());   
     
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Authentication
     //
     passport.use(new LocalStrategy({usernameField: 'email'}, function (email, password, done) {
         UserDB.getUserByEmail(email)
-            .then(function (dbUser) {	                
+            .then(function (dbUser) {
                 if (!dbUser) return done(null, false, {message: 'Incorrect credentials.'});
-                bcrypt.compare(password, dbUser.passwordHash, function (err, matches) {
-                    if (err) return done(err);			
-                    if (!matches) return done(null, false, {message: 'Incorrect credentials'});
+                bcrypt.compare(password.trim(), dbUser.passwordHash, function (err, matches) {
+                    if (err) return done(err);
+                    if (!matches) return done(new Error('incorrect creds'), false);
 
                     return done(null, dbUser);
                 });
@@ -51,11 +55,10 @@ module.exports.start = function (connection) {
     }));
 
     passport.serializeUser(function (user, done) {
-        return done(null, user.id); 
+        done(null, user.user_id); 
     });
 
     passport.deserializeUser(function (id, done) {
-
         UserDB.getUserById(id)
             .then(function (dbUser) {
                 if (!dbUser) {
@@ -67,12 +70,7 @@ module.exports.start = function (connection) {
             .catch(done);
     });
 
-
-    app.use(passport.initialize());
-    //looks at req.session and pulls data off of it and sets on req.user
-    app.use(passport.session());   
-
-     /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
     // API
     //
 
@@ -92,8 +90,8 @@ module.exports.start = function (connection) {
         //might want to do error checking
         //posts new username and new password and other info -> new user obj
         //field validation will be done on the client.
-
-        bcrypt.hash(req.body.password, 10, function (err, passwordHash) {
+        const salt = bcrypt.genSaltSync(10);
+        bcrypt.hash(req.body.password.trim(), salt, function (err, passwordHash) {
             if (err) return next(err);
             // if username is already in db, returns error
             // if not, adds new user to db, returns user information
@@ -109,32 +107,31 @@ module.exports.start = function (connection) {
         });
     });
 
-    // MOVE THIS LATER
-    var authApi = require(__base + 'routes/auth-api.js');
-    app.use('/api/auth', authApi.Router());
-
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
     //
     app.use(function (req, res, next) {
         if (!req.secure) {
             return res.redirect(['https://', req.get('Host'), req.url].join(''));
-        } else if (req.isAuthenticated()) {
-            return next();
-        } else {
-            res.status(401).json({message: 'Must sign in.'});		
         }
+        // else if (req.isAuthenticated()) {
+        //     return next();
+        // } else {
+        //     res.status(401).json({message: 'Must sign in.'});
+        // }
     });
 
-    var usersApi = require(__base + 'routes/user-api.js'),
-        categoryApi = require(__base + 'routes/category-api.js'),
-        domainApi = require(__base + 'routes/domain-api.js'),
-        messageApi = require(__base + 'routes/message-api.js');
+    const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
+        domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
+        messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
+        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
+        authApi = require(__base + 'routes/auth-api.js').Router();
 
-    app.use('/api/user', usersApi.Router(UserDB));
-    app.use('/api/category', categoryApi.Router(CategoryDB));
-    app.use('/api/domain', domainApi.Router(DomainDB));
-    app.use('/api/message', messageApi.Router(MessageDB));    
+    app.use('/api/users', usersApi);
+    app.use('/api/domains', domainApi);
+    app.use('/api/messages', messageApi);    
+    app.use('/api/tags', tagApi);
+    app.use('/api/auth', authApi);
 
     app.use(function (err, req, res, next) {
         console.error(err.stack);
@@ -146,7 +143,14 @@ module.exports.start = function (connection) {
         key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
     };
 
-    var server = https.createServer(options, app);
+    const server = https.createServer(options, app);
+    const io = require('socket.io')(server);
+
+    io.on('connection', socket => {
+        socket.on('message', data => {
+            console.log(data);
+        });
+    });
 
     server.listen(443);
     app.listen(80);

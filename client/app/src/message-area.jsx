@@ -21,7 +21,7 @@ export default class extends React.Component {
             messages = this.props.messages.map(msg => {
                 return (
                     <Message 
-                        key={msg.id}
+                        key={msg.messageId}
                         msg={msg}
                     />
                 )

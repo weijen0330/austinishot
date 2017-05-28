@@ -16,8 +16,8 @@ export default class extends React.Component {
         var typesArr = [],
 			tagsArr = [],
 			domainsArr = []
-
-        if (this.props.types && this.props.newAll && this.props.newArticles && this.props.newImages && this.props.newVideos) {
+        
+        if (this.props.types && this.props.allNew && this.props.articlesNew && this.props.imagesNew && this.props.videosNew) {              
 			typesArr = Object.keys(this.props.types).map(key => {
                 var selected = ""
                 if (this.props.view === key) {
@@ -35,11 +35,11 @@ export default class extends React.Component {
                             <i className={"fa " + this.props.types[key]}></i>
                         </span>
                         
-                        <span style={{marginLeft: '7px'}}>{key}</span>					
+                        <span style={{marginLeft: '7px'}}>{this.capitalizeString(key)}</span>					
 
-                        {this.props['new' + key].length ? (
+                        {this.props[key + 'New'].length ? (
                             <span className="tag is-info" style={{float: 'right'}}>
-                                {this.props['new' + key].length + ' new'}
+                                {this.props[key + "New"].length + ' new'}
                             </span>
                         ) : ""}					
                     </p>
@@ -48,13 +48,13 @@ export default class extends React.Component {
 		}
 
 		if (this.props.tags) {
-			tagsArr = Object.keys(this.props.tags).map(tag => {
+            tagsArr = this.props.tags.map(tag => {
                 var selected = ""
-                if (this.props.view === tag) {
+                if (this.props.view == tag) {
                     selected = "is-selected"
                 }
 
-				return (
+                return (
                     <dd 
                         className={"sidebar-option " + selected} 
                         style={{marginBottom: "5px"}} 
@@ -62,11 +62,11 @@ export default class extends React.Component {
                         onClick={() => this.props.handleViewChange(tag, "tag")}
                     >{this.capitalizeString(tag)}</dd>
                 )
-			})
+            })
 		}
 
 		if (this.props.domains) {
-			domainsArr = Object.keys(this.props.domains).map(dom => {
+			domainsArr = this.props.domains.map(dom => {
                 var selected = ""
                 if (this.props.view === dom) {
                     selected = "is-selected"

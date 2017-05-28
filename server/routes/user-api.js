@@ -11,12 +11,6 @@ module.exports.Router = function (UserDB) {
 			imgUrl: req.user.imgUrl
 		});
 	});
-	
-	router.get('/friends', (req, res, next) => {
-		UserDB.getFriends(req.user.id)
-			.then(rows => res.json(rows))
-			.catch(next);
-	});
 
 	return router;
 }

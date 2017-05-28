@@ -48,7 +48,7 @@ export default class extends React.Component {
                             ref={input => this.addTagInput = input}
                             className="input" 
                             type="text" 
-                            placeholder="Find a repository" 
+                            placeholder="ex. Cute, funny" 
                             style={{height: '27px', fontSize: '0.75rem'}}
                         />
                     </p>
@@ -85,7 +85,7 @@ export default class extends React.Component {
 
                    <div className="media-left" style={{width: '25%'}}>
                        <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>
-                           <img src={urlData.image} alt="" />
+                           <img src={urlData.imageUrl} alt="" />
                        </figure>
                    </div>
 
@@ -95,13 +95,14 @@ export default class extends React.Component {
                            <p>
                                 {urlData.description} 
                                 <br /> 
-                                <small >from {urlData.site_name}</small>
+                                <small >from {urlData.domainName}</small>
                             </p>
-                           <p>
-                               <strong>{urlData.from}</strong>
-                                <small style={{marginLeft: '5px'}}>via {urlData.service}</small>
-                                <small style={{marginLeft: '5px'}}>{urlData.time} ago</small>
+                           <p style={{marginBottom: '5px'}}>
+                               <strong>{urlData.sender}</strong>
+                                <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>
+                                <small style={{marginLeft: '5px'}}>{urlData.timeSent} ago</small>                                
                            </p>
+                           <p>{urlData.note}</p>
                        </div>
                    </div>
                </article>

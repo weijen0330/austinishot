@@ -91,3 +91,6 @@ Vagrantfile
 #intellij
 .idea
 #
+
+#vs code
+.vscode

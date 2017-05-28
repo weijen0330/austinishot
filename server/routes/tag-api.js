@@ -1,10 +1,13 @@
 var express = require('express');
 var _ = require('lodash');
 
-module.exports.Router = function (CategoryDB) {
+const fs = require("fs")
+const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).messages
+
+module.exports.Router = function (TagDB) {
 	var router = express.Router();
 
-	/*
+/*
 	delete specific category 
 	app.delete('/:cat', function (req, res, next) {
 		req.params.cat <- get the param passes in
@@ -19,20 +22,16 @@ module.exports.Router = function (CategoryDB) {
 	app.get('/messages?query=jsdhfs', function req, res, next) {
 		req.query.query <- getting the query
 	});
-	 */
-
+*/
 
 	router.get('/', (req, res, next) => {
-		CategoryDB.getCategories(req.user.id)
-			.then(rows => res.json(_.map(rows, 'name')))
-			.catch(next);
+		// TagDB.getTags(req.user.user_id)
+		let tags = []
+		messages.forEach(msg => {
+			tags = tags.concat(msg.tags)
+		})
+		res.json(tags)
 	});	
-
-	router.get('/:messageId', (req, res, next) => {
-		CategoryDB.getCategoriesByMessageId(req.params.messageId)
-		.then(rows => res.json(_.map(rows, 'name')))
-		.catch(next);
-	});
 
 	return router;
 }

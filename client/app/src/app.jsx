@@ -1,6 +1,7 @@
 import React from "react";
 import {render} from "react-dom";
 import Browse from "./browse.jsx";
+// import * as Socket from 'socket.io-client';
 
 
 import Navbar from './navbar.jsx'
@@ -14,6 +15,12 @@ export default class extends React.Component {
             activeTab: "browse" 
         }
 
+    }
+
+    componentDidMount() {
+        let ws = io("http://localhost:1234")
+        // example of how to send data - if needed
+        ws.emit("message", "this is some data")
     }
 
     handleTabClick(e, newTab) {

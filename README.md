@@ -29,11 +29,12 @@ In the db config, add this json object, filling in the blanks
 {
 	"host" : "127.0.0.1",
 	"user" : "root",
-	"password" : ""
+	"password" : "",
+	"db": "lynx"
 }
 ```
 
-### Starting Vagrant
+### Starting Vagrant for server dev
 
 ```
 $ vagrant up
@@ -60,4 +61,7 @@ It should say:
 listening at http://localhost:1234 (mapped from :80)
 ```
 
-### YOU ARE GOOD TO GO
+### Start webpack for client dev
+```
+$ npm run dev
+```

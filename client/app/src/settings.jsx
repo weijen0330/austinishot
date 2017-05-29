@@ -29,7 +29,7 @@ export default class extends React.Component {
         this.setState({[integration + 'Checked']: clickedOn});
         // turned on integration 
         if (clickedOn) {
-            fetch('https://lynxapp.me/api/auth/' + integration)
+            fetch('https://lynxapp.me/api/auth/' + integration + "_oath")
                 .then(response => {
                     return response.text()
                 })

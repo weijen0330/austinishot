@@ -26740,7 +26740,7 @@
 	    _createClass(_class, [{
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
-	            var ws = io("http://localhost:1234");
+	            var ws = io("https://lynxapp.me");
 	            // example of how to send data - if needed
 	            ws.emit("message", "this is some data");
 	        }
@@ -26863,7 +26863,7 @@
 			value: function componentDidMount() {
 				var _this2 = this;
 	
-				fetch("http://localhost:1234/api/messages/new").then(function (response) {
+				fetch("https://lynxapp.me/api/messages/new").then(function (response) {
 					return response.json();
 				}).then(function (data) {
 					_this2.setState({
@@ -26879,7 +26879,7 @@
 						})
 					});
 				});
-				fetch("http://localhost:1234/api/messages/old").then(function (response) {
+				fetch("https://lyxnapp.me/api/messages/old").then(function (response) {
 					return response.json();
 				}).then(function (data) {
 					_this2.setState({
@@ -26896,12 +26896,12 @@
 					});
 				});
 	
-				fetch("http://localhost:1234/api/domains/").then(function (response) {
+				fetch("https://lynxapp.me/api/domains/").then(function (response) {
 					return response.json();
 				}).then(function (data) {
 					return _this2.setState({ domains: data });
 				});
-				fetch("http://localhost:1234/api/tags/").then(function (response) {
+				fetch("https://lynxapp.me/api/tags/").then(function (response) {
 					return response.json();
 				}).then(function (data) {
 					return _this2.setState({ tags: data });
@@ -28431,7 +28431,7 @@
 	            var headers = new Headers();
 	            headers.append("Content-Type", "application/json");
 	
-	            fetch("http://localhost:1234/api/messages/search", {
+	            fetch("https://lynxapp.me/api/messages/search", {
 	                method: "POST",
 	                headers: headers,
 	                body: JSON.stringify(this.state.search)
@@ -29127,7 +29127,7 @@
 	            this.setState(_defineProperty({}, integration + 'Checked', clickedOn));
 	            // turned on integration 
 	            if (clickedOn) {
-	                fetch('http://localhost:1234/api/auth/' + integration).then(function (response) {
+	                fetch('https://lynxapp.me/api/auth/' + integration).then(function (response) {
 	                    return response.text();
 	                }).then(console.log).catch(console.log);
 	            } else {// turned off

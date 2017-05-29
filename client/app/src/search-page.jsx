@@ -42,7 +42,7 @@ export default class extends React.Component {
         var headers = new Headers()
         headers.append("Content-Type", "application/json")
 
-        fetch("http://localhost:1234/api/messages/search", {
+        fetch("https://lynxapp.me/api/messages/search", {
             method: "POST",
             headers: headers,
             body: JSON.stringify(this.state.search)

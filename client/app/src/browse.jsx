@@ -27,7 +27,7 @@ export default class extends React.Component {
 		};
     }
 	componentDidMount() {
-		fetch("http://localhost:1234/api/messages/new")
+		fetch("https://lynxapp.me/api/messages/new")
 			.then(response => response.json()).then(data => {
 				this.setState({
 					allNew: data,
@@ -36,7 +36,7 @@ export default class extends React.Component {
 					videosNew: data.filter(msg => msg.type == "video")
 				})
 			})
-		fetch("http://localhost:1234/api/messages/old")
+		fetch("https://lyxnapp.me/api/messages/old")
 			.then(response => response.json()).then(data => {
 				this.setState({
 					allOld: data,
@@ -45,10 +45,10 @@ export default class extends React.Component {
 					videosOld: data.filter(msg => msg.type == "video")
 				})
 		})
-
-		fetch("http://localhost:1234/api/domains/")	
+		
+		fetch("https://lynxapp.me/api/domains/")	
 			.then(response => response.json()).then(data => this.setState({domains: data}))
-		fetch("http://localhost:1234/api/tags/")	
+		fetch("https://lynxapp.me/api/tags/")	
 			.then(response => response.json()).then(data => this.setState({tags: data}))
 	}
 

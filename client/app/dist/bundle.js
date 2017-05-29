@@ -29127,7 +29127,7 @@
 	            this.setState(_defineProperty({}, integration + 'Checked', clickedOn));
 	            // turned on integration 
 	            if (clickedOn) {
-	                fetch('https://lynxapp.me/api/auth/' + integration + "_oath").then(function (response) {
+	                fetch('https://lynxapp.me/api/auth/' + integration + "_oauth").then(function (response) {
 	                    return response.text();
 	                }).then(console.log).catch(console.log);
 	            } else {// turned off

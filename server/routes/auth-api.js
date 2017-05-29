@@ -76,6 +76,7 @@ module.exports.Router = function () {
             return results;
         }
     }
+    
 
     // Facebook oauth: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
     router.get('/facebook_oauth', function(req, res) {

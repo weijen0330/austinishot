@@ -20,8 +20,7 @@ if (!cookieSigSecret) {
 
 app.use(morgan('dev'));
 
-// app.use(cors());
-app.options("*", cors())
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(session({
@@ -127,6 +126,8 @@ module.exports.start = function (connection) {
         //     res.status(401).json({message: 'Must sign in.'});
         // }
     // });
+
+    app.options("/api/auth/facebook_oauth", cors())
 
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),

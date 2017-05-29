@@ -36,7 +36,7 @@ export default class extends React.Component {
 					videosNew: data.filter(msg => msg.type == "video")
 				})
 			})
-		fetch("https://lyxnapp.me/api/messages/old")
+		fetch("https://lynxapp.me/api/messages/old")
 			.then(response => response.json()).then(data => {
 				this.setState({
 					allOld: data,

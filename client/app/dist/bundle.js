@@ -26879,7 +26879,7 @@
 						})
 					});
 				});
-				fetch("https://lyxnapp.me/api/messages/old").then(function (response) {
+				fetch("https://lynxapp.me/api/messages/old").then(function (response) {
 					return response.json();
 				}).then(function (data) {
 					_this2.setState({

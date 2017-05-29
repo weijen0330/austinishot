@@ -59,18 +59,20 @@ module.exports.Router = function () {
                 // if it is a link, we will call the link summary API
                 if (re.test(words[i])) {
                     console.log("Yep! it's a link!");
-                    request(url + words[i], function (error, response, body) {
-                        console.log(error)
-                        console.log(body)
-                        // if (!error){
-                        //     var JSONresponse = JSON.parse(body);
-                        //     JSONresponse.service = "slack";
-                        //     JSONresponse.from = "wei-jen";
-                        //     JSONresponse.time = Date.now();
-                        //     results.push(JSONresponse);
-                        // } else {
-                        //     console.log(error);
-                        // }
+                    request(url + words[i], function (error, response, body) {                        
+                        if (!error){
+                            try {
+                                var JSONresponse = JSON.parse(body);
+                                JSONresponse.service = "slack";
+                                JSONresponse.from = "wei-jen";
+                                JSONresponse.time = Date.now();
+                                results.push(JSONresponse);
+                            } catch (e) {
+                                console.log(error)
+                            }                            
+                        } else {
+                            console.log(error);
+                        }
                     });
                 }
             }

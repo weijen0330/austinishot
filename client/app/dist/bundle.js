@@ -29126,7 +29126,7 @@
 	            var clickedOn = !this.state[integration + 'Checked'];
 	            this.setState(_defineProperty({}, integration + 'Checked', clickedOn));
 	
-	            var headers = new Header();
+	            var headers = new Headers();
 	            headers.add("Access-Control-Allow-Credentials", true);
 	
 	            // turned on integration 

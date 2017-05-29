@@ -60,15 +60,17 @@ module.exports.Router = function () {
                 if (re.test(words[i])) {
                     console.log("Yep! it's a link!");
                     request(url + words[i], function (error, response, body) {
-                        if (!error){
-                            var JSONresponse = JSON.parse(body);
-                            JSONresponse.service = "slack";
-                            JSONresponse.from = "wei-jen";
-                            JSONresponse.time = Date.now();
-                            results.push(JSONresponse);
-                        } else {
-                            console.log(error);
-                        }
+                        console.log(error)
+                        console.log(body)
+                        // if (!error){
+                        //     var JSONresponse = JSON.parse(body);
+                        //     JSONresponse.service = "slack";
+                        //     JSONresponse.from = "wei-jen";
+                        //     JSONresponse.time = Date.now();
+                        //     results.push(JSONresponse);
+                        // } else {
+                        //     console.log(error);
+                        // }
                     });
                 }
             }

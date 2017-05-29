@@ -29,7 +29,7 @@ export default class extends React.Component {
         this.setState({[integration + 'Checked']: clickedOn});
 
         let headers = new Headers();
-        headers.append("Access-Control-Allow-Credentials", true)
+        headers.append("Access-Control-Allow-Credentials", "*")
 
         // turned on integration 
         if (clickedOn) {

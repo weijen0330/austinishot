@@ -7,6 +7,7 @@ const RedisStore = require('connect-redis')(session);
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors')
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -18,6 +19,7 @@ if (!cookieSigSecret) {
 }
 
 app.use(morgan('dev'));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(session({
     secret: cookieSigSecret,

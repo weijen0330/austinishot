@@ -1,18 +1,21 @@
 import React from "react";
 import {render} from "react-dom";
 import Browse from "./browse.jsx";
+
 // import * as Socket from 'socket.io-client';
 
 
 import Navbar from './navbar.jsx'
 import SearchPage from './search-page.jsx'
 import Settings from './settings.jsx'
+import Modal from './modal.jsx'
 
 export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: "browse" 
+            activeTab: "browse",
+            modal:"false" 
         }
 
     }
@@ -24,9 +27,17 @@ export default class extends React.Component {
     }
 
     handleTabClick(e, newTab) {
+        console.log("tab click")
         e.preventDefault()
         this.setState({activeTab: newTab})
     }
+
+    handleModalClick(e, modalState) {
+        console.log('clikced')
+        e.preventDefault()
+        this.setState({modal: modalState})
+    }
+
 
     render() {        
 
@@ -48,10 +59,14 @@ export default class extends React.Component {
                 <Navbar 
                     activeTab={this.state.activeTab} 
                     handleTabClick={this.handleTabClick.bind(this)}
-                />                
+                    handleModalClick={this.handleModalClick.bind(this)} /> 
+
+                <Modal active={this.state.modal} />              
+                    
                 {content}
             </div>
         )
 
     }
 }
+

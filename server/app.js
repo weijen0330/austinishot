@@ -127,6 +127,7 @@ module.exports.start = function (connection) {
         // }
     // });
 
+    // tryng to enable preflight
     app.options("/api/auth/facebook_oauth", cors())
 
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),

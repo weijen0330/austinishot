@@ -83,7 +83,8 @@ module.exports.Router = function () {
             + authConf.facebook.clientID
             + '&scope=' + authConf.facebook.scope
             + '&redirect_uri=' + authConf.facebook.redirectUri;
-        res.redirect(oauthUrl);
+        // res.redirect(oauthUrl);
+        res.send(oauthUrl)
     });
 
     router.get('/facebook', function(facebookReq, facebookRes) {

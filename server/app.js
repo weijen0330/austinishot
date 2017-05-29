@@ -110,7 +110,7 @@ module.exports.start = function (connection) {
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
     //
-    app.use(function (req, res, next) {
+    // app.use(function (req, res, next) {
         // redirect is messing up api routes...
         // if (!req.secure) {
         //     return res.redirect(['https://', req.get('Host'), req.url].join(''));
@@ -121,7 +121,7 @@ module.exports.start = function (connection) {
         // } else {
         //     res.status(401).json({message: 'Must sign in.'});
         // }
-    });
+    // });
 
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),

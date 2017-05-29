@@ -17,7 +17,8 @@ var authConf = {
         'clientID' : authTokens.fbClientID, // also refer to as app-ID
         'clientSecret' : authTokens.fbClientSecret, // also refer to as app-secret
         'scope' : 'email, public_profile, user_friends, user_posts',
-        'redirectUri' : 'https://lynxapp.me/api/auth/facebook'
+        // 'redirectUri' : 'https://lynxapp.me/api/auth/facebook'
+        'redirectUri' : 'https://lynxapp.me/app'
     },
     'gmail' : {
         'clientID': authTokens.gmailClientID,

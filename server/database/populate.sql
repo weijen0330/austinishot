@@ -62,6 +62,17 @@ CREATE PROCEDURE insert_message (
 //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE insert_platform (
+	platformName VARCHAR (255)
+)
+	BEGIN
+		INSERT INTO PLATFORM (platform_name)
+		values (platformName)
+	END;
+//
+DELIMITER ;
+
 /*
 DELIMITER //
 CREATE PROCEDURE insert_mc (
@@ -238,6 +249,10 @@ CALL insert_message (
 	'stearns@gmail.com',
 	'Become addicted to facebook please.'
 );
+
+CALL insert_platform("slack");
+CALL insert_platform("facebook");
+CALL insert_platform("gmail");
 
 /*
 CALL insert_mc (

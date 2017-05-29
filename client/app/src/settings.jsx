@@ -34,7 +34,6 @@ export default class extends React.Component {
         // turned on integration 
         if (clickedOn) {
             fetch('https://lynxapp.me/api/auth/' + integration + "_oauth",{
-                method: "GET",
                 headers: headers
             })
                 .then(response => {

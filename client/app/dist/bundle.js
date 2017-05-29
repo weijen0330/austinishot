@@ -29132,7 +29132,6 @@
 	            // turned on integration 
 	            if (clickedOn) {
 	                fetch('https://lynxapp.me/api/auth/' + integration + "_oauth", {
-	                    method: "GET",
 	                    headers: headers
 	                }).then(function (response) {
 	                    return response.text();

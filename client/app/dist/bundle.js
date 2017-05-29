@@ -63,11 +63,11 @@
 	
 	var _app2 = _interopRequireDefault(_app);
 	
-	var _login = __webpack_require__(/*! ./login.jsx */ 242);
+	var _login = __webpack_require__(/*! ./login.jsx */ 240);
 	
 	var _login2 = _interopRequireDefault(_login);
 	
-	var _signup = __webpack_require__(/*! ./signup.jsx */ 243);
+	var _signup = __webpack_require__(/*! ./signup.jsx */ 241);
 	
 	var _signup2 = _interopRequireDefault(_signup);
 	
@@ -29275,9 +29275,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "settings.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 240 */,
-/* 241 */,
-/* 242 */
+/* 240 */
 /*!**********************************!*\
   !*** ./client/app/src/login.jsx ***!
   \**********************************/
@@ -29344,7 +29342,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "login.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 243 */
+/* 241 */
 /*!***********************************!*\
   !*** ./client/app/src/signup.jsx ***!
   \***********************************/

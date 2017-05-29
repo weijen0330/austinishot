@@ -12,9 +12,9 @@ export default class extends React.Component {
         super(props);
         this.state = {
             view: "integration",  
-            facebookChecked: false,
-            slackChecked: false,
-            gmailChecked: false
+            facebookChecked: true,
+            slackChecked: true,
+            gmailChecked: true
         }
 
         this.handleIntegrationClick = this.handleIntegrationClick.bind(this)
@@ -27,21 +27,7 @@ export default class extends React.Component {
     handleIntegrationClick(integration) {
         let clickedOn = !this.state[integration + 'Checked']
         this.setState({[integration + 'Checked']: clickedOn});
-
-        let headers = new Headers();
-        headers.append("Access-Control-Allow-Credentials", "*")
-
-        // turned on integration 
-        if (clickedOn) {
-            fetch('https://lynxapp.me/api/auth/' + integration + "_oauth", {headers: headers})
-                .then(response => {
-                    return response.text()
-                })
-                .then(console.log)
-                .catch(console.log)
-        } else { // turned off
-            // call another endpoint to turn off
-        }
+        
     }
 
     render() {

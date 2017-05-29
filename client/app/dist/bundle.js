@@ -29106,9 +29106,9 @@
 	
 	        _this.state = {
 	            view: "integration",
-	            facebookChecked: false,
-	            slackChecked: false,
-	            gmailChecked: false
+	            facebookChecked: true,
+	            slackChecked: true,
+	            gmailChecked: true
 	        };
 	
 	        _this.handleIntegrationClick = _this.handleIntegrationClick.bind(_this);
@@ -29125,18 +29125,6 @@
 	        value: function handleIntegrationClick(integration) {
 	            var clickedOn = !this.state[integration + 'Checked'];
 	            this.setState(_defineProperty({}, integration + 'Checked', clickedOn));
-	
-	            var headers = new Headers();
-	            headers.append("Access-Control-Allow-Credentials", "*");
-	
-	            // turned on integration 
-	            if (clickedOn) {
-	                fetch('https://lynxapp.me/api/auth/' + integration + "_oauth", { headers: headers }).then(function (response) {
-	                    return response.text();
-	                }).then(console.log).catch(console.log);
-	            } else {// turned off
-	                // call another endpoint to turn off
-	            }
 	        }
 	    }, {
 	        key: "render",

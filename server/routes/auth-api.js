@@ -316,6 +316,9 @@ module.exports.Router = function () {
         //            ts: '1495684015.632873',
         //            channel: 'D51MCEQ1M',
         //            event_ts: '1495684015.632873' },
+        
+        let event = req.body.event
+        console.log(event)
         if (req.body.event.text) {
             res.status(200).send(regParser(req.body.event.text));
         } else {

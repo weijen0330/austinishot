@@ -50,7 +50,7 @@ CREATE TABLE USER_TAGS (
 CREATE TABLE USER_MESSAGES (
 	user_id INT NOT NULL REFERENCES USERS(user_id),
 	message_id INT NOT NULL REFERENCES MESSAGE(message_id),
-	PRIMARY KEY (user_id, link_id)
+	PRIMARY KEY (user_id, message_id)
 );
 
 CREATE TABLE USER_DOMAINS (

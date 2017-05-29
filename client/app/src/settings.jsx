@@ -27,9 +27,16 @@ export default class extends React.Component {
     handleIntegrationClick(integration) {
         let clickedOn = !this.state[integration + 'Checked']
         this.setState({[integration + 'Checked']: clickedOn});
+
+        let headers = new Header();
+        headers.add("Access-Control-Allow-Credentials", true)
+
         // turned on integration 
         if (clickedOn) {
-            fetch('https://lynxapp.me/api/auth/' + integration + "_oauth")
+            fetch('https://lynxapp.me/api/auth/' + integration + "_oauth",{
+                method: "GET",
+                headers: headers
+            })
                 .then(response => {
                     return response.text()
                 })

@@ -29125,9 +29125,16 @@
 	        value: function handleIntegrationClick(integration) {
 	            var clickedOn = !this.state[integration + 'Checked'];
 	            this.setState(_defineProperty({}, integration + 'Checked', clickedOn));
+	
+	            var headers = new Header();
+	            headers.add("Access-Control-Allow-Credentials", true);
+	
 	            // turned on integration 
 	            if (clickedOn) {
-	                fetch('https://lynxapp.me/api/auth/' + integration + "_oauth").then(function (response) {
+	                fetch('https://lynxapp.me/api/auth/' + integration + "_oauth", {
+	                    method: "GET",
+	                    headers: headers
+	                }).then(function (response) {
 	                    return response.text();
 	                }).then(console.log).catch(console.log);
 	            } else {// turned off

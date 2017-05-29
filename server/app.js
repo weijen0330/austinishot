@@ -19,7 +19,10 @@ if (!cookieSigSecret) {
 }
 
 app.use(morgan('dev'));
-app.use(cors());
+
+// app.use(cors());
+app.options("*", cors())
+
 app.use(bodyParser.json());
 app.use(session({
     secret: cookieSigSecret,

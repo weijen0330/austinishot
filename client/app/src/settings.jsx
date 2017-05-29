@@ -28,14 +28,12 @@ export default class extends React.Component {
         let clickedOn = !this.state[integration + 'Checked']
         this.setState({[integration + 'Checked']: clickedOn});
 
-        let headers = new Headers();
-        headers.append("Access-Control-Allow-Credentials", "*")
+        // let headers = new Headers();
+        // headers.append("Access-Control-Allow-Credentials", "*")
 
         // turned on integration 
         if (clickedOn) {
-            fetch('https://lynxapp.me/api/auth/' + integration + "_oauth",{
-                headers: headers
-            })
+            fetch('https://lynxapp.me/api/auth/' + integration + "_oauth")
                 .then(response => {
                     return response.text()
                 })

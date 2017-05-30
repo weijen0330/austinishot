@@ -29359,8 +29359,8 @@
 	            this.setState(_defineProperty({}, prop, value));
 	        }
 	    }, {
-	        key: "handleSignin",
-	        value: function handleSignin() {
+	        key: "handleSignIn",
+	        value: function handleSignIn() {
 	            console.log("state", this.state);
 	        }
 	    }, {

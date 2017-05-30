@@ -19,7 +19,7 @@ export default class extends React.Component {
         this.setState({[prop] : value})        
     }
 
-    handleSignin() {
+    handleSignIn() {
         console.log("state", this.state)
     }
 

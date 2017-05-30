@@ -43,7 +43,7 @@ const oauth2Client = new oauth2(
     authConf.gmail.redirectUri
 );
 
-module.exports.Router = function () {
+module.exports.Router = function (currentUser, MessageDB) {
 	const router = express.Router();
 
     // Parses a string and returns an array of links if there are any.
@@ -381,7 +381,7 @@ module.exports.Router = function () {
         slackRes.status(200).send(linkSummaries);
     });
 
-    router.post('/slack_incoming', function(req, res) {
+    router.post('/slack_incoming', function(req, res) {        
         // This is used to respond to slack challenges. Saved in case
         // the verification expires in the future.
         // res.type('html');
@@ -424,12 +424,14 @@ module.exports.Router = function () {
                     generateLinkSummary(links[0], linkInfo).then(linkSummary => {
                         // add the message to the database
                         console.log("link summary:", linkSummary)
-                    }).then(() => {
-                        console.log("user id: ", req.user.user_id)
+                        return MessageDB.insertMessage(currentUser, linkSummary)
+                    }).then((messageId) => {
+                        
+
                         // send the added message back to the user through web socket
                         // this should broadcast to users       
-                        res.status(200).send(links);
-                    })
+                        res.status(200).send(messageId);
+                    }).catch(console.log)
                 } else {
                     res.status(200).send("did not have a link");
                 }           

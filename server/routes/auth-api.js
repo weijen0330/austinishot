@@ -395,7 +395,7 @@ module.exports.Router = function (MessageDB, socketIo) {
         //          channel: 'D51MCEQ1M',
         //          event_ts: '1495684015.632873' },
         console.log("should emit message")
-        socketIo.emit("message", "hello testing")
+        console.log(socketIo)
         if (req.body.event.text) {            
 
             var info =  req.body.event;
@@ -426,7 +426,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                     generateLinkSummary(links[0], linkInfo).then(linkSummary => {
                         // add the message to the database
                         console.log("link summary:", linkSummary)
-                        return MessageDB.insertMessage(currentUser, linkSummary)
+                        return MessageDB.insertMessage(1, linkSummary)
                     }).then((messageId) => {
                         
 

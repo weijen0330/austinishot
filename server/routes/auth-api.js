@@ -60,12 +60,14 @@ module.exports.Router = function () {
 
             for (i = 0; i < words.length; i++) {
                 console.log('The word is: ' + words[i]);
+                                
                 // if it is a link, we will call the link summary API
-                if (re.test(words[i])) {
+                try {
                     console.log("Yep! it's a link!");
-                    links.push(words[i]);
-                } else {
-                    console.log("not a link ")
+                    const url = new URL(words[i])
+                    links.push(url.href);
+                } catch (e) {
+                    console.log("not a link")
                 }
             }
             return links;

@@ -27934,12 +27934,11 @@
 	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
 	                _react2.default.createElement(
 	                    "div",
-	                    null,
+	                    { style: { textAlign: 'right' } },
 	                    _react2.default.createElement("div", {
 	                        className: this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread",
 	                        onClick: this.handleSeenButtonClicked.bind(this)
-	                    }),
-	                    _react2.default.createElement("a", { style: { float: "right" }, className: "delete" })
+	                    })
 	                ),
 	                _react2.default.createElement(
 	                    "article",

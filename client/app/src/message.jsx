@@ -89,12 +89,11 @@ export default class extends React.Component {
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
                
                {/*unread and delete btns*/}
-               <div>
+               <div style={{textAlign: 'right'}}>
                    <div 
                         className={this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread"}
                         onClick={this.handleSeenButtonClicked.bind(this)}
-                    ></div>
-                   <a style={{float: "right"}} className="delete"></a>
+                    ></div>                   
                </div>
 
                <article className="media" style={{marginBottom: '5px'}}>

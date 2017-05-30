@@ -112,6 +112,10 @@ module.exports.start = function (connection) {
         });
     });
 
+    const options = {
+        cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
+        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
+    };   
     const server = https.createServer(options, app);
     const socketIo = require('socket.io')(server);    
 
@@ -154,12 +158,7 @@ module.exports.start = function (connection) {
     app.use(function (err, req, res, next) {
         console.error(err.stack);
         res.status(err.status || 500).send({message: err.message});
-    });
-
-    const options = {
-        cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
-        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
-    };    
+    });     
 
     server.listen(443);
     app.listen(80);

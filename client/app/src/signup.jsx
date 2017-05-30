@@ -45,6 +45,7 @@ export default class extends React.Component {
                     </div>
                 </article>                
             )
+        }
 
 
         return (                    
@@ -69,7 +70,7 @@ export default class extends React.Component {
                                         <span>Login</span>
                                     </a>
                                 </p>
-                                
+
                             </div>
 
                         </div>

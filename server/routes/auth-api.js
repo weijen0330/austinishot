@@ -419,19 +419,21 @@ module.exports.Router = function () {
                 }
 
                 // parsed data will be the urls 
-                let links = regParser(req.body.event.text, linkInfo)  
-                console.log("got links from parser", links)              
-                
-                // send the urls through 344 handler
-                // generate link summary is expecting url object ( new URL() )
-                generateLinkSummary(links[0], linkInfo).then(linkSummary => {
-                    // add the message to the database
-                    console.log("link summary:", linkSummary)
-                }).then(() => {
-                    // send the added message back to the user through web socket
-                    // this should broadcast to users       
-                    res.status(200).send(links);
-                })
+                let links = regParser(req.body.event.text, linkInfo)            
+                if (links.length > 0) {
+                    // send the urls through 344 handler
+                    // generate link summary is expecting url object ( new URL() )
+                    generateLinkSummary(links[0], linkInfo).then(linkSummary => {
+                        // add the message to the database
+                        console.log("link summary:", linkSummary)
+                    }).then(() => {
+                        // send the added message back to the user through web socket
+                        // this should broadcast to users       
+                        res.status(200).send(links);
+                    })
+                } else {
+                    res.status(200).send("did not have a link");
+                }           
                                                 
                                          
             });

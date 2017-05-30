@@ -27822,7 +27822,8 @@
 	
 	        _this.state = {
 	            editing: false,
-	            tags: _this.props.msg ? _this.props.msg.tags : []
+	            tags: _this.props.msg ? _this.props.msg.tags : [],
+	            isRead: _this.props.msg.isRead
 	        };
 	        return _this;
 	    }
@@ -27850,6 +27851,12 @@
 	            var tags = this.state.tags;
 	            tags = tags.concat(value);
 	            this.setState({ editing: false, tags: tags });
+	        }
+	    }, {
+	        key: "handleSeenButtonClicked",
+	        value: function handleSeenButtonClicked() {
+	            var isRead = this.state.isRead;
+	            this.setState({ isRead: !isRead });
 	        }
 	    }, {
 	        key: "render",
@@ -27928,7 +27935,10 @@
 	                _react2.default.createElement(
 	                    "div",
 	                    null,
-	                    _react2.default.createElement("div", { className: urlData.isRead ? "message-seen-button message-read" : "message-seen-button message-unread" }),
+	                    _react2.default.createElement("div", {
+	                        className: this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread",
+	                        onClick: this.handleSeenButtonClicked.bind(this)
+	                    }),
 	                    _react2.default.createElement("a", { style: { float: "right" }, className: "delete" })
 	                ),
 	                _react2.default.createElement(

@@ -69,7 +69,9 @@ export default class extends React.Component {
                                         <span>Login</span>
                                     </a>
                                 </p>
+                                
                             </div>
+
                         </div>
                     </div>
                 </nav>                
@@ -135,6 +137,7 @@ export default class extends React.Component {
                                 </button>
                             </p>
                         </div> 
+
                     </div>
                 </section>
             </div>

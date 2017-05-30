@@ -29348,8 +29348,8 @@
 	        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 	
 	        _this.state = {
-	            email: "",
-	            password: "",
+	            email: "lynxcapstone@gmail.com",
+	            password: "password",
 	            error: null
 	        };
 	        return _this;

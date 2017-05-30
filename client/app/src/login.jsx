@@ -10,8 +10,8 @@ export default class extends React.Component {
         super(props);
 
         this.state = {
-            email: "",
-            password: "",
+            email: "lynxcapstone@gmail.com",
+            password: "password",
             error: null              
         }
     }

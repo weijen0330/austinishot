@@ -120,7 +120,6 @@ module.exports.start = function (connection) {
     const socketIo = require('socket.io')(server);    
 
     socketIo.on('connection', socket => {
-        app.set("socket", socket)
         socket.on('message', data => {
             console.log(data);
         });
@@ -148,7 +147,7 @@ module.exports.start = function (connection) {
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
         messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
         tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
-        authApi = require(__base + 'routes/auth-api.js').Router(MessageDB);
+        authApi = require(__base + 'routes/auth-api.js').Router(MessageDB), socketIo;
 
     app.use('/api/users', usersApi);
     app.use('/api/domains', domainApi);

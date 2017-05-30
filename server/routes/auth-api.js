@@ -396,7 +396,7 @@ module.exports.Router = function (MessageDB, app) {
         //          event_ts: '1495684015.632873' },
         
         const socket = app.get('socket')
-        console.log(socket)
+        console.log(socket.emit)
 
         if (req.body.event.text) {            
 

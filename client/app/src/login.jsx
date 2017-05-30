@@ -35,6 +35,32 @@ export default class extends React.Component {
 
         return (                    
             <div>
+
+                <nav className="nav">
+                    <div className="nav-left">
+                        <a className="nav-item">
+                            <img src="../img/logoGreen.png" alt="Bulma logo" /> Lynx
+                        </a>
+                    </div>
+                    <div className="nav-right nav-menu">
+
+                        <div className="nav-item">
+                            <div className="field is-grouped">
+                                
+                                <p className="control">
+                                    <a className="button is-primary" href="https://lynxapp.me/app/#/signup">
+                                        <span className="icon">
+                                            <i className="fa fa-sign-in" aria-hidden="true"></i>
+                                        </span>
+                                        <span>Sign Up</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </nav>                
+
+                 
                 <section className="section">
                     <div className="container content-middle">
                         {error}
@@ -78,3 +104,13 @@ export default class extends React.Component {
         )
     }
 }
+/*
+                                <p className="control">
+                                    <a className="button" href="https://lynxapp.me/app/#/login">
+                                        <span className="icon">
+                                            <i className="fa fa-user" aria-hidden="true"></i>
+                                        </span>
+                                        <span>Login</span>
+                                    </a>
+                                </p>
+*/

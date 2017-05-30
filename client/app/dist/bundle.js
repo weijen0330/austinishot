@@ -29385,6 +29385,50 @@
 	                "div",
 	                null,
 	                _react2.default.createElement(
+	                    "nav",
+	                    { className: "nav" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "nav-left" },
+	                        _react2.default.createElement(
+	                            "a",
+	                            { className: "nav-item" },
+	                            _react2.default.createElement("img", { src: "../img/logoGreen.png", alt: "Bulma logo" }),
+	                            " Lynx"
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "nav-right nav-menu" },
+	                        _react2.default.createElement(
+	                            "div",
+	                            { className: "nav-item" },
+	                            _react2.default.createElement(
+	                                "div",
+	                                { className: "field is-grouped" },
+	                                _react2.default.createElement(
+	                                    "p",
+	                                    { className: "control" },
+	                                    _react2.default.createElement(
+	                                        "a",
+	                                        { className: "button is-primary", href: "https://lynxapp.me/app/#/signup" },
+	                                        _react2.default.createElement(
+	                                            "span",
+	                                            { className: "icon" },
+	                                            _react2.default.createElement("i", { className: "fa fa-sign-in", "aria-hidden": "true" })
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "span",
+	                                            null,
+	                                            "Sign Up"
+	                                        )
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
 	                    "section",
 	                    { className: "section" },
 	                    _react2.default.createElement(
@@ -29450,7 +29494,18 @@
 	
 	    return _class;
 	}(_react2.default.Component);
-	
+	/*
+	                                <p className="control">
+	                                    <a className="button" href="https://lynxapp.me/app/#/login">
+	                                        <span className="icon">
+	                                            <i className="fa fa-user" aria-hidden="true"></i>
+	                                        </span>
+	                                        <span>Login</span>
+	                                    </a>
+	                                </p>
+	*/
+
+
 	exports.default = _class;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "login.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }

@@ -395,8 +395,8 @@ module.exports.Router = function (MessageDB, socketIo) {
         //          channel: 'D51MCEQ1M',
         //          event_ts: '1495684015.632873' },
         
-        socketIo.sockets.emit("message", "testing message from slack incoming")
-        console.log(socketIo.broadcast)
+        const socket = app.get('socket')
+        console.log(socket)
 
         if (req.body.event.text) {            
 

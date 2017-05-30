@@ -43,7 +43,7 @@ const oauth2Client = new oauth2(
     authConf.gmail.redirectUri
 );
 
-module.exports.Router = function (MessageDB, socketIo) {
+module.exports.Router = function (MessageDB) {
 	const router = express.Router();
 
     // Parses a string and returns an array of links if there are any.
@@ -394,8 +394,8 @@ module.exports.Router = function (MessageDB, socketIo) {
         //          ts: '1495684015.632873',
         //          channel: 'D51MCEQ1M',
         //          event_ts: '1495684015.632873' },
-        console.log("should emit message")
-        console.log(socketIo)
+        let socket = app.get("socket")
+        console.log(socket);
         if (req.body.event.text) {            
 
             var info =  req.body.event;

@@ -1,6 +1,7 @@
 import React from "react";
 import {render} from "react-dom";
 import {Link} from "react-router-dom";
+import "whatwg-fetch";
 
 import Textfield from "./textfield.jsx"
 
@@ -16,11 +17,36 @@ export default class extends React.Component {
     }
 
     handleInputChange(prop, value) {
-        this.setState({[prop] : value})        
+        this.setState({[prop] : value, error: null})        
     }
 
+    // TODO: hardcode test user signin credentials
     handleSignIn() {
-        console.log("state", this.state)
+        if (this.state.email.length > 0 && this.state.password > 0) {
+            let headers = new Headers()
+            headers.set("Content-Type", "application/json")
+
+            fetch("https://lynxapp.me/api/signin", {
+                method: "POST",
+                headers: headers,
+                body: {
+                    email: this.state.email,
+                    password: this.state.password
+                }
+            }).then(response => {
+                if (response.ok) {                    
+                    console.log("signed in")
+                    // TODO: redirect to app                    
+                } else {
+                    throw new Error("Error signing in")
+                }
+            }).catch(err => {
+                this.setState({error: err.message})
+            })
+
+        } else {
+            this.setState({error: "Please enter an email and password"})
+        }
     }
 
     render() {        
@@ -101,13 +127,3 @@ export default class extends React.Component {
         )
     }
 }
-/*
-                                <p className="control">
-                                    <a className="button" href="https://lynxapp.me/app/#/login">
-                                        <span className="icon">
-                                            <i className="fa fa-user" aria-hidden="true"></i>
-                                        </span>
-                                        <span>Login</span>
-                                    </a>
-                                </p>
-*/

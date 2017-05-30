@@ -67,7 +67,7 @@
 	
 	var _login2 = _interopRequireDefault(_login);
 	
-	var _signup = __webpack_require__(/*! ./signup.jsx */ 241);
+	var _signup = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./signup.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	
 	var _signup2 = _interopRequireDefault(_signup);
 	
@@ -29323,6 +29323,8 @@
 	
 	var _reactRouterDom = __webpack_require__(/*! react-router-dom */ 182);
 	
+	__webpack_require__(/*! whatwg-fetch */ 230);
+	
 	var _textfield = __webpack_require__(/*! ./textfield.jsx */ 242);
 	
 	var _textfield2 = _interopRequireDefault(_textfield);
@@ -29356,17 +29358,47 @@
 	    _createClass(_class, [{
 	        key: "handleInputChange",
 	        value: function handleInputChange(prop, value) {
-	            this.setState(_defineProperty({}, prop, value));
+	            var _setState;
+	
+	            this.setState((_setState = {}, _defineProperty(_setState, prop, value), _defineProperty(_setState, "error", null), _setState));
 	        }
+	
+	        // TODO: hardcode test user signin credentials
+	
 	    }, {
 	        key: "handleSignIn",
 	        value: function handleSignIn() {
-	            console.log("state", this.state);
+	            var _this2 = this;
+	
+	            if (this.state.email.length > 0 && this.state.password > 0) {
+	                var headers = new Headers();
+	                headers.set("Content-Type", "application/json");
+	
+	                fetch("https://lynxapp.me/api/signin", {
+	                    method: "POST",
+	                    headers: headers,
+	                    body: {
+	                        email: this.state.email,
+	                        password: this.state.password
+	                    }
+	                }).then(function (response) {
+	                    if (response.ok) {
+	                        console.log("signed in");
+	                        // TODO: redirect to app                    
+	                    } else {
+	                        throw new Error("Error signing in");
+	                    }
+	                }).catch(function (err) {
+	                    _this2.setState({ error: err.message });
+	                });
+	            } else {
+	                this.setState({ error: "Please enter an email and password" });
+	            }
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 	
 	            var error = void 0;
 	            if (this.state.error) {
@@ -29444,7 +29476,7 @@
 	                            _textfield2.default,
 	                            {
 	                                handleChange: function handleChange(propName, value) {
-	                                    return _this2.handleInputChange(propName, value);
+	                                    return _this3.handleInputChange(propName, value);
 	                                },
 	                                label: "Email",
 	                                propName: "email",
@@ -29456,7 +29488,7 @@
 	                            _textfield2.default,
 	                            {
 	                                handleChange: function handleChange(propName, value) {
-	                                    return _this2.handleInputChange(propName, value);
+	                                    return _this3.handleInputChange(propName, value);
 	                                },
 	                                label: "Password",
 	                                propName: "password",
@@ -29485,90 +29517,13 @@
 	
 	    return _class;
 	}(_react2.default.Component);
-	/*
-	                                <p className="control">
-	                                    <a className="button" href="https://lynxapp.me/app/#/login">
-	                                        <span className="icon">
-	                                            <i className="fa fa-user" aria-hidden="true"></i>
-	                                        </span>
-	                                        <span>Login</span>
-	                                    </a>
-	                                </p>
-	*/
-
-
+	
 	exports.default = _class;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "login.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 241 */
-/*!***********************************!*\
-  !*** ./client/app/src/signup.jsx ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-	
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactDom = __webpack_require__(/*! react-dom */ 32);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var _class = function (_React$Component) {
-	    _inherits(_class, _React$Component);
-	
-	    function _class(props) {
-	        _classCallCheck(this, _class);
-	
-	        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
-	
-	        _this.state = {
-	            login: true
-	        };
-	        return _this;
-	    }
-	
-	    _createClass(_class, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                null,
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "container" },
-	                    "sign up"
-	                )
-	            );
-	        }
-	    }]);
-	
-	    return _class;
-	}(_react2.default.Component);
-	
-	exports.default = _class;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "signup.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
+/* 241 */,
 /* 242 */
 /*!**************************************!*\
   !*** ./client/app/src/textfield.jsx ***!

@@ -394,8 +394,9 @@ module.exports.Router = function (MessageDB, socketIo) {
         //          ts: '1495684015.632873',
         //          channel: 'D51MCEQ1M',
         //          event_ts: '1495684015.632873' },
-        if (req.body.event.text) {
-            socketIo.emit("message", "hello testing")
+        console.log("should emit message")
+        socketIo.emit("message", "hello testing")
+        if (req.body.event.text) {            
 
             var info =  req.body.event;
 

@@ -29434,6 +29434,11 @@
 	                    _react2.default.createElement(
 	                        "div",
 	                        { className: "container content-middle" },
+	                        _react2.default.createElement(
+	                            "h1",
+	                            { className: "title" },
+	                            "Log In"
+	                        ),
 	                        error,
 	                        _react2.default.createElement(
 	                            _textfield2.default,
@@ -29470,20 +29475,6 @@
 	                                    { className: "button is-primary", onClick: this.handleSignIn.bind(this) },
 	                                    "Sign in"
 	                                )
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            "div",
-	                            { style: { textAlign: 'right' } },
-	                            _react2.default.createElement(
-	                                "p",
-	                                null,
-	                                "No account?"
-	                            ),
-	                            _react2.default.createElement(
-	                                _reactRouterDom.Link,
-	                                { to: "/signup", className: "button is-link" },
-	                                "Sign up"
 	                            )
 	                        )
 	                    )

@@ -63,6 +63,8 @@ export default class extends React.Component {
                  
                 <section className="section">
                     <div className="container content-middle">
+                        <h1 className="title">Log In</h1>
+                        
                         {error}
 
                         {/*email*/}
@@ -93,11 +95,6 @@ export default class extends React.Component {
                                 </button>
                             </p>
                         </div>  
-
-                        <div style={{textAlign: 'right'}}>
-                            <p>No account?</p>
-                            <Link to="/signup" className="button is-link">Sign up</Link>
-                        </div>
                     </div>
                 </section>
             </div>

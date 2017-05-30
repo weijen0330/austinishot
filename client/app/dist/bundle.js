@@ -29155,7 +29155,7 @@
 	        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 	
 	        _this.state = {
-	            view: "integration",
+	            view: "account",
 	            facebookChecked: true,
 	            slackChecked: true,
 	            gmailChecked: true

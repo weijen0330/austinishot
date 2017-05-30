@@ -26738,26 +26738,6 @@
 	    }
 	
 	    _createClass(_class, [{
-	        key: "componentWillMount",
-	        value: function componentWillMount() {
-	            var headers = new Headers();
-	            headers.set("Content-Type", "application/json");
-	            fetch("https://lynxapp.me/api/signin/", {
-	                method: "POST",
-	                headers: headers,
-	                body: JSON.stringify({
-	                    email: "lynxcapstone@gmail.com",
-	                    password: "password"
-	                })
-	            }).then(function (response) {
-	                if (response.ok) {
-	                    console.log("signed in");
-	                } else {
-	                    console.log("signin failed");
-	                }
-	            });
-	        }
-	    }, {
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
 	            var ws = io("https://lynxapp.me");
@@ -29385,34 +29365,12 @@
 	    }, {
 	        key: "handleSignIn",
 	        value: function handleSignIn() {
-	            var _this2 = this;
-	
-	            var headers = new Headers();
-	            headers.set("Content-Type", "application/json");
-	            fetch("https://lynxapp.me/api/signin/", {
-	                method: "POST",
-	                headers: headers,
-	                body: JSON.stringify({
-	                    email: "lynxcapstone@gmail.com",
-	                    password: "password"
-	                })
-	            }).then(function (response) {
-	                if (response.ok) {
-	                    console.log("signed in");
-	                    // TODO: redirect to app 
-	                    _this2.props.context.history.push('/');
-	                } else {
-	                    throw new Error("Error signing in");
-	                }
-	            }).catch(function (err) {
-	                console.log(err);
-	                _this2.setState({ error: err.message });
-	            });
+	            this.props.context.history.push('/');
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this3 = this;
+	            var _this2 = this;
 	
 	            var error = void 0;
 	            if (this.state.error) {
@@ -29490,7 +29448,7 @@
 	                            _textfield2.default,
 	                            {
 	                                handleChange: function handleChange(propName, value) {
-	                                    return _this3.handleInputChange(propName, value);
+	                                    return _this2.handleInputChange(propName, value);
 	                                },
 	                                label: "Email",
 	                                propName: "email",
@@ -29502,7 +29460,7 @@
 	                            _textfield2.default,
 	                            {
 	                                handleChange: function handleChange(propName, value) {
-	                                    return _this3.handleInputChange(propName, value);
+	                                    return _this2.handleInputChange(propName, value);
 	                                },
 	                                label: "Password",
 	                                propName: "password",
@@ -29604,34 +29562,12 @@
 	    }, {
 	        key: "handleSignUp",
 	        value: function handleSignUp() {
-	            var _this2 = this;
-	
-	            var headers = new Headers();
-	            headers.set("Content-Type", "application/json");
-	            fetch("https://lynxapp.me/api/signin/", {
-	                method: "POST",
-	                headers: headers,
-	                body: JSON.stringify({
-	                    email: "lynxcapstone@gmail.com",
-	                    password: "password"
-	                })
-	            }).then(function (response) {
-	                if (response.ok) {
-	                    console.log("signed in");
-	                    // TODO: redirect to app  
-	                    _this2.props.context.history.push('/');
-	                } else {
-	                    throw new Error("Error signing in");
-	                }
-	            }).catch(function (err) {
-	                console.log(err);
-	                _this2.setState({ error: err.message });
-	            });
+	            this.props.context.history.push('/');
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this3 = this;
+	            var _this2 = this;
 	
 	            var error = void 0;
 	            if (this.state.error) {
@@ -29718,7 +29654,7 @@
 	                            _textfield2.default,
 	                            {
 	                                handleChange: function handleChange(propName, value) {
-	                                    return _this3.handleInputChange(propName, value);
+	                                    return _this2.handleInputChange(propName, value);
 	                                },
 	                                label: "Email",
 	                                propName: "email",
@@ -29728,7 +29664,7 @@
 	                        ),
 	                        _react2.default.createElement(_textfield2.default, {
 	                            handleChange: function handleChange(propName, value) {
-	                                return _this3.handleInputChange(propName, value);
+	                                return _this2.handleInputChange(propName, value);
 	                            },
 	                            label: "First name",
 	                            propName: "firstName",
@@ -29736,7 +29672,7 @@
 	                        }),
 	                        _react2.default.createElement(_textfield2.default, {
 	                            handleChange: function handleChange(propName, value) {
-	                                return _this3.handleInputChange(propName, value);
+	                                return _this2.handleInputChange(propName, value);
 	                            },
 	                            label: "Last name",
 	                            propName: "lastName",
@@ -29746,7 +29682,7 @@
 	                            _textfield2.default,
 	                            {
 	                                handleChange: function handleChange(propName, value) {
-	                                    return _this3.handleInputChange(propName, value);
+	                                    return _this2.handleInputChange(propName, value);
 	                                },
 	                                label: "Password",
 	                                propName: "password",
@@ -29758,7 +29694,7 @@
 	                            _textfield2.default,
 	                            {
 	                                handleChange: function handleChange(propName, value) {
-	                                    return _this3.handleInputChange(propName, value);
+	                                    return _this2.handleInputChange(propName, value);
 	                                },
 	                                label: "Password confirmation",
 	                                propName: "passwordConf",

@@ -17,25 +17,6 @@ export default class extends React.Component {
 
     }
 
-    componentWillMount() {
-        let headers = new Headers()
-        headers.set("Content-Type", "application/json")        
-        fetch("https://lynxapp.me/api/signin/", {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify({
-                email: "lynxcapstone@gmail.com",
-                password: "password",
-            })
-        }).then(response => {
-            if (response.ok) {
-                console.log("signed in")
-            } else {
-                console.log("signin failed")
-            }
-        })
-    }
-
     componentDidMount() {
         let ws = io("https://lynxapp.me")
         // example of how to send data - if needed

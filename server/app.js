@@ -121,12 +121,12 @@ module.exports.start = function (connection) {
         //     return res.redirect(['https://', req.get('Host'), req.url].join(''));
         // }
         
-        if (req.isAuthenticated()) {
+        // if (req.isAuthenticated()) {
             
-            return next();
-        } else {
-            res.status(401).json({message: 'Must sign in.'});
-        }
+        //     return next();
+        // } else {
+        //     res.status(401).json({message: 'Must sign in.'});
+        // }
     });
 
 

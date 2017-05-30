@@ -402,7 +402,8 @@ module.exports.Router = function () {
             var linkInfo = {
                 //sender
                 platform : 'slack',
-                timeStamp: info.event_ts
+                timeStamp: info.event_ts,
+                bodyText: info.text
             };
 
             const slackWeb = new slackWebClient(authConf.slack.accessToken);
@@ -422,7 +423,7 @@ module.exports.Router = function () {
                 // send the urls through 344 handler
                 generateLinkSummary(links[0], linkInfo).then(linkSummary => {
                     // add the message to the database
-                    console.log(linkSummary)
+                    console.log("link summary:", linkSummary)
                 })
                                 
                 // send the added message back to the user through web socket

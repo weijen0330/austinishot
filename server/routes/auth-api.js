@@ -387,6 +387,10 @@ module.exports.Router = function () {
                 } else {
                     linkinfo.sender = usersInfo.name;
                 }
+
+                let parsedData = regParser(req.body.event.text, linkinfo)
+                console.log("parsed data: ", parsedData)
+                res.status(200).send(parsedData);
             });
 
             // if (info.channel) {
@@ -398,8 +402,7 @@ module.exports.Router = function () {
             //             linkinfo.channel_name = channelInfo.channel.name;
             //         }
             //     });
-            // }
-            res.status(200).send(regParser(req.body.event.text, linkinfo));
+            // }            
         } else {
             res.status(200).send("non-text event");
         }

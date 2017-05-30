@@ -47,11 +47,10 @@ var MessageDB = {
 						return this._connection.queryAsync(
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",
 							{domain: messageData.domain}
-						).then(() => {
-							console.log("id", this._connection.lastInsertId())
+						).then(() => {							
 							return this._connection.lastInsertId()
 						}).then(domainId => {
-							console.log("domain id where it previously failed:", domainId)
+							
 							this._connection.queryAsync(
 								"INSERT INTO USER_DOMAINS VALUES (:userId, :domainId)",
 								{userId: userId, domainId: domainId}
@@ -72,7 +71,9 @@ var MessageDB = {
 							url: messageData.url,
 							imgUrl: messageData.imgUrl
 						}
-					).then(() => this._connection.lastInsertIdAsync())
+					).then(() => {
+						return this._connection.lastInsertId()
+					})
 				}) 
 			}
 		}).then(linkId => {
@@ -100,10 +101,12 @@ var MessageDB = {
 					isRead: false,
 					deleted: false
 				}
-			).then(() => this._connection.lastInsertIdAsync())
+			).then(() => {
+				return this._connection.lastInsertId()
+			})
 		}).then(messageId => {
 			return this._connection.queryAsync(
-				"INSERT INTO USER_MESSAGE VALUES (:userId, :messageId)",
+				"INSERT INTO USER_MESSAGE (user_id, message_id) VALUES (:userId, :messageId)",
 				{userId: userId, messageId: messageId}
 			)
 		}).then(() => {

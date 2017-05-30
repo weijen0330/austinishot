@@ -26,7 +26,7 @@ var MessageDB = {
 		5. insert to user_messages		
 		*/
 		
-
+		// TODO: check if message is already if there before adding again
 		return this._connection.queryAsync(
 			"SELECT link_id FROM LINKS WHERE url = :url",
 			{url: messageData.url}

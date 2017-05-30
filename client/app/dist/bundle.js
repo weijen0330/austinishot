@@ -29392,7 +29392,7 @@
 	                        { className: "nav-left" },
 	                        _react2.default.createElement(
 	                            "a",
-	                            { className: "nav-item" },
+	                            { className: "nav-item", href: "https://lynxapp.me" },
 	                            _react2.default.createElement("img", { src: "../img/logoGreen.png", alt: "Bulma logo" }),
 	                            " Lynx"
 	                        )

@@ -38,7 +38,7 @@ export default class extends React.Component {
 
                 <nav className="nav">
                     <div className="nav-left">
-                        <a className="nav-item">
+                        <a className="nav-item" href="https://lynxapp.me">
                             <img src="../img/logoGreen.png" alt="Bulma logo" /> Lynx
                         </a>
                     </div>

@@ -84,13 +84,7 @@ export default class extends React.Component {
                
                {/*unread and delete btns*/}
                <div>
-                   <div style={{
-                       width: "20px",
-                       height: "20px",
-                       borderRadius: "50%",
-                       color: "red",
-                       display: "inline"                       
-                   }}></div>
+                   <div className={urlData.isRead ? "message-seen-button message-read" : "message-seen-button message-unread"}></div>
                    <a style={{float: "right"}} className="delete"></a>
                </div>
 

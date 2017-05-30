@@ -69,3 +69,27 @@ input.switch:checked ~ label:before {
 input.switch:checked ~ label:after {
   margin-left: 33.6px;
 }
+
+.message-seen-button {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.message-read {
+    border: 1px #dbdbdb solid;
+    background-color: none;
+}
+.message-read:hover {
+    border: 1px #276cda solid;
+}
+
+.message-unread {
+    border: none;
+    background-color: #276cda;
+}
+
+.message-unread:hover {
+    border: 1px #dbdbdb solid;
+}

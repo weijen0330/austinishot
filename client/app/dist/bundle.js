@@ -27928,13 +27928,7 @@
 	                _react2.default.createElement(
 	                    "div",
 	                    null,
-	                    _react2.default.createElement("div", { style: {
-	                            width: "20px",
-	                            height: "20px",
-	                            borderRadius: "50%",
-	                            color: "red",
-	                            display: "inline"
-	                        } }),
+	                    _react2.default.createElement("div", { className: urlData.isRead ? "message-seen-button message-read" : "message-seen-button message-unread" }),
 	                    _react2.default.createElement("a", { style: { float: "right" }, className: "delete" })
 	                ),
 	                _react2.default.createElement(

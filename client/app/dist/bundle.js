@@ -29258,7 +29258,7 @@
 	                case "account":
 	                    content = _react2.default.createElement(
 	                        "div",
-	                        { style: { textAlign: 'center' } },
+	                        { style: { textAlign: 'center', marginTop: '50px' } },
 	                        _react2.default.createElement(
 	                            "a",
 	                            {

@@ -80,7 +80,7 @@ export default class extends React.Component {
                 break;
             case "account":
                 content = (
-                    <div style={{textAlign: 'center'}}>
+                    <div style={{textAlign: 'center', marginTop: '50px'}}>
                         <a 
                             className="button is-primary"
                             href="https://lynxapp.me/app/#/login"

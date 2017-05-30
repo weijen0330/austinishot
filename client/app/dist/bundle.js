@@ -29323,7 +29323,7 @@
 	
 	var _reactRouterDom = __webpack_require__(/*! react-router-dom */ 182);
 	
-	var _textfield = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./textfield.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _textfield = __webpack_require__(/*! ./textfield.jsx */ 242);
 	
 	var _textfield2 = _interopRequireDefault(_textfield);
 	
@@ -29521,6 +29521,99 @@
 	exports.default = _class;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "signup.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 242 */
+/*!**************************************!*\
+  !*** ./client/app/src/textfield.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 32);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _class = function (_React$Component) {
+	    _inherits(_class, _React$Component);
+	
+	    function _class(props) {
+	        _classCallCheck(this, _class);
+	
+	        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+	
+	        _this.state = {
+	            value: _this.props.value ? _this.props.value : ""
+	        };
+	        return _this;
+	    }
+	
+	    _createClass(_class, [{
+	        key: "handleInputChange",
+	        value: function handleInputChange(inputVal) {
+	            this.setState({ value: inputVal });
+	            this.props.handleChange(this.props.propName, inputVal);
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var _this2 = this;
+	
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "field" },
+	                _react2.default.createElement(
+	                    "label",
+	                    { className: "label" },
+	                    this.props.label
+	                ),
+	                _react2.default.createElement(
+	                    "p",
+	                    { className: "control has-icons-left has-icons-right" },
+	                    _react2.default.createElement("input", {
+	                        onChange: function onChange(e) {
+	                            return _this2.handleInputChange(e.target.value);
+	                        },
+	                        className: "input",
+	                        type: this.props.inputType,
+	                        placeholder: this.props.label + " input",
+	                        value: this.state.value
+	                    }),
+	                    _react2.default.createElement(
+	                        "span",
+	                        { className: "icon is-small is-left" },
+	                        this.props.children
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return _class;
+	}(_react2.default.Component);
+	
+	exports.default = _class;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/enamarkovic2/Desktop/lynx/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "textfield.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 /******/ ]);

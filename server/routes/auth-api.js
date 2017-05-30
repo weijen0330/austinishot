@@ -56,8 +56,6 @@ module.exports.Router = function () {
             // Slack puts brackets around their links, so we need to remove them.
             const words = message.replace(/[<>]/g,'').split(' ');
 
-            console.log(words);
-
             const links = [];
 
             for (i = 0; i < words.length; i++) {
@@ -66,6 +64,8 @@ module.exports.Router = function () {
                 if (re.test(words[i])) {
                     console.log("Yep! it's a link!");
                     links.push(words[i]);
+                } else {
+                    console.log("not a link ")
                 }
             }
             return links;

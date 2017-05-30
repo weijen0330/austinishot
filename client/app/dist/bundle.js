@@ -26738,6 +26738,26 @@
 	    }
 	
 	    _createClass(_class, [{
+	        key: "componentWillMount",
+	        value: function componentWillMount() {
+	            var headers = new Headers();
+	            headers.set("Content-Type", "application/json");
+	            fetch("https://lynxapp.me/api/signin/", {
+	                method: "POST",
+	                headers: headers,
+	                body: JSON.stringify({
+	                    email: "lynxcapstone@gmail.com",
+	                    password: "password"
+	                })
+	            }).then(function (response) {
+	                if (response.ok) {
+	                    console.log("signed in");
+	                } else {
+	                    console.log("signin failed");
+	                }
+	            });
+	        }
+	    }, {
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
 	            var ws = io("https://lynxapp.me");

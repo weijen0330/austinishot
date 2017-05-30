@@ -1,4 +1,114 @@
 var MessageDB = {
+	insertMessage(userId, messageData) {				
+		/*
+		messageData = {
+			url -> url that was sent in the message
+			platform -> platform it came from
+			domain -> url's domain name
+			title -> from 344 api, title of article
+			description -> from 344 api, description of article
+			url -> link url
+			imgUrl -> from 344 api, image in article
+			sender -> who sent the link 
+			note -> the text of the message
+			timeStamp -> string timestamp of when the message was sent
+		}
+
+		1. check if link exists
+			if does -> go to step 3 with link id	
+			if doesnt -> do step 2, do step 3				
+		2. check if domain exists
+			if does -> get id
+			if doesnt -> insert domain, insert user_domains
+			insert link
+		3. get platform id
+		4. insert message w/ platform id, link id, & recipient id
+		5. insert to user_messages		
+		*/
+		
+
+		return this._connection.queryAsync(
+			"SELECT link_id FROM LINKS WHERE url = :url",
+			{url: messageData.url}
+		).then(linkRows => {
+			if (linkRows && linkRows.length > 0) {
+				return linkRows[0].link_id		
+			} else {
+				// link doesnt exist
+
+				//check if domain exists
+				return this._connection.queryAsync(
+					"SELECT domain_id FROM DOMAIN WHERE domain_name = :domain",
+					{domain: messageData.domain}
+				).then(domainRows => {
+					if (domainRows && domainRows.length > 0) {
+						return domainRows[0].domainId
+					} else {
+						return this._connection.queryAsync(
+							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",
+							{domain: messageData.domain}
+						).then(() => {
+							return this._connection.lastInsertIdAsync()
+						}).then(domainId => {
+							this._connection.queryAsync(
+								"INSERT INTO USER_DOMAINS VALUES (:userId, :domainId)",
+								{userId: userId, domainId: domainId}
+							)
+							return domainId
+						})
+					}
+				}).then(domainId => {
+					// insert link, return id
+					return this._connection.queryAsync(
+						"INSERT INTO LINKS (title, description, type, domain_id, url, img_url) " +
+						"VALUES (:title, :description, :type, :domainId, :url, :imgUrl)",
+						{
+							title: messageData.title,
+							description: messageData.description,
+							domainId: domainId,
+							url: messageData.url,
+							imgUrl: messageData.imgUrl
+						}
+					).then(() => this._connection.lastInsertIdAsync())
+				}) 
+			}
+		}).then(linkId => {
+			// get platform id
+			return this._connection.queryAsync(
+				"SELECT platform_id FROM PLATFORM WHERE platform_name = :platform",
+				{platform: messageData.platform}
+			).then(platformRows => {
+				return {
+					platformId: platformRows[0].platform_id,
+					linkId: linkId
+				}
+			})
+		}).then(ids => {
+			return this._connection.queryAsync(
+				"INSERT INTO MESSAGE (link_id, sender, recipient_id, platform_id, note, timeSent, is_read, deleted) " + 
+				"VALUES (:linkId, :sender, :recipId, :platId, :note, :time, :isRead, :deleted)",
+				{
+					linkId: ids.linkId,
+					sender: messageData.sender,
+					recipId: userId,
+					platId: ids.platformId,
+					note: messageData.note,
+					time: messageData.timeStamp,
+					isRead: false,
+					deleted: false
+				}
+			).then(() => this._connection.lastInsertIdAsync())
+		}).then(messageId => {
+			return this._connection.queryAsync(
+				"INSERT INTO USER_MESSAGE VALUES (:userId, :messageId)",
+				{userId: userId, messageId: messageId}
+			)
+		}).then(() => {
+			this._connection.end()
+		})
+
+	},
+
 	getMessages(whereClause, options) {
 		return this._getObjects(
 			(
@@ -137,6 +247,7 @@ var MessageDB = {
 	},
 
 	// TODO: this probably has to be modified too
+/*
 	newMessage(data) {
 		//data =>senderId, url, recipientEmail, note, imgUrl, title, domain, description
 		var recipientId,
@@ -203,7 +314,7 @@ var MessageDB = {
 			});
 				
 	},
-
+*/
 	// Given connection, query and params, returns a promise containing query contents
 	// If query returns no results, returns a promise containing null
 	_getSingleObject(query, params) {

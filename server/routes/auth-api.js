@@ -78,16 +78,16 @@ module.exports.Router = function () {
     // @param {Object} linkinfo - other additional information about the link, which has the following properties:
     //                              service {string} - name of the platform
     //                              sender {string} - name of the sender
-    function generateLinkSummary(link, linkinfo) {
+    function generateLinkSummary(link, linkInfo) {
         link = new URL(link)
         // defensive
         let linkSummary = {
             url: link,
-            platform: linkinfo.platform,
+            platform: linkInfo.platform,
             sender: linkInfo.sender,
-            timeStamp: linkinfo.timeStamp,
+            timeStamp: linkInfo.timeStamp,
             domain: link.hostname,
-            note: linkinfo.bodyText,
+            note: linkInfo.bodyText,
             type: "article",
             title: "",
             description: "",

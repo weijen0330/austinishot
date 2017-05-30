@@ -398,7 +398,7 @@ module.exports.Router = function () {
             const slackWeb = new slackWebClient(authConf.slack.accessToken);
 
             // identify the user through the Slack API
-            slackWeb.users.info(req.body.event.user, function(usersInfoErr, usersInfo) {
+            slackWeb.users.info(info.user, function(usersInfoErr, usersInfo) {
                 if (usersInfoErr || !usersInfo.ok) {
                     console.log('Error: Unable to identify user.');
                     linkInfo.sender = '';

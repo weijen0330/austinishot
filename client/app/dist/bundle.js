@@ -29255,6 +29255,20 @@
 	                        )
 	                    );
 	                    break;
+	                case "account":
+	                    content = _react2.default.createElement(
+	                        "div",
+	                        { style: { textAlign: 'center' } },
+	                        _react2.default.createElement(
+	                            "a",
+	                            {
+	                                className: "button is-primary",
+	                                href: "https://lynxapp.me/app/#/login"
+	                            },
+	                            "Sign out"
+	                        )
+	                    );
+	                    break;
 	            }
 	
 	            return _react2.default.createElement(

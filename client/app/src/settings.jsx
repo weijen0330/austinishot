@@ -78,6 +78,18 @@ export default class extends React.Component {
                     </div>
                 )
                 break;
+            case "account":
+                content = (
+                    <div style={{textAlign: 'center'}}>
+                        <a 
+                            className="button is-primary"
+                            href="https://lynxapp.me/app/#/login"
+                        >
+                            Sign out
+                        </a> 
+                    </div>
+                )
+                break
         }
 
         return (

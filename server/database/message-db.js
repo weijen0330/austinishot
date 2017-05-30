@@ -48,6 +48,7 @@ var MessageDB = {
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",
 							{domain: messageData.domain}
 						).then(() => {
+							console.log("id", this._connection.lastInsertId())
 							return this._connection.lastInsertId()
 						}).then(domainId => {
 							console.log("domain id where it previously failed:", domainId)

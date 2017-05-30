@@ -418,7 +418,8 @@ module.exports.Router = function () {
                 }
 
                 // parsed data will be the urls 
-                let links = regParser(req.body.event.text, linkInfo)                
+                let links = regParser(req.body.event.text, linkInfo)  
+                console.log("got links from parser", links)              
                 
                 // send the urls through 344 handler
                 generateLinkSummary(links[0], linkInfo).then(linkSummary => {

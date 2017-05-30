@@ -119,7 +119,7 @@ module.exports.start = function (connection) {
         // if (!req.secure) {
         //     return res.redirect(['https://', req.get('Host'), req.url].join(''));
         // }
-        console.log(req)
+        console.log(req.user)
         if (req.isAuthenticated()) {
             
             return next();

@@ -95,3 +95,8 @@ input.switch:checked ~ label:after {
     border: 1px #dbdbdb solid;
     cursor: pointer;
 }
+
+.icon.fa-trash-o:hover {
+    cursor: pointer;
+    
+}

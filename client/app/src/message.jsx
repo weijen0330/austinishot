@@ -34,6 +34,10 @@ export default class extends React.Component {
         const isRead = this.state.isRead
         this.setState({isRead: !isRead})
     }
+    
+    handleDeleteMessageClick() {
+        console.log("deleted message")
+    }
 
 	render() {              
         var urlData = this.props.msg 
@@ -122,9 +126,18 @@ export default class extends React.Component {
                    </div>
                </article>
 
-               <div>{tags}</div>
+               <div>{tags}</div>               
 
-               {addTags}                
+               {addTags}        
+
+                <div style={{textAlign: "right"}}>
+                    <span 
+                        onClick={this.handleDeleteMessageClick.bind(this)}
+                        className="icon"
+                    >
+                        <i className="fa fa-trash-o"></i>
+                    </span>
+                </div>        
            </div>
         )
     }

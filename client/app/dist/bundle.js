@@ -27859,6 +27859,11 @@
 	            this.setState({ isRead: !isRead });
 	        }
 	    }, {
+	        key: "handleDeleteMessageClick",
+	        value: function handleDeleteMessageClick() {
+	            console.log("deleted message");
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
 	            var _this2 = this;
@@ -28013,7 +28018,19 @@
 	                    null,
 	                    tags
 	                ),
-	                addTags
+	                addTags,
+	                _react2.default.createElement(
+	                    "div",
+	                    { style: { textAlign: "right" } },
+	                    _react2.default.createElement(
+	                        "span",
+	                        {
+	                            onClick: this.handleDeleteMessageClick.bind(this),
+	                            className: "icon"
+	                        },
+	                        _react2.default.createElement("i", { className: "fa fa-trash-o" })
+	                    )
+	                )
 	            );
 	        }
 	    }]);

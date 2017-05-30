@@ -43,7 +43,7 @@ const oauth2Client = new oauth2(
     authConf.gmail.redirectUri
 );
 
-module.exports.Router = function (MessageDB, socketIo) {
+module.exports.Router = function (MessageDB, app) {
 	const router = express.Router();
 
     // Parses a string and returns an array of links if there are any.

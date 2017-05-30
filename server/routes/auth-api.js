@@ -424,13 +424,13 @@ module.exports.Router = function () {
                 generateLinkSummary(links[0], linkInfo).then(linkSummary => {
                     // add the message to the database
                     console.log("link summary:", linkSummary)
+                }).then(() => {
+                    // send the added message back to the user through web socket
+                    // this should broadcast to users       
+                    res.status(200).send(links);
                 })
-                                
-                // send the added message back to the user through web socket
-                
-
-                // this should broadcast to users
-                res.status(200).send(links);
+                                                
+                                         
             });
 
             // if (info.channel) {

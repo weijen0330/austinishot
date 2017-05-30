@@ -78,14 +78,14 @@ module.exports.Router = function () {
     // @param {Object} linkinfo - other additional information about the link, which has the following properties:
     //                              service {string} - name of the platform
     //                              sender {string} - name of the sender
-    function generateLinkSummary(link, linkInfo) {        
+    function generateLinkSummary(url, linkInfo) {        
         // defensive
         let linkSummary = {
-            url: link.href,
+            url: url.href,
             platform: linkInfo.platform,
             sender: linkInfo.sender,
             timeStamp: linkInfo.timeStamp,
-            domain: link.hostname,
+            domain: url.hostname,
             note: linkInfo.bodyText,
             type: "article",
             title: "",
@@ -94,13 +94,13 @@ module.exports.Router = function () {
 
         }
         
-        const url = 'https://info344api.enamarkovic.com/v1/summary?url=';
-        return requestProm(url + link.href).then(body => {                
+        const prefix = 'https://info344api.enamarkovic.com/v1/summary?url=';
+        return requestProm(prefix + url.href).then(body => {                
             const urlData = JSON.parse(body)
             linkSummary.type = urlData.type ? urlData.type : ""
             linkSummary.title = urlData.title ? urlData.title : ""
             linkSummary.description = urlData.description ? urlData.description : ""
-            linkSummary.imgUrl = urlData.imgUrl ? urlData.imgUrl : ""                
+            linkSummary.imgUrl = urlData.image ? urlData.image : ""                
         }).catch(err => {
             console.error(err)
         }).then(() => linkSummary)        

@@ -60,7 +60,7 @@ export default class extends React.Component {
                         </Textfield>
 
                         {/*submit btn*/}
-                        <div className="field" style={marginTop}>
+                        <div className="field" style={{marginTop: '15px'}}>
                             <p className="control">
                                 <button className="button is-primary" onClick={this.handleSignIn.bind(this)}>
                                     Sign in

@@ -112,6 +112,15 @@ module.exports.start = function (connection) {
         });
     });
 
+    const server = https.createServer(options, app);
+    const socketIo = require('socket.io')(server);    
+
+    socketIo.on('connection', socket => {
+        socket.on('message', data => {
+            console.log(data);
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
     //
@@ -134,7 +143,7 @@ module.exports.start = function (connection) {
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
         messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
         tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
-        authApi = require(__base + 'routes/auth-api.js').Router(1, MessageDB);
+        authApi = require(__base + 'routes/auth-api.js').Router(MessageDB, sockerIo);
 
     app.use('/api/users', usersApi);
     app.use('/api/domains', domainApi);
@@ -150,16 +159,7 @@ module.exports.start = function (connection) {
     const options = {
         cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
         key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
-    };
-
-    const server = https.createServer(options, app);
-    const io = require('socket.io')(server);
-
-    io.on('connection', socket => {
-        socket.on('message', data => {
-            console.log(data);
-        });
-    });
+    };    
 
     server.listen(443);
     app.listen(80);

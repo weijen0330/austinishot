@@ -56,7 +56,7 @@ module.exports.Router = function () {
             // Slack puts brackets around their links, so we need to remove them.
             const words = message.replace(/[<>]/g,'').split(' ');
 
-            const links = [];
+            const urls = [];
 
             for (i = 0; i < words.length; i++) {
                 console.log('The word is: ' + words[i]);
@@ -65,12 +65,12 @@ module.exports.Router = function () {
                 try {
                     console.log("Yep! it's a link!");
                     const url = new URL(words[i])
-                    links.push(url.href);
+                    urls.push(url);
                 } catch (e) {
                     console.log("not a link")
                 }
             }
-            return links;
+            return urls;
         }
     }
 
@@ -78,11 +78,10 @@ module.exports.Router = function () {
     // @param {Object} linkinfo - other additional information about the link, which has the following properties:
     //                              service {string} - name of the platform
     //                              sender {string} - name of the sender
-    function generateLinkSummary(link, linkInfo) {
-        link = new URL(link)
+    function generateLinkSummary(link, linkInfo) {        
         // defensive
         let linkSummary = {
-            url: link,
+            url: link.href,
             platform: linkInfo.platform,
             sender: linkInfo.sender,
             timeStamp: linkInfo.timeStamp,
@@ -96,7 +95,7 @@ module.exports.Router = function () {
         }
         
         const url = 'https://info344api.enamarkovic.com/v1/summary?url=';
-        return requestProm(url + link).then(body => {                
+        return requestProm(url + link.href).then(body => {                
             const urlData = JSON.parse(body)
             linkSummary.type = urlData.type ? urlData.type : ""
             linkSummary.title = urlData.title ? urlData.title : ""
@@ -424,6 +423,7 @@ module.exports.Router = function () {
                 console.log("got links from parser", links)              
                 
                 // send the urls through 344 handler
+                // generate link summary is expecting url object ( new URL() )
                 generateLinkSummary(links[0], linkInfo).then(linkSummary => {
                     // add the message to the database
                     console.log("link summary:", linkSummary)

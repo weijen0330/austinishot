@@ -29585,16 +29585,12 @@
 	        value: function handleSignUp() {
 	            var _this2 = this;
 	
-	            var headers = new Headers();
-	            headers.set("Content-Type", "application/json");
-	
 	            fetch("https://lynxapp.me/api/signin/", {
 	                method: "POST",
-	                headers: headers,
-	                body: {
+	                body: JSON.stringify({
 	                    email: "lynxcapstone@gmail.com",
 	                    password: "password"
-	                }
+	                })
 	            }).then(function (response) {
 	                if (response.ok) {
 	                    console.log("signed in");
@@ -29603,6 +29599,7 @@
 	                    throw new Error("Error signing in");
 	                }
 	            }).catch(function (err) {
+	                console.log(err);
 	                _this2.setState({ error: err.message });
 	            });
 	        }

@@ -29321,7 +29321,15 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 32);
 	
+	var _reactRouterDom = __webpack_require__(/*! react-router-dom */ 182);
+	
+	var _textfield = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./textfield.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _textfield2 = _interopRequireDefault(_textfield);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -29338,21 +29346,103 @@
 	        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 	
 	        _this.state = {
-	            login: true
+	            email: "",
+	            password: "",
+	            error: null
 	        };
 	        return _this;
 	    }
 	
 	    _createClass(_class, [{
+	        key: "handleInputChange",
+	        value: function handleInputChange(prop, value) {
+	            this.setState(_defineProperty({}, prop, value));
+	        }
+	    }, {
+	        key: "handleSignin",
+	        value: function handleSignin() {
+	            console.log("state", this.state);
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+	
+	            var error = void 0;
+	            if (this.state.error) {
+	                error = _react2.default.createElement(
+	                    "article",
+	                    { className: "message is-danger" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "message-body" },
+	                        this.state.error
+	                    )
+	                );
+	            }
+	
 	            return _react2.default.createElement(
 	                "div",
 	                null,
 	                _react2.default.createElement(
-	                    "div",
-	                    { className: "container" },
-	                    "log in"
+	                    "section",
+	                    { className: "section" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "container content-middle" },
+	                        error,
+	                        _react2.default.createElement(
+	                            _textfield2.default,
+	                            {
+	                                handleChange: function handleChange(propName, value) {
+	                                    return _this2.handleInputChange(propName, value);
+	                                },
+	                                label: "Email",
+	                                propName: "email",
+	                                inputType: "email"
+	                            },
+	                            _react2.default.createElement("i", { className: "fa fa-envelope" })
+	                        ),
+	                        _react2.default.createElement(
+	                            _textfield2.default,
+	                            {
+	                                handleChange: function handleChange(propName, value) {
+	                                    return _this2.handleInputChange(propName, value);
+	                                },
+	                                label: "Password",
+	                                propName: "password",
+	                                inputType: "password"
+	                            },
+	                            _react2.default.createElement("i", { className: "fa fa-lock" })
+	                        ),
+	                        _react2.default.createElement(
+	                            "div",
+	                            { className: "field", style: marginTop },
+	                            _react2.default.createElement(
+	                                "p",
+	                                { className: "control" },
+	                                _react2.default.createElement(
+	                                    "button",
+	                                    { className: "button is-primary", onClick: this.handleSignIn.bind(this) },
+	                                    "Sign in"
+	                                )
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            "div",
+	                            { style: { textAlign: 'right' } },
+	                            _react2.default.createElement(
+	                                "p",
+	                                null,
+	                                "No account?"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactRouterDom.Link,
+	                                { to: "/signup", className: "button is-link" },
+	                                "Sign up"
+	                            )
+	                        )
+	                    )
 	                )
 	            );
 	        }

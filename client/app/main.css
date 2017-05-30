@@ -100,3 +100,8 @@ input.switch:checked ~ label:after {
     cursor: pointer;
     color: black;
 }
+
+.content-middle {
+    width: 50%;
+    margin: 0 auto;
+}

@@ -96,6 +96,24 @@ module.exports.Router = function () {
         return linkSummaries;
     }
 
+    function addMessageToDB(userId, messageData) {
+        /*
+        messageData = {
+			url -> url that was sent in the message
+			platform -> platform it came from
+			domain -> url's domain name
+			title -> from 344 api, title of article
+			description -> from 344 api, description of article
+			url -> link url
+			imgUrl -> from 344 api, image in article
+			sender -> who sent the link 
+			note -> the text of the message
+			timeStamp -> string timestamp of when the message was sent
+		}
+        */
+    }
+
+
     // Facebook oauth: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
     router.get('/facebook_oauth', function(req, res) {
         const oauthUrl = 'https://www.facebook.com/v2.9/dialog/oauth?client_id='
@@ -371,8 +389,8 @@ module.exports.Router = function () {
 
             var info =  req.body.event;
 
-            var linkinfo = {
-
+            var linkInfo = {
+                //sender
                 platform : 'slack',
                 timeStamp: info.event_ts
             };
@@ -383,14 +401,24 @@ module.exports.Router = function () {
             slackWeb.users.info(req.body.event.user, function(usersInfoErr, usersInfo) {
                 if (usersInfoErr || !usersInfo.ok) {
                     console.log('Error: Unable to identify user.');
-                    linkinfo.sender = '';
+                    linkInfo.sender = '';
                 } else {
-                    linkinfo.sender = usersInfo.name;
+                    linkInfo.sender = usersInfo.name;
                 }
 
-                let parsedData = regParser(req.body.event.text, linkinfo)
-                console.log("parsed data: ", parsedData)
-                res.status(200).send(parsedData);
+                // parsed data will be the urls 
+                let links = regParser(req.body.event.text, linkInfo)                
+                
+                // send the urls through 344 handler
+                let linkSummaries = generateLinkSummary(links, linkInfo)
+                console.log(linkSummaries)
+                
+                // add the message to the database
+                // send the added message back to the user through web socket
+                
+
+                // this should broadcast to users
+                res.status(200).send(links);
             });
 
             // if (info.channel) {

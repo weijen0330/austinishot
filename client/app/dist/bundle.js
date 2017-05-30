@@ -29379,7 +29379,8 @@
 	            }).then(function (response) {
 	                if (response.ok) {
 	                    console.log("signed in");
-	                    // TODO: redirect to app                    
+	                    // TODO: redirect to app 
+	                    _this2.props.context.history.push('/');
 	                } else {
 	                    throw new Error("Error signing in");
 	                }
@@ -29597,7 +29598,8 @@
 	            }).then(function (response) {
 	                if (response.ok) {
 	                    console.log("signed in");
-	                    // TODO: redirect to app                    
+	                    // TODO: redirect to app  
+	                    _this2.props.context.history.push('/');
 	                } else {
 	                    throw new Error("Error signing in");
 	                }

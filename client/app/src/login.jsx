@@ -33,7 +33,8 @@ export default class extends React.Component {
         }).then(response => {
             if (response.ok) {                    
                 console.log("signed in")
-                // TODO: redirect to app                    
+                // TODO: redirect to app 
+                this.props.context.history.push('/')                   
             } else {
                 throw new Error("Error signing in")
             }

@@ -20,9 +20,12 @@ export default class extends React.Component {
         this.setState({[prop] : value, error: null})        
     }
     
-    handleSignIn() {        
+    handleSignIn() {
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")        
         fetch("https://lynxapp.me/api/signin/", {
             method: "POST",
+            headers: headers,
             body: JSON.stringify({
                 email: "lynxcapstone@gmail.com",
                 password: "password",
@@ -38,7 +41,6 @@ export default class extends React.Component {
             console.log(err)
             this.setState({error: err.message})
         })
-
     }
 
     render() {        

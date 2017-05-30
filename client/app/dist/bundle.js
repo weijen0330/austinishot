@@ -29367,8 +29367,11 @@
 	        value: function handleSignIn() {
 	            var _this2 = this;
 	
+	            var headers = new Headers();
+	            headers.set("Content-Type", "application/json");
 	            fetch("https://lynxapp.me/api/signin/", {
 	                method: "POST",
+	                headers: headers,
 	                body: JSON.stringify({
 	                    email: "lynxcapstone@gmail.com",
 	                    password: "password"
@@ -29582,8 +29585,11 @@
 	        value: function handleSignUp() {
 	            var _this2 = this;
 	
+	            var headers = new Headers();
+	            headers.set("Content-Type", "application/json");
 	            fetch("https://lynxapp.me/api/signin/", {
 	                method: "POST",
+	                headers: headers,
 	                body: JSON.stringify({
 	                    email: "lynxcapstone@gmail.com",
 	                    password: "password"

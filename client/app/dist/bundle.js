@@ -29436,7 +29436,7 @@
 	                        { className: "container content-middle" },
 	                        _react2.default.createElement(
 	                            "h1",
-	                            { className: "title" },
+	                            { style: { textAlign: 'center' }, className: "title" },
 	                            "Log In"
 	                        ),
 	                        error,

@@ -63,8 +63,8 @@ export default class extends React.Component {
                  
                 <section className="section">
                     <div className="container content-middle">
-                        <h1 className="title">Log In</h1>
-                        
+                        <h1 style={{textAlign: 'center'}} className="title">Log In</h1>
+
                         {error}
 
                         {/*email*/}

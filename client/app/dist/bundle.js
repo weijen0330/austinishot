@@ -29588,7 +29588,7 @@
 	            var headers = new Headers();
 	            headers.set("Content-Type", "application/json");
 	
-	            fetch("https://lynxapp.me/api/signin", {
+	            fetch("https://lynxapp.me/api/signin/", {
 	                method: "POST",
 	                headers: headers,
 	                body: {

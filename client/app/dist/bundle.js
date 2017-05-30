@@ -27926,6 +27926,18 @@
 	                "div",
 	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
 	                _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    _react2.default.createElement("div", { style: {
+	                            width: "20px",
+	                            height: "20px",
+	                            borderRadius: "50%",
+	                            color: "red",
+	                            display: "inline"
+	                        } }),
+	                    _react2.default.createElement("a", { style: { float: "right" }, className: "delete" })
+	                ),
+	                _react2.default.createElement(
 	                    "article",
 	                    { className: "media", style: { marginBottom: '5px' } },
 	                    _react2.default.createElement(

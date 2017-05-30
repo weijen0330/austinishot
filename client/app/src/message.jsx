@@ -81,6 +81,19 @@ export default class extends React.Component {
 
         return (
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
+               
+               {/*unread and delete btns*/}
+               <div>
+                   <div style={{
+                       width: "20px",
+                       height: "20px",
+                       borderRadius: "50%",
+                       color: "red",
+                       display: "inline"                       
+                   }}></div>
+                   <a style={{float: "right"}} className="delete"></a>
+               </div>
+
                <article className="media" style={{marginBottom: '5px'}}>
 
                    <div className="media-left" style={{width: '25%'}}>

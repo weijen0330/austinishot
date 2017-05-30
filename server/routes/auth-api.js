@@ -51,8 +51,7 @@ module.exports.Router = function () {
     function regParser(message) {
         // Resource: https://gist.github.com/dperini/729294
         // defensive
-        if (message) {
-            const re = new RegExp('^(?:(?:https?|ftp|http):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$');
+        if (message) {            
             // Slack puts brackets around their links, so we need to remove them.
             const words = message.replace(/[<>]/g,'').split(' ');
 
@@ -63,7 +62,6 @@ module.exports.Router = function () {
                                 
                 // if it is a link, we will call the link summary API
                 try {
-                    console.log("Yep! it's a link!");
                     const url = new URL(words[i])
                     urls.push(url);
                 } catch (e) {
@@ -427,6 +425,7 @@ module.exports.Router = function () {
                         // add the message to the database
                         console.log("link summary:", linkSummary)
                     }).then(() => {
+                        console.log("user id: ", req.user.user_id)
                         // send the added message back to the user through web socket
                         // this should broadcast to users       
                         res.status(200).send(links);
@@ -437,17 +436,18 @@ module.exports.Router = function () {
                                                 
                                          
             });
-
-            // if (info.channel) {
-            //     slackWeb.channels.info(info.channel, function(channelInfoErr, channelInfo) {
-            //         if (channelInfoErr || !channelInfo.ok) {
-            //             console.log('Error: Unable to identify channel.');
-            //             linkinfo.channel_name = '';
-            //         } else {
-            //             linkinfo.channel_name = channelInfo.channel.name;
-            //         }
-            //     });
-            // }            
+/*
+            if (info.channel) {
+                slackWeb.channels.info(info.channel, function(channelInfoErr, channelInfo) {
+                    if (channelInfoErr || !channelInfo.ok) {
+                        console.log('Error: Unable to identify channel.');
+                        linkinfo.channel_name = '';
+                    } else {
+                        linkinfo.channel_name = channelInfo.channel.name;
+                    }
+                });
+            }   
+*/         
         } else {
             res.status(200).send("non-text event");
         }

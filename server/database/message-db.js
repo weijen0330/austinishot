@@ -8,7 +8,6 @@ var MessageDB = {
 			title -> from 344 api, title of article
 			description -> from 344 api, description of article
 			type -> from 344 
-			url -> link url
 			imgUrl -> from 344 api, image in article
 			sender -> who sent the link 
 			note -> the text of the message

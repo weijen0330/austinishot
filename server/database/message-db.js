@@ -7,6 +7,7 @@ var MessageDB = {
 			domain -> url's domain name
 			title -> from 344 api, title of article
 			description -> from 344 api, description of article
+			type -> from 344 
 			url -> link url
 			imgUrl -> from 344 api, image in article
 			sender -> who sent the link 
@@ -65,6 +66,7 @@ var MessageDB = {
 						{
 							title: messageData.title,
 							description: messageData.description,
+							type: messageData.type,
 							domainId: domainId,
 							url: messageData.url,
 							imgUrl: messageData.imgUrl

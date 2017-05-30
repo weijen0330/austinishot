@@ -1,8 +1,10 @@
 const express = require('express');
 const _ = require('lodash');
 const request = require('request');
+const requestProm = require('request-promise');
 const fs = require('fs');
 const base64url = require('base64url');
+const URL = require('url').URL
 
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
@@ -74,26 +76,33 @@ module.exports.Router = function () {
     // @param {Object} linkinfo - other additional information about the link, which has the following properties:
     //                              service {string} - name of the platform
     //                              sender {string} - name of the sender
-    function generateLinkSummary(links, linkinfo) {
+    function generateLinkSummary(link, linkinfo) {
+        link = new URL(link)
         // defensive
-        const linkSummaries = [];
-        if (links && linkinfo) {
-            const url = 'https://info344api.enamarkovic.com/v1/summary?url=';
-            for (i = 0; i < links.length; i++) {
-                request(url + links[i], function (error, response, body) {
-                    if (!error){
-                        const JSONresponse = JSON.parse(body);
-                        JSONresponse.service = linkinfo.service;
-                        JSONresponse.from = linkinfo.from;
-                        JSONresponse.time = linkinfo.time;
-                        linkSummaries.push(JSONresponse);
-                    } else {
-                        console.log(error);
-                    }
-                });
-            }
+        let linkSummary = {
+            url: link,
+            platform: linkinfo.platform,
+            sender: linkInfo.sender,
+            timeStamp: linkinfo.timeStamp,
+            domain: link.hostname,
+            note: linkinfo.bodyText,
+            type: "article",
+            title: "",
+            description: "",
+            imgUrl: "",
+
         }
-        return linkSummaries;
+        
+        const url = 'https://info344api.enamarkovic.com/v1/summary?url=';
+        return requestProm(url + link).then(body => {                
+            const urlData = JSON.parse(body)
+            linkSummary.type = urlData.type ? urlData.type : ""
+            linkSummary.title = urlData.title ? urlData.title : ""
+            linkSummary.description = urlData.description ? urlData.description : ""
+            linkSummary.imgUrl = urlData.imgUrl ? urlData.imgUrl : ""                
+        }).catch(err => {
+            console.error(err)
+        }).then(() => linkSummary)        
     }
 
     function addMessageToDB(userId, messageData) {
@@ -109,6 +118,7 @@ module.exports.Router = function () {
 			sender -> who sent the link 
 			note -> the text of the message
 			timeStamp -> string timestamp of when the message was sent
+            type
 		}
         */
     }
@@ -388,7 +398,7 @@ module.exports.Router = function () {
         if (req.body.event.text) {
 
             var info =  req.body.event;
-            console.log("req.body.event:", info)
+
             var linkInfo = {
                 //sender
                 platform : 'slack',
@@ -410,10 +420,11 @@ module.exports.Router = function () {
                 let links = regParser(req.body.event.text, linkInfo)                
                 
                 // send the urls through 344 handler
-                let linkSummaries = generateLinkSummary(links, linkInfo)
-                console.log(linkSummaries)
-
-                // add the message to the database
+                generateLinkSummary(links[0], linkInfo).then(linkSummary => {
+                    // add the message to the database
+                    console.log(linkSummary)
+                })
+                                
                 // send the added message back to the user through web socket
                 
 

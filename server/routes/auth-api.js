@@ -388,7 +388,7 @@ module.exports.Router = function () {
         if (req.body.event.text) {
 
             var info =  req.body.event;
-
+            console.log("req.body.event:", info)
             var linkInfo = {
                 //sender
                 platform : 'slack',
@@ -412,7 +412,7 @@ module.exports.Router = function () {
                 // send the urls through 344 handler
                 let linkSummaries = generateLinkSummary(links, linkInfo)
                 console.log(linkSummaries)
-                
+
                 // add the message to the database
                 // send the added message back to the user through web socket
                 

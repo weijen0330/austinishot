@@ -21,7 +21,7 @@ export default class extends React.Component {
     }
     
     handleSignIn() {
-        this.props.context.history.push('/')         
+        this.props.context.history.push('/')    
     }
 
     render() {        

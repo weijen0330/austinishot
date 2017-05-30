@@ -27857,11 +27857,29 @@
 	        value: function handleSeenButtonClicked() {
 	            var isRead = this.state.isRead;
 	            this.setState({ isRead: !isRead });
+	
+	            fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+	                method: "PATCH"
+	            }).then(function (response) {
+	                if (response.ok) {
+	                    console.log("msg mofifies");
+	                } else {
+	                    console.log("error editing message");
+	                }
+	            });
 	        }
 	    }, {
 	        key: "handleDeleteMessageClick",
 	        value: function handleDeleteMessageClick() {
-	            console.log("deleted message");
+	            fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+	                method: "DELETE"
+	            }).then(function (response) {
+	                if (response.ok) {
+	                    console.log("msg deleted");
+	                } else {
+	                    console.log("error deleting message");
+	                }
+	            });
 	        }
 	    }, {
 	        key: "render",

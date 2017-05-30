@@ -25,11 +25,26 @@ export default class extends React.Component {
     }
 
     handleSignUp() {        
-        if (this.stats.password != this.state.passwordConf) {
-            console.log("passwords dont match", this.state)
-        } else {
-            console.log("state", this.state)
-        }
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+
+        fetch("https://lynxapp.me/api/signin", {
+            method: "POST",
+            headers: headers,
+            body: {
+                email: "lynxcapstone@gmail.com",
+                password: "password",
+            }
+        }).then(response => {
+            if (response.ok) {                    
+                console.log("signed in")
+                // TODO: redirect to app                    
+            } else {
+                throw new Error("Error signing in")
+            }
+        }).catch(err => {
+            this.setState({error: err.message})
+        })
     }
 
     render() {        

@@ -96,7 +96,7 @@ input.switch:checked ~ label:after {
     cursor: pointer;
 }
 
-.icon.fa-trash-o:hover {
+.message-delete:hover {
     cursor: pointer;
-    
+    color: black;
 }

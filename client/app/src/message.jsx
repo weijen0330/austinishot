@@ -133,7 +133,7 @@ export default class extends React.Component {
                 <div style={{textAlign: "right"}}>
                     <span 
                         onClick={this.handleDeleteMessageClick.bind(this)}
-                        className="icon"
+                        className="icon message-delete"
                     >
                         <i className="fa fa-trash-o"></i>
                     </span>

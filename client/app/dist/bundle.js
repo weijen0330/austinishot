@@ -28026,7 +28026,7 @@
 	                        "span",
 	                        {
 	                            onClick: this.handleDeleteMessageClick.bind(this),
-	                            className: "icon"
+	                            className: "icon message-delete"
 	                        },
 	                        _react2.default.createElement("i", { className: "fa fa-trash-o" })
 	                    )

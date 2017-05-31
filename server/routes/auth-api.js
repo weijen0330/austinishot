@@ -175,7 +175,7 @@ module.exports.Router = function (MessageDB, socketIo) {
         //              id: '44444444_444444444',
         //              value: 'This is an Example Status.' } ]
         const newStatus = facebookReq.body.entry[0].changes[0];
-        console.log(facebookReq.body.entry[0].changes);
+        console.log("value from fb", facebookReq.body.entry[0].changes);
 
         const fboptions = {
             timeout: 3000,
@@ -189,6 +189,7 @@ module.exports.Router = function (MessageDB, socketIo) {
 
         // Grab information about the status via the API
         graph.setOptions(fboptions).get(newStatus.id, reqParam, function(err, res) {
+            console.log(err)
             if (err) {
                 console.log("Error: Unable to get information from a single status from the API");
                 facebookRes.status(200).send();

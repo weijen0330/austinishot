@@ -108,10 +108,12 @@ var MessageDB = {
 			return this._connection.queryAsync(
 				"INSERT INTO USER_MESSAGES (user_id, message_id) VALUES (:userId, :messageId)",
 				{userId: userId, messageId: messageId}
-			)
-		}).then((data) => {
+			).then(() => {
+				return messageId
+			})
+		}).then((message_id) => {
 			this._connection.end()
-			return data;
+			return message_id;
 		})
 
 	},

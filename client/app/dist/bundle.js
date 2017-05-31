@@ -26905,33 +26905,20 @@
 						})
 					});
 				});
-				fetch("https://lynxapp.me/api/messages/old").then(function (response) {
-					return response.json();
-				}).then(function (data) {
-					_this2.setState({
-						allOld: data,
-						articlesOld: data.filter(function (msg) {
-							return msg.type == "article";
-						}),
-						imagesOld: data.filter(function (msg) {
-							return msg.type == "image";
-						}),
-						videosOld: data.filter(function (msg) {
-							return msg.type == "video";
-						})
-					});
-				});
+				// fetch("https://lynxapp.me/api/messages/old")
+				// 	.then(response => response.json()).then(data => {
+				// 		this.setState({
+				// 			allOld: data,
+				// 			articlesOld: data.filter(msg => msg.type == "article"),
+				// 			imagesOld: data.filter(msg => msg.type == "image"),
+				// 			videosOld: data.filter(msg => msg.type == "video")
+				// 		})
+				// })
 	
-				fetch("https://lynxapp.me/api/domains/").then(function (response) {
-					return response.json();
-				}).then(function (data) {
-					return _this2.setState({ domains: data });
-				});
-				fetch("https://lynxapp.me/api/tags/").then(function (response) {
-					return response.json();
-				}).then(function (data) {
-					return _this2.setState({ tags: data });
-				});
+				// fetch("https://lynxapp.me/api/domains/")	
+				// 	.then(response => response.json()).then(data => this.setState({domains: data}))
+				// fetch("https://lynxapp.me/api/tags/")	
+				// 	.then(response => response.json()).then(data => this.setState({tags: data}))
 			}
 		}, {
 			key: "changeView",

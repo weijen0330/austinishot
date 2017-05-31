@@ -36,7 +36,7 @@ export default class extends React.Component {
         this.setState({isRead: isRead})
         
         let url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId
-        if (!isRead) { // mark read
+        if (!isRead) { 
             url = "https://lynxapp.me/api/messages/unread/" + this.props.msg.messageId
         } 
 
@@ -50,8 +50,8 @@ export default class extends React.Component {
             }
         })
         
-        // this.props.msg.isRead = isRead
-        // this.props.updateSeenStatus(this.props.msg)
+        this.props.msg.isRead = isRead
+        this.props.updateSeenStatus(this.props.msg)
     }
     
     handleDeleteMessageClick() {

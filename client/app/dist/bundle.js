@@ -28125,7 +28125,6 @@
 	
 	            var url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId;
 	            if (!isRead) {
-	                // mark read
 	                url = "https://lynxapp.me/api/messages/unread/" + this.props.msg.messageId;
 	            }
 	
@@ -28139,8 +28138,8 @@
 	                }
 	            });
 	
-	            // this.props.msg.isRead = isRead
-	            // this.props.updateSeenStatus(this.props.msg)
+	            this.props.msg.isRead = isRead;
+	            this.props.updateSeenStatus(this.props.msg);
 	        }
 	    }, {
 	        key: "handleDeleteMessageClick",

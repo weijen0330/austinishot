@@ -176,7 +176,7 @@ module.exports.Router = function (MessageDB, socketIo) {
         //              id: '44444444_444444444',
         //              value: 'This is an Example Status.' } ]
         const newStatus = facebookReq.body.entry[0].changes[0];
-        console.log("new status", newStatus)
+        console.log("new status", newStatus.value)
         
 
         const statusValue = facebookReq.body.entry[0].changes.value;

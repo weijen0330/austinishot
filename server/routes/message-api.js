@@ -106,7 +106,7 @@ module.exports.Router = function (MessageDB) {
 
 	router.patch("/unread/:messageId", (req, res, next) => {
 		const messageId = req.params.messageId
-		MessageDb.markUnRead(messageId).then(() => {
+		MessageDB.markUnRead(messageId).then(() => {
 			res.send("marking message with id: " + messageId + " as unread")	
 		})		
 	})

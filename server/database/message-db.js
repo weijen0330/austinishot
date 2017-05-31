@@ -3,7 +3,8 @@ var MariaSql = require('mariasql');
 var bluebird = require('bluebird');
 
 var MessageDB = {
-	insertMessage(userId, messageData) {				
+	insertMessage(userId, messageData) {	
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));			
 		/*
 		messageData = {
 			url -> url that was sent in the message
@@ -31,7 +32,7 @@ var MessageDB = {
 		*/
 		
 		// TODO: check if message is already if there before adding again
-		return this._connection.queryAsync(
+		return connection.queryAsync(
 			"SELECT link_id FROM LINKS WHERE url = :url",
 			{url: messageData.url}
 		).then(linkRows => {
@@ -41,21 +42,21 @@ var MessageDB = {
 				// link doesnt exist
 
 				//check if domain exists
-				return this._connection.queryAsync(
+				return connection.queryAsync(
 					"SELECT domain_id FROM DOMAIN WHERE domain_name = :domain",
 					{domain: messageData.domainName}
 				).then(domainRows => {
 					if (domainRows && domainRows.length > 0) {
 						return domainRows[0].domainId
 					} else {
-						return this._connection.queryAsync(
+						return connection.queryAsync(
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",
 							{domain: messageData.domainName}
 						).then(() => {							
-							return this._connection.lastInsertId()
+							return connection.lastInsertId()
 						}).then(domainId => {
 							
-							this._connection.queryAsync(
+							connection.queryAsync(
 								"INSERT INTO USER_DOMAINS VALUES (:userId, :domainId)",
 								{userId: userId, domainId: domainId}
 							)
@@ -64,7 +65,7 @@ var MessageDB = {
 					}
 				}).then(domainId => {
 					// insert link, return id
-					return this._connection.queryAsync(
+					return connection.queryAsync(
 						"INSERT INTO LINKS (title, description, type, domain_id, url, img_url) " +
 						"VALUES (:title, :description, :type, :domainId, :url, :imgUrl)",
 						{
@@ -76,13 +77,13 @@ var MessageDB = {
 							imgUrl: messageData.imageUrl
 						}
 					).then(() => {
-						return this._connection.lastInsertId()
+						return connection.lastInsertId()
 					})
 				}) 
 			}
 		}).then(linkId => {
 			// get platform id
-			return this._connection.queryAsync(
+			return connection.queryAsync(
 				"SELECT platform_id FROM PLATFORM WHERE platform_name = :platform",
 				{platform: messageData.platformName}
 			).then(platformRows => {
@@ -92,7 +93,7 @@ var MessageDB = {
 				}
 			})
 		}).then(ids => {
-			return this._connection.queryAsync(
+			return connection.queryAsync(
 				"INSERT INTO MESSAGE (link_id, sender, recipient_id, platform_id, note, timeSent, is_read, deleted) " + 
 				"VALUES (:linkId, :sender, :recipId, :platId, :note, :time, :isRead, :deleted)",
 				{
@@ -106,17 +107,17 @@ var MessageDB = {
 					deleted: false
 				}
 			).then(() => {
-				return this._connection.lastInsertId()
+				return connection.lastInsertId()
 			})
 		}).then(messageId => {
-			return this._connection.queryAsync(
+			return connection.queryAsync(
 				"INSERT INTO USER_MESSAGES (user_id, message_id) VALUES (:userId, :messageId)",
 				{userId: userId, messageId: messageId}
 			).then(() => {
 				return messageId
 			})
 		}).then((messageId) => {
-			this._connection.end()
+			connection.end()
 			messageData.messageId = messageId
 			return messageData
 		})
@@ -124,7 +125,6 @@ var MessageDB = {
 	},
 
 	getMessages(whereClause) {
-		console.log("options", options)
 		return this._getObjects(
 			(
 				'SELECT ' +

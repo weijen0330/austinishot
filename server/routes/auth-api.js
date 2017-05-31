@@ -51,6 +51,7 @@ module.exports.Router = function (MessageDB, socketIo) {
     function regParser(message) {
         // Resource: https://gist.github.com/dperini/729294
         // defensive
+        console.log("message in reg parser", message)
         if (message) {            
             // Slack puts brackets around their links, so we need to remove them.
             var words = message.replace(/[<>]/g,'').split(' ');

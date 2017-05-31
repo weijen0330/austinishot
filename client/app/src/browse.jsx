@@ -51,6 +51,7 @@ export default class extends React.Component {
 			})
 
 			this.props.ws.on("tags_added", data => {
+				console.log("tags added, webhook")
 				this.getAllTags()
 			})
 		}

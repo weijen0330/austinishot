@@ -26889,6 +26889,7 @@
 					});
 	
 					this.props.ws.on("tags_added", function (data) {
+						console.log("tags added, webhook");
 						_this2.getAllTags();
 					});
 				}

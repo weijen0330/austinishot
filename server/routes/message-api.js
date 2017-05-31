@@ -152,7 +152,9 @@ module.exports.Router = function (MessageDB) {
 	// })
 */
 	router.get('/new', (req, res, next) => {
-		// MessageDB.getUnreadMessages(req.user.user_id)
+		MessageDB.getUnreadMessages(1).then(messages => {
+			console.log(messages)
+		})
 
 		const newMsgs = messages.filter(msg => {
 			return !msg.isRead

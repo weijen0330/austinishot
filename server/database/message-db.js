@@ -180,18 +180,46 @@ var MessageDB = {
 	},	
 
 	getReadMessages(userId) {
-		return this.getMessages(
-			(
+		// return this.getMessages(
+		// 	(
+		// 		'WHERE m.recipient_id = :userId ' + 
+		// 		'AND m.is_read = :isRead ' + 
+		// 		'AND m.deleted = :isDeleted'
+		// 	),
+		// 	{
+		// 		userId: userId,
+		// 		isRead: true,
+		// 		isDeleted: false
+		// 	}
+		// )
+
+		const query = (
+			'SELECT ' +
+					'm.message_id AS messageId, ' +
+					'm.sender, ' +
+					'm.note, ' +
+					'm.timeSent, ' +
+					'm.is_read AS isRead, ' +
+					'p.platform_name AS platformName, ' +
+					'l.title, ' +
+					'l.description, ' +
+					'l.type, ' +
+					'l.url, ' +
+					'l.img_url AS imageUrl, ' +
+					'd.domain_name AS domainName ' +
+					// 't.tag_text AS tag ' + 
+				'FROM MESSAGE m ' + 
+				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
+				'JOIN LINKS l ON m.link_id = l.link_id ' + 
+				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
+				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
+				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
 				'WHERE m.recipient_id = :userId ' + 
 				'AND m.is_read = :isRead ' + 
-				'AND m.deleted = :isDeleted'
-			),
-			{
-				userId: userId,
-				isRead: true,
-				isDeleted: false
-			}
+				'AND m.deleted = :deleted '
 		)
+		
+		return this._connection.queryAsync(query, {userId: 1, isRead: 1, deleted: 0})
 	},
 
 	getMessageWithTag(userId, tag) {

@@ -27252,13 +27252,16 @@
 					case "tag":
 						if (this.state.allNew) {
 							newMessages = this.state.allNew.filter(function (msg) {
-								console.log(msg);
-								msg.tags.includes(_this4.state.view);
+								if (msg.tags) {
+									msg.tags.includes(_this4.state.view);
+								}
 							});
 						}
 						if (this.state.allOld) {
 							oldMessages = this.state.allOld.filter(function (msg) {
-								return msg.tags.includes(_this4.state.view);
+								if (msg.tags) {
+									msg.tags.includes(_this4.state.view);
+								}
 							});
 						}
 						allMessages = newMessages.concat(oldMessages);

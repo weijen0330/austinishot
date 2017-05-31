@@ -363,12 +363,17 @@ export default class extends React.Component {
 			case "tag":
 				if (this.state.allNew) {
 					newMessages = this.state.allNew.filter(msg => {
-						console.log(msg)
-						msg.tags.includes(this.state.view)
+						if (msg.tags) {
+							msg.tags.includes(this.state.view)
+						}						
 					})					
 				}
 				if (this.state.allOld) {
-					oldMessages = this.state.allOld.filter(msg => msg.tags.includes(this.state.view))
+					oldMessages = this.state.allOld.filter(msg => {
+						if (msg.tags) {
+							msg.tags.includes(this.state.view)
+						}
+					})						
 				}
 				allMessages = newMessages.concat(oldMessages)
 

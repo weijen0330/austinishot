@@ -57,14 +57,14 @@ export default class extends React.Component {
                     "integrations": "Easily turn on and off whichever services you want to archive links from"
                     }
 
-        var previousState = "false";
+        var previousState = "";
         if(this.state.tab <= 0){
-            previousState = "true";
+            previousState = "disabled";
         }
 
-        var nextState = "false";
-        if(this.state.tab >= order.length){
-            nextState = "true";
+        var nextState = "";
+        if(this.state.tab >= order.length - 1){
+            nextState = "disabled";
         }
 
 
@@ -74,7 +74,7 @@ export default class extends React.Component {
                 <div className="modal-background"></div>
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">Modal title</p>
+                        <p className="modal-card-title">Get familiar with Lynx</p>
                         <button onClick={e => this.props.handleModalClick(e, "false")} className="delete"></button>
                     </header>
                     <section className="modal-card-body">
@@ -82,8 +82,8 @@ export default class extends React.Component {
                         <p>{text[order[this.state.tab]]}</p>
                     </section>
                     <footer className="modal-card-foot">
-                        <a onClick={e => this.increaseIndex(e, -1, order.length)} className="button">&lt; previous</a>
-                        <a onClick={e => this.increaseIndex(e, 1, order.length)}  className="button">next &gt; </a>
+                        <a onClick={e => this.increaseIndex(e, -1, order.length)} disabled={previousState} className="button">&lt; previous</a>
+                        <a onClick={e => this.increaseIndex(e, 1, order.length)}  disabled={nextState} className="button">next &gt; </a>
                     </footer>
                 </div>
             </div>

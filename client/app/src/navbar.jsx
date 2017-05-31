@@ -51,9 +51,13 @@ export default class extends React.Component {
                                     >Settings</a>
                                 </li>
                             </ul>
-                            <button
+                            <button className="button" style={{height: '100%'}}
                                 onClick={e => this.props.handleModalClick(e, "true")}
-                             >(?)</button>
+                             >
+                                <span className="icon is-small">
+                                      <i className="fa fa-question" aria-hidden="true"></i>
+                                    </span>
+                             </button>
                         </div>    
                         
 

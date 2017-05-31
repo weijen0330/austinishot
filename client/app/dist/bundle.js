@@ -28069,12 +28069,16 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            "button",
-	                            {
+	                            { className: "button", style: { height: '100%' },
 	                                onClick: function onClick(e) {
 	                                    return _this2.props.handleModalClick(e, "true");
 	                                }
 	                            },
-	                            "(?)"
+	                            _react2.default.createElement(
+	                                "span",
+	                                { className: "icon is-small" },
+	                                _react2.default.createElement("i", { className: "fa fa-question", "aria-hidden": "true" })
+	                            )
 	                        )
 	                    )
 	                )
@@ -29251,14 +29255,14 @@
 	                "integrations": "Easily turn on and off whichever services you want to archive links from"
 	            };
 	
-	            var previousState = "false";
+	            var previousState = "";
 	            if (this.state.tab <= 0) {
-	                previousState = "true";
+	                previousState = "disabled";
 	            }
 	
-	            var nextState = "false";
-	            if (this.state.tab >= order.length) {
-	                nextState = "true";
+	            var nextState = "";
+	            if (this.state.tab >= order.length - 1) {
+	                nextState = "disabled";
 	            }
 	
 	            return _react2.default.createElement(
@@ -29274,7 +29278,7 @@
 	                        _react2.default.createElement(
 	                            "p",
 	                            { className: "modal-card-title" },
-	                            "Modal title"
+	                            "Get familiar with Lynx"
 	                        ),
 	                        _react2.default.createElement("button", { onClick: function onClick(e) {
 	                                return _this2.props.handleModalClick(e, "false");
@@ -29297,14 +29301,14 @@
 	                            "a",
 	                            { onClick: function onClick(e) {
 	                                    return _this2.increaseIndex(e, -1, order.length);
-	                                }, className: "button" },
+	                                }, disabled: previousState, className: "button" },
 	                            "< previous"
 	                        ),
 	                        _react2.default.createElement(
 	                            "a",
 	                            { onClick: function onClick(e) {
 	                                    return _this2.increaseIndex(e, 1, order.length);
-	                                }, className: "button" },
+	                                }, disabled: nextState, className: "button" },
 	                            "next > "
 	                        )
 	                    )

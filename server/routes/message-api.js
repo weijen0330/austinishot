@@ -119,8 +119,8 @@ module.exports.Router = function (MessageDB) {
 	})
 
 	router.post('/search', (req, res, next) => {
-		console.log(req.body)
-		res.json(req.body)
+		MessageDB.getAllMessages()
+		res.send("hello world")
 	})
 	
 

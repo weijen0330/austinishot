@@ -124,6 +124,42 @@ var MessageDB = {
 
 	},
 
+	getAllMessages() {
+		// get all messages
+		const getMessages = (
+			'SELECT ' +
+				'm.message_id AS messageId, ' +
+				'm.sender, ' +
+				'm.note, ' +
+				'm.timeSent, ' +
+				'm.is_read AS isRead, ' +
+				'p.platform_name AS platformName, ' +
+				'l.title, ' +
+				'l.description, ' +
+				'l.type, ' +
+				'l.url, ' +
+				'l.img_url AS imgUrl, ' +
+				'd.domain_name AS domainName ' +				
+			'FROM MESSAGE m ' + 
+			'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
+			'JOIN LINKS l ON m.link_id = l.link_id ' + 
+			'JOIN DOMAIN d ON l.domain_id = d.domain_id ' +
+			'WHERE m.deleted = 0'
+		)
+
+		const getMessageLinks = (
+			'SELECT m.message_id, t.tag_text FROM MESSAGE m ' + 
+			'JOIN LINKS l on m.link_id = l.link_id ' +
+			'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' + 
+			'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
+			'WHERE m.deleted = 0'			
+		)
+
+		connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
+			console.log(rows)
+		})
+	},
+
 	getMessages(whereClause) {
 		return this._getObjects(
 			(

@@ -1,4 +1,6 @@
 var dbConfig = require(__base + 'secret/config-db.json');
+var MariaSql = require('mariasql');
+var bluebird = require('bluebird');
 
 var MessageDB = {
 	insertMessage(userId, messageData) {				

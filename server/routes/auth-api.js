@@ -175,6 +175,7 @@ module.exports.Router = function (MessageDB, socketIo) {
         //              id: '44444444_444444444',
         //              value: 'This is an Example Status.' } ]
         const newStatus = req.body.entry[0].changes[0];
+        console.log(req.body.entry[0].changes);
 
         const fboptions = {
             timeout: 3000,
@@ -186,35 +187,37 @@ module.exports.Router = function (MessageDB, socketIo) {
             fields: 'type,caption,description,link,updated_time,from'
         };
 
-        // Grab all the statuses on the feed.
+        // Grab information about the status via the API
         graph.setOptions(fboptions).get(newStatus.id, reqParam, function(err, res) {
-            var message = res.data;
-            console.log(message);
+            if (err) {
+                console.log("Error: Unable to get information from a single status from the API");
+            } else {
+                var message = res;
+                if (res.type === 'video'|| res.type === 'link') {
+                    var linkInfo = {
+                        platform: 'facebook',
+                        sender: res.from.name,
+                        bodyText: req.body.entry[0].changes[0].value ? req.body.entry[0].changes[0].value : "",
+                        timeStamp: res.updated_time
+                    };
+                    generateLinkSummary(res.link, linkInfo).then(linkSummary => {
+                        // add the message to the database
+                        console.log("link summary:", linkSummary);
+                        return MessageDB.insertMessage(1, linkSummary)
+                    }).then((message) => {
+                        console.log(message);
+
+                        socketIo.emit("new_message", {message: message});
+                        // send the added message back to the user through web socket
+                        // this should broadcast to users
+                        res.status(200).send(message);
+                    }).catch(console.log);
+                    res.status(200).send()
+                } else {
+                    res.status(200).send("not a link");
+                }
+            }
         });
-
-        let linkSummary = {
-            url: url.href,
-            platformName: linkInfo.platform,
-            sender: linkInfo.sender,
-            timeSent: linkInfo.timeStamp,
-            domainName: url.hostname,
-            note: linkInfo.bodyText,
-            isRead: false,
-            tags: [],
-            type: "article",
-            title: "",
-            description: "",
-            imageUrl: ""
-        };
-        var linkInfo = {
-            platform: 'facebook',
-            bodyText: req.body.entry[0].changes[0].value,
-            timeStamp: Date.now(),
-
-        };
-
-        res.status(200).send(regParser(text, linkInfo));
-        console.log(req.body.entry[0].changes[0].value);
     });
 
     // Gmail Oauth: https://developers.google.com/identity/protocols/OAuth2WebServer
@@ -448,7 +451,6 @@ module.exports.Router = function (MessageDB, socketIo) {
                         res.status(200).send(message);
                     }).catch(console.log)
                 });
-                
             } else {
                 res.status(200).send("did not have a link");
             }

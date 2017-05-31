@@ -162,20 +162,32 @@ var MessageDB = {
 
 		connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
 			if (rows && rows.length) {
-				let tags = {}
+				let tagsForMessages = {}
 				rows.forEach(row => {
 					let messageId = row[0]
 					let tag = row[1]
-					if (!tags[messageId]) {
-						tags[messageId] = []
+					if (!tagsForMessages[messageId]) {
+						tagsForMessages[messageId] = []
 					}
-					tags[messageId].push(tag)
+					tagsForMessages[messageId].push(tag)
 				})
 
-				console.log(tags)
+				console.log(tagsForMessages)
+				return tagsForMessages
 			}
-			
-		})
+			return {}			
+		}).then(tagsForMessages => {
+			return connection.queryAsync(getMessages, {}).then(rows => {
+				if (rows && rows.length) {
+					rows.forEach(row => {						
+						if (tagsForMessages[row.messageId]) {
+							row.tags = tagsForMessages[row.messageId]
+						}
+					})
+					console.log(rows)
+				}
+			})
+		}) 
 
 		connection.end()
 	},

@@ -65,6 +65,7 @@ var MessageDB = {
 					}
 				}).then(domainId => {
 					// insert link, return id
+					console.log("inserting link, domain id", domainId)
 					return connection.queryAsync(
 						"INSERT INTO LINKS (title, description, type, domain_id, url, img_url) " +
 						"VALUES (:title, :description, :type, :domainId, :url, :imgUrl)",

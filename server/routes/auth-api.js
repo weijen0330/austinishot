@@ -180,8 +180,8 @@ module.exports.Router = function (MessageDB, socketIo) {
         const statusValue = newStatus.value
         
         const links = regParser(statusValue)       
-        console.log("links", links)
-        if (links.length) {
+
+        if (links && links.length) {
             var linkInfo = {
                 platform: "facebook",
                 sender: "",
@@ -189,7 +189,6 @@ module.exports.Router = function (MessageDB, socketIo) {
                 timeStamp: Date.now()            
             }
             generateLinkSummary(links[0], linkInfo).then(linkSummary => {
-                console.log("fb link sum", linkSummary)
                 return MessageDB.insertMessage(1, linkSummary)
             }).then(message => {
                 socketIo.emit("new_message", {message: message});

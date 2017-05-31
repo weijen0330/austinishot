@@ -119,7 +119,7 @@ export default class extends React.Component {
         }
         console.log(urlData)
 
-        if (urlData.imgUrl.length > 0) {
+        if (urlData.imageUrl.length > 0) {
             mediaLeft = (
                 <div className="media-left" style={{width: '25%'}}>
                     <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>

@@ -27990,7 +27990,7 @@
 	            }
 	            console.log(urlData);
 	
-	            if (urlData.imgUrl.length > 0) {
+	            if (urlData.imageUrl.length > 0) {
 	                mediaLeft = _react2.default.createElement(
 	                    "div",
 	                    { className: "media-left", style: { width: '25%' } },

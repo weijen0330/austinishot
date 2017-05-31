@@ -8,7 +8,7 @@ var MessageDB = {
 			title -> from 344 api, title of article
 			description -> from 344 api, description of article
 			type -> from 344 
-			imgUrl -> from 344 api, image in article
+			imageUrl -> from 344 api, image in article
 			sender -> who sent the link 
 			note -> the text of the message
 			timeSent -> string timestamp of when the message was sent
@@ -69,7 +69,7 @@ var MessageDB = {
 							type: messageData.type,
 							domainId: domainId,
 							url: messageData.url,
-							imgUrl: messageData.imgUrl
+							imgUrl: messageData.imageUrl
 						}
 					).then(() => {
 						return this._connection.lastInsertId()

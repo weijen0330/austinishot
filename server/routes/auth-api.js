@@ -90,7 +90,7 @@ module.exports.Router = function (MessageDB, socketIo) {
             type: "article",
             title: "",
             description: "",
-            imgUrl: ""                       
+            imageUrl: ""                       
         };
         
         const prefix = 'https://info344api.enamarkovic.com/v1/summary?url=';
@@ -99,7 +99,7 @@ module.exports.Router = function (MessageDB, socketIo) {
             linkSummary.type = urlData.type ? urlData.type : "";
             linkSummary.title = urlData.title ? urlData.title : "";
             linkSummary.description = urlData.description ? urlData.description : "";
-            linkSummary.imgUrl = urlData.image ? urlData.image : "";
+            linkSummary.imageUrl = urlData.image ? urlData.image : "";
         }).catch(err => {
             console.error(err)
         }).then(() => linkSummary)        

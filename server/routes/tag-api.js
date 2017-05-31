@@ -17,6 +17,7 @@ module.exports.Router = function (TagDB, socketIo) {
 	router.post('/:messageId', (req, res, next) => {
 		const messageId = req.params.messageId
 		const tags = req.body.tags
+		console.log(tags)
 
 		if (tags && tags.length) {
 			TagDB.addTags(messageId, tags).then(() => {	

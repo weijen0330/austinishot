@@ -28135,7 +28135,7 @@
 	            fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId, {
 	                method: "POST",
 	                headers: headers,
-	                body: JSON.stringify(tags)
+	                body: JSON.stringify({ tags: tags })
 	            }).then(function (response) {
 	                if (response.ok) {
 	                    console.log("added tags to db ok");

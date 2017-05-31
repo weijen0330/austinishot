@@ -134,7 +134,7 @@ var MessageDB = {
 					'l.type, ' +
 					'l.url, ' +
 					'l.img_url AS imgUrl, ' +
-					'd.domain_name AS domainName' +
+					'd.domain_name AS domainName, ' +
 					't.tag_text AS tag ' + 
 				'FROM MESSAGE ' + 
 				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 

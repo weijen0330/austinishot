@@ -50,9 +50,14 @@ var TagDB = {
 				if (link && tag) {
 					connection.queryAsync(insertTagLink, {linkId: link, tagId: tag})
 					connection.queryAsync(insertTagUser, {userId: 1, tagId: tag})
-				}
-				connection.end()
+				}				
 			})
+		})
+
+		return Promise.all(promiseTags).then(values => {
+			console.log(values)
+			connection.end()
+			return values
 		})
 	}
 }

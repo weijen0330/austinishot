@@ -19,8 +19,8 @@ module.exports.Router = function (TagDB) {
 		const tags = req.body.tags
 
 		if (tags && tags.length) {
-			TagDB.addTags(messageId, tags).then(() => {
-				res.send("done adding")
+			TagDB.addTags(messageId, tags).then((values) => {				
+				res.json(values)
 			}).catch(next)
 		} else {
 			res.send("no tags to add")

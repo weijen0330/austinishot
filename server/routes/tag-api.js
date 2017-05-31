@@ -15,9 +15,15 @@ module.exports.Router = function (TagDB) {
 
 	// adds tags to message
 	router.post('/:messageId', (req, res, next) => {
+		const messageId = req.params.messageId
 		const tags = req.body.tags
+
 		if (tags && tags.length) {
-			
+			TagDB.addTags(messageId, tags).then(() => {
+				res.send("done adding")
+			}).catch(next)
+		} else {
+			res.send("no tags to add")
 		}
 	})
 

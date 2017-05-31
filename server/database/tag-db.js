@@ -46,11 +46,12 @@ var TagDB = {
 				const tag = linkAndTag.tagId
 
 				console.log(linkAndTag)
-				
+
 				if (link && tag) {
 					connection.queryAsync(insertTagLink, {linkId: link, tagId: tag}).catch(next)
 					connection.queryAsync(insertTagUser, {userId: 1, tagId: tag}).catch(next)
 				}
+				connection.end()
 			}).catch(next)
 		})
 	}

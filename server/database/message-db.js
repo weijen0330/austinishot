@@ -48,8 +48,8 @@ var MessageDB = {
 					{useArray: true}
 				).then(domainRows => {
 					if (domainRows && domainRows.length) {
-						console.log("print domain rows", domainRows[0])
-						return domainRows[0]
+						console.log("print domain rows", domainRows[0][0])
+						return domainRows[0][0]
 					} else {
 						return connection.queryAsync(
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",

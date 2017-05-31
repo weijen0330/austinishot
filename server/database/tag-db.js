@@ -26,8 +26,10 @@ var TagDB = {
 			'WHERE m.message_id = :messageId'
 		)
 		return connection.queryAsync(query, {messageId: messageId}, {useArray: true}).then(rows => {
-			console.log(rows)
+			connection.end()
+			return rows.map(row => row[0]);
 		})
+		
 	},
 
 	addTags(messageId, tags) {

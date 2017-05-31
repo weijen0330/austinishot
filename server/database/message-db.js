@@ -161,7 +161,19 @@ var MessageDB = {
 		})
 
 		connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
-			console.log(rows)
+			if (rows && rows.length) {
+				let tags = {}
+				rows.forEach(row => {
+					let messageId = row[0]
+					let tag = row[1]
+					if (!tags[messageId]) {
+						tags[messageId] = []
+					}
+					tags[messageId].push(tag)
+				})
+
+				console.log(tags)
+			}
 			
 		})
 

@@ -29,6 +29,20 @@ export default class extends React.Component {
         var tags = this.state.tags;
         tags = tags.concat(value)
         this.setState({editing: false, tags: tags}) 
+
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+        fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(tags)
+        }).then(response => {
+            if (response.ok) {
+                console.log("added tags to db ok")
+            }
+        }).then(() => {
+            //fetch all tags... maybe use web socket..
+        })
     }
 
     handleSeenButtonClicked() {

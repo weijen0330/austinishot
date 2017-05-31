@@ -30,14 +30,9 @@ var TagDB = {
 			const insertTagLink = "INSERT INTO LINKS_TAGS (link_id, tag_id) VALUES (:linkId, :tagId)"
 			const insertTagUser = "INSERT INTO USER_TAGS (user_id, tag_id) VALUES (:userId, :tagId)"
 			
-			connection.queryAsync(getTag, {tagText: tag}, {useArray: true}).then(rows => {
-				if (rows && rows.length) {
-					return rows[0]
-				} else {
-					return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
-						return connection.lastInsertId()
-					})
-				}
+			
+			return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
+				return connection.lastInsertId()
 			}).then(tagId => {
 				return connection.queryAsync(getLink, {messageId: messageId}, {useArray: true}).then(rows => {
 					if (rows && rows.length) {

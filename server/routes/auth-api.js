@@ -177,7 +177,7 @@ module.exports.Router = function (MessageDB, socketIo) {
         const newStatus = facebookReq.body.entry[0].changes[0];
         console.log("value from fb", facebookReq.body.entry[0].changes);
 
-        const statusValue = facebookReq.body.entry[0].changes;
+        const statusValue = facebookReq.body.entry[0].changes.value;
         const links = regParser(statusValue)        
         if (links.length) {
             var linkInfo = {

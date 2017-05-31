@@ -120,6 +120,7 @@ var MessageDB = {
 	},
 
 	getMessages(whereClause, options) {
+		console.log(whereClause)
 		return this._getObjects(
 			(
 				'SELECT ' +

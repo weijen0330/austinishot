@@ -163,7 +163,9 @@ module.exports.Router = function (MessageDB) {
 	})
 
 	router.get('/old', (req, res, next) => {
-		// MessageDB.getReadMessages(req.user.user_id)
+		MessageDB.getReadMessages(1).then(messages => {
+			console.log("messages", messages)
+		})
 
 		const oldMsgs = messages.filter(msg => {
 			return msg.isRead

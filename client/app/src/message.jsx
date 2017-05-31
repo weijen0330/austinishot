@@ -21,12 +21,10 @@ export default class extends React.Component {
 
         fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(response => {
             if (response.ok) {
-                console.log("response was ok")
                 return response.json()
             } 
             return []
-        }).then(tags => {
-            console.log(tags)
+        }).then(tags => {            
             this.setState({tags: tags})
         })
     }

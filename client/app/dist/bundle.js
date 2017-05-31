@@ -28116,12 +28116,10 @@
 	
 	            fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(function (response) {
 	                if (response.ok) {
-	                    console.log("response was ok");
 	                    return response.json();
 	                }
 	                return [];
 	            }).then(function (tags) {
-	                console.log(tags);
 	                _this2.setState({ tags: tags });
 	            });
 	        }

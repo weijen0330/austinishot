@@ -26733,21 +26733,20 @@
 	        _this.state = {
 	            activeTab: "browse"
 	        };
-	
+	        _this.ws = io("https://lynxapp.me");
 	        return _this;
 	    }
 	
+	    // componentDidMount() {
+	    //     let ws = io("https://lynxapp.me")
+	    //     // example of how to send data - if needed
+	    //     // ws.emit("message", "this is some data")
+	    //     ws.on("new_message", data => {
+	    //         console.log(data)
+	    //     })
+	    // }
+	
 	    _createClass(_class, [{
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            var ws = io("https://lynxapp.me");
-	            // example of how to send data - if needed
-	            // ws.emit("message", "this is some data")
-	            ws.on("new_message", function (data) {
-	                console.log(data);
-	            });
-	        }
-	    }, {
 	        key: "handleTabClick",
 	        value: function handleTabClick(e, newTab) {
 	            e.preventDefault();
@@ -26760,7 +26759,7 @@
 	            var content = void 0;
 	            switch (this.state.activeTab) {
 	                case "browse":
-	                    content = _react2.default.createElement(_browse2.default, null);
+	                    content = _react2.default.createElement(_browse2.default, { ws: this.ws });
 	                    break;
 	                case "search":
 	                    content = _react2.default.createElement(_searchPage2.default, null);
@@ -26866,6 +26865,30 @@
 			value: function componentDidMount() {
 				var _this2 = this;
 	
+				if (this.props.ws) {
+					this.props.ws.on("new_message", function (data) {
+						console.log("got a new message!");
+						var msg = data.message;
+	
+						var all = [msg].concat(_this2.state.allNew);
+	
+						switch (msg.type) {
+							case "image":
+								var images = [msg].concat(_this2.state.imagesNew);
+								_this2.setState({ allNew: all, imagesNew: images });
+								break;
+							case "video":
+								var videos = [msg].concat(_this2.state.videosNew);
+								_this2.setState({ allNew: all, videosNew: videos });
+								break;
+							default:
+								var articles = [msg].concat(_this2.state.articlesNew);
+								_this2.setState({ allNew: all, articlesNew: articles });
+								break;
+						}
+					});
+				}
+	
 				fetch("https://lynxapp.me/api/messages/new").then(function (response) {
 					return response.json();
 				}).then(function (data) {
@@ -26920,6 +26943,150 @@
 				}
 			}
 		}, {
+			key: "updateSeenStatus",
+			value: function updateSeenStatus(msg) {
+				// msg is the whole msg obj
+				// isRead = true - marked as read, move from new to old
+				// isRead = false - marked as unread, move from old to new
+				// messageId, type
+	
+	
+				var compareIds = function compareIds(m) {
+					return m.messageId != msg.messageId;
+				};
+	
+				// remove from old status and put into new status		
+	
+				switch (msg.type) {
+					case "image":
+						if (msg.isRead) {
+							//marked as read, move from new to old
+							this.setState({
+								allNew: this.state.allNew.filter(compareIds),
+								allOld: [msg].concat(this.state.allOld),
+	
+								imagesNew: this.state.imagesNew.filter(compareIds),
+								imagesOld: [msg].concat(this.state.imagesOld)
+							});
+						} else {
+							//marked as unread, move from old to new
+							this.setState({
+								allOld: this.state.allOld.filter(compareIds),
+								allNew: [msg].concat(this.state.allNew),
+	
+								imagesOld: this.state.imagesOld.filter(compareIds),
+								imagesNew: [msg].concat(this.state.imagesNew)
+							});
+						}
+						break;
+					case "video":
+						if (msg.isRead) {
+							//marked as read, move from new to old
+							this.setState({
+								allNew: this.state.allNew.filter(compareIds),
+								allOld: [msg].concat(this.state.allOld),
+	
+								videosNew: this.state.videosNew.filter(compareIds),
+								videosOld: [msg].concat(this.state.videosOld)
+							});
+						} else {
+							//marked as unread, move from old to new
+							this.setState({
+								allOld: this.state.allOld.filter(compareIds),
+								allNew: [msg].concat(this.state.allNew),
+	
+								videosOld: this.state.videosOld.filter(compareIds),
+								videosNew: [msg].concat(this.state.videosNew)
+							});
+						}
+						break;
+					default:
+						if (msg.isRead) {
+							//marked as read, move from new to old
+							this.setState({
+								allNew: this.state.allNew.filter(compareIds),
+								allOld: [msg].concat(this.state.allOld),
+	
+								articlesNew: this.state.articlesNew.filter(compareIds),
+								articlesOld: [msg].concat(this.state.articlesOld)
+							});
+						} else {
+							//marked as unread, move from old to new
+							this.setState({
+								allOld: this.state.allOld.filter(compareIds),
+								allNew: [msg].concat(this.state.allNew),
+	
+								articlesOld: this.state.articlesOld.filter(compareIds),
+								articlesNew: [msg].concat(this.state.articlesNew)
+							});
+						}
+						break;
+				}
+			}
+		}, {
+			key: "removeMessageFromUi",
+			value: function removeMessageFromUi(messageData) {
+				/*
+	   messageData = {
+	   	messageId,
+	   	type,
+	   	isRead
+	   }
+	   */
+	
+				var compareIds = function compareIds(m) {
+					return m.messageId != messageData.messageId;
+				};
+	
+				switch (messageData.type) {
+					case "image":
+						if (messageData.isRead) {
+							//old
+							this.setState({
+								allOld: this.state.allOld.filter(compareIds),
+								imagesOld: this.state.imagesOld.filter(compareIds)
+							});
+						} else {
+							//new
+							this.setState({
+								allNew: this.state.allNew.filter(compareIds),
+								imagesNew: this.state.imagesNew.filter(compareIds)
+							});
+						}
+						break;
+					case "video":
+						if (messageData.isRead) {
+							//old
+							this.setState({
+								allOld: this.state.allOld.filter(compareIds),
+								videosOld: this.state.videosOld.filter(compareIds)
+							});
+						} else {
+							//new
+							this.setState({
+								allNew: this.state.allNew.filter(compareIds),
+								videosNew: this.state.videosNew.filter(compareIds)
+							});
+						}
+						break;
+					default:
+						if (messageData.isRead) {
+							//old
+							this.setState({
+								allOld: this.state.allOld.filter(compareIds),
+								articlesOld: this.state.articlesOld.filter(compareIds)
+							});
+						} else {
+							//new
+							this.setState({
+								allNew: this.state.allNew.filter(compareIds),
+								articlesNew: this.state.articlesNew.filter(compareIds)
+							});
+						}
+						break;
+				}
+			}
+		}, {
 			key: "render",
 			value: function render() {
 				var _this3 = this;
@@ -26941,8 +27108,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: newMessages, title: "New links" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: oldMessages, title: "Older links" }) : ""
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: newMessages,
+								title: "New links"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: oldMessages,
+								title: "Older links"
+							}) : ""
 						);
 	
 						break;
@@ -26957,8 +27142,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: newMessages, title: "New articles" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: oldMessages, title: "Older articles" }) : ""
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: newMessages,
+								title: "New articles"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: oldMessages,
+								title: "Older articles"
+							}) : ""
 						);
 	
 						break;
@@ -26973,8 +27176,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: newMessages, title: "New images" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: oldMessages, title: "Older images" }) : ""
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: newMessages,
+								title: "New images"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: oldMessages,
+								title: "Older images"
+							}) : ""
 						);
 	
 						break;
@@ -26990,8 +27211,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: newMessages, title: "New videos" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: oldMessages, title: "Older videos" }) : ""
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: newMessages,
+								title: "New videos"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: oldMessages,
+								title: "Older videos"
+							}) : ""
 						);
 	
 						break;
@@ -27014,7 +27253,16 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: allMessages, title: "Links with tag '" + this.state.view + "'" }) : "No messages with tag '" + this.state.view + "'"
+							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: allMessages,
+								title: "Links with tag '" + this.state.view + "'"
+							}) : "No messages with tag '" + this.state.view + "'"
 						);
 	
 						break;
@@ -27034,7 +27282,16 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { messages: allMessages, title: "Links with domain '" + this.state.view + "'" }) : "No messages with domain '" + this.state.view + "'"
+							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
+									return _this3.removeMessageFromUi(messageData);
+								},
+								messages: allMessages,
+								title: "Links with domain '" + this.state.view + "'"
+							}) : "No messages with domain '" + this.state.view + "'"
 						);
 	
 						break;
@@ -27747,12 +28004,16 @@
 	    _createClass(_class, [{
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+	
 	            var messages = [];
 	
 	            if (this.props.messages) {
 	                messages = this.props.messages.map(function (msg) {
 	                    return _react2.default.createElement(_message2.default, {
 	                        key: msg.messageId,
+	                        removeMessageFromUi: _this2.props.removeMessageFromUi,
+	                        updateSeenStatus: _this2.props.updateSeenStatus,
 	                        msg: msg
 	                    });
 	                });
@@ -27825,9 +28086,10 @@
 	
 	        _this.state = {
 	            editing: false,
-	            tags: _this.props.msg ? _this.props.msg.tags : [],
-	            isRead: _this.props.msg.isRead
+	            tags: [],
+	            isRead: Number(_this.props.msg.isRead)
 	        };
+	
 	        return _this;
 	    }
 	
@@ -27858,10 +28120,15 @@
 	    }, {
 	        key: "handleSeenButtonClicked",
 	        value: function handleSeenButtonClicked() {
-	            var isRead = this.state.isRead;
-	            this.setState({ isRead: !isRead });
+	            var isRead = !this.state.isRead;
+	            this.setState({ isRead: isRead });
 	
-	            fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+	            var url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId;
+	            if (!isRead) {
+	                url = "https://lynxapp.me/api/messages/unread/" + this.props.msg.messageId;
+	            }
+	
+	            fetch(url, {
 	                method: "PATCH"
 	            }).then(function (response) {
 	                if (response.ok) {
@@ -27870,6 +28137,9 @@
 	                    console.log("error editing message");
 	                }
 	            });
+	
+	            this.props.msg.isRead = isRead;
+	            this.props.updateSeenStatus(this.props.msg);
 	        }
 	    }, {
 	        key: "handleDeleteMessageClick",
@@ -27880,8 +28150,14 @@
 	                if (response.ok) {
 	                    console.log("msg deleted");
 	                } else {
-	                    console.log("error deleting message");
+	                    throw new Error();
 	                }
+	            }).catch(console.log);
+	
+	            this.props.removeMessageFromUi({
+	                messageId: this.props.msg.messageId,
+	                type: this.props.msg.type,
+	                isRead: this.state.isRead
 	            });
 	        }
 	    }, {
@@ -27891,7 +28167,10 @@
 	
 	            var urlData = this.props.msg;
 	            var tags = [],
-	                addTags = "";
+	                addTags = "",
+	                titleAndDesc = "",
+	                mediaLeft = "",
+	                time;
 	            if (this.state.tags) {
 	                tags = this.state.tags.map(function (tag, i) {
 	                    return _react2.default.createElement(
@@ -27955,6 +28234,60 @@
 	                );
 	            }
 	
+	            if (urlData.title.length > 0) {
+	                titleAndDesc = _react2.default.createElement(
+	                    "div",
+	                    { style: { marginBottom: '10px' } },
+	                    _react2.default.createElement(
+	                        "h3",
+	                        { className: "title", style: { marginBottom: 0 } },
+	                        _react2.default.createElement(
+	                            "a",
+	                            { target: "_blank", href: urlData.url },
+	                            urlData.title
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "p",
+	                        null,
+	                        urlData.description,
+	                        " \xA0",
+	                        _react2.default.createElement(
+	                            "small",
+	                            null,
+	                            "from ",
+	                            urlData.domainName
+	                        )
+	                    )
+	                );
+	            } else {
+	                titleAndDesc = _react2.default.createElement(
+	                    "h3",
+	                    { className: "title", style: { marginBottom: 0 } },
+	                    _react2.default.createElement(
+	                        "a",
+	                        { target: "_blank", href: urlData.url },
+	                        urlData.url
+	                    )
+	                );
+	            }
+	
+	            if (urlData.imageUrl.length > 0) {
+	                mediaLeft = _react2.default.createElement(
+	                    "div",
+	                    { className: "media-left", style: { width: '25%' } },
+	                    _react2.default.createElement(
+	                        "figure",
+	                        { className: "image", style: { maxHeight: '100%', maxWidth: '100%' } },
+	                        _react2.default.createElement("img", { src: urlData.imageUrl, alt: "" })
+	                    )
+	                );
+	            }
+	
+	            if (urlData.timeSent) {
+	                time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString();
+	            }
+	
 	            return _react2.default.createElement(
 	                "div",
 	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
@@ -27969,42 +28302,14 @@
 	                _react2.default.createElement(
 	                    "article",
 	                    { className: "media", style: { marginBottom: '5px' } },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "media-left", style: { width: '25%' } },
-	                        _react2.default.createElement(
-	                            "figure",
-	                            { className: "image", style: { maxHeight: '100%', maxWidth: '100%' } },
-	                            _react2.default.createElement("img", { src: urlData.imageUrl, alt: "" })
-	                        )
-	                    ),
+	                    mediaLeft,
 	                    _react2.default.createElement(
 	                        "div",
 	                        { className: "media-content" },
 	                        _react2.default.createElement(
 	                            "div",
 	                            { className: "content" },
-	                            _react2.default.createElement(
-	                                "h3",
-	                                { className: "title", style: { marginBottom: 0 } },
-	                                _react2.default.createElement(
-	                                    "a",
-	                                    { target: "_blank", href: urlData.url },
-	                                    urlData.title
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                "p",
-	                                null,
-	                                urlData.description,
-	                                _react2.default.createElement("br", null),
-	                                _react2.default.createElement(
-	                                    "small",
-	                                    null,
-	                                    "from ",
-	                                    urlData.domainName
-	                                )
-	                            ),
+	                            titleAndDesc,
 	                            _react2.default.createElement(
 	                                "p",
 	                                { style: { marginBottom: '5px' } },
@@ -28022,14 +28327,15 @@
 	                                _react2.default.createElement(
 	                                    "small",
 	                                    { style: { marginLeft: '5px' } },
-	                                    urlData.timeSent,
-	                                    " ago"
+	                                    time
 	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                "p",
 	                                null,
-	                                urlData.note
+	                                "\"",
+	                                urlData.note,
+	                                "\""
 	                            )
 	                        )
 	                    )
@@ -28120,7 +28426,8 @@
 	
 	            var typesArr = [],
 	                tagsArr = [],
-	                domainsArr = [];
+	                domainsArr = [],
+	                tagArea;
 	
 	            if (this.props.types && this.props.allNew && this.props.articlesNew && this.props.imagesNew && this.props.videosNew) {
 	                typesArr = Object.keys(this.props.types).map(function (key) {
@@ -28150,13 +28457,13 @@
 	                        _this2.props[key + 'New'].length ? _react2.default.createElement(
 	                            "span",
 	                            { className: "tag is-info", style: { float: 'right' } },
-	                            _this2.props[key + "New"].length + ' new'
+	                            _this2.props[key + "New"].length + ' unseen'
 	                        ) : ""
 	                    );
 	                });
 	            }
 	
-	            if (this.props.tags) {
+	            if (this.props.tags && this.props.tags.length) {
 	                tagsArr = this.props.tags.map(function (tag) {
 	                    var selected = "";
 	                    if (_this2.props.view == tag) {
@@ -28176,6 +28483,21 @@
 	                        _this2.capitalizeString(tag)
 	                    );
 	                });
+	
+	                tagArea = _react2.default.createElement(
+	                    "dl",
+	                    null,
+	                    _react2.default.createElement(
+	                        "dt",
+	                        null,
+	                        _react2.default.createElement(
+	                            "h2",
+	                            { className: "title is-5" },
+	                            "Tags"
+	                        )
+	                    ),
+	                    tagsArr
+	                );
 	            }
 	
 	            if (this.props.domains) {
@@ -28215,20 +28537,7 @@
 	                        "Recent Activity"
 	                    ),
 	                    typesArr,
-	                    _react2.default.createElement(
-	                        "dl",
-	                        null,
-	                        _react2.default.createElement(
-	                            "dt",
-	                            null,
-	                            _react2.default.createElement(
-	                                "h2",
-	                                { className: "title is-5" },
-	                                "Tags"
-	                            )
-	                        ),
-	                        tagsArr
-	                    ),
+	                    tagArea,
 	                    _react2.default.createElement(
 	                        "dl",
 	                        { style: { marginTop: '5px' } },

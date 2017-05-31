@@ -1,33 +1,38 @@
-var TagDB = {
-	getTags(userId) {
-		return this._getObjects(
-			(
-				'SELECT DISTINCT t.tag_text AD tag FROM TAGS t ' +
-				'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
-				'WHERE ur.user_id = :userId'
-			),
-			{
-				userId: userId
-			}
-		)
-	},	
+var dbConfig = require(__base + 'secret/config-db.json');
+var MariaSql = require('mariasql');
+var bluebird = require('bluebird');
 
-	// Given connection, query and params, returns a promise containing query contents
-	// If query returns no results, returns a promise containing null
-	_getSingleObject(query, params) {
-		return this._connection
-			.queryAsync(query, {id: params.id || '', email: params.email || ''})
-			.then(rows => {
-				return rows && rows.length > 0 ? rows[0] : null;
-			});
+var TagDB = {
+	getTags() {	
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		const query = (
+			'SELECT DISTINCT t.tag_text AS tag FROM TAGS t ' +
+			'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
+			'WHERE ut.user_id = :userId'
+		)
+		return connection.queryAsync(query, {userId: 1}, {useArray: true}).then(rows => {
+			connection.end()
+			return rows.map(row => row[0])			
+		})
 	},
 
-	_getObjects(query, params) {
-		return this._connection
-			.queryAsync(query, {id: params.id})
-			.then(rows => {
-				return rows && rows.length > 0 ? rows : null;
-			});
+	addTags(messageId, tags) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+
+		const promiseTags = tags.map(tag => {
+			// insert tag
+			// hook tag to message
+			// hook tag to user
+			const insertTag = "INSERT INTO TAGS (tag_text) VALUES (:tagText)"
+			const getLink = "SELECT link_id FROM MESSAGE WHERE message_id = :messageId"
+			const insertTagLink = "INSERT INTO LINKS_TAGS (link_id, tag_id) VALUES (:linkId, :tagId)"
+			const insertTagUser = "INSERT INTO USER_TAGS (user_id, tag_id) VALUES (:userId, :tagId)"
+			
+			return connection.queryAsync(insertTag, {tagText: tag}).then(() => {
+				const tagId = connection.lastInsertId()
+				//do the rest
+			})
+		})
 	}
 }
 

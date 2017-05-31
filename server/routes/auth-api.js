@@ -80,46 +80,29 @@ module.exports.Router = function (MessageDB, socketIo) {
         // defensive
         let linkSummary = {
             url: url.href,
-            platform: linkInfo.platform,
+            platformName: linkInfo.platform,
             sender: linkInfo.sender,
-            timeStamp: linkInfo.timeStamp,
-            domain: url.hostname,
+            timeSent: linkInfo.timeStamp,
+            domainName: url.hostname,
             note: linkInfo.bodyText,
+            isRead: false,
+            tags: [],
             type: "article",
             title: "",
             description: "",
-            imgUrl: "",
-
+            imageUrl: ""                       
         };
         
         const prefix = 'https://info344api.enamarkovic.com/v1/summary?url=';
         return requestProm(prefix + url.href).then(body => {                
             const urlData = JSON.parse(body);
-            linkSummary.type = urlData.type ? urlData.type : "";
+            linkSummary.type = urlData.type && urlData.type.length > 0 ? urlData.type : "article";
             linkSummary.title = urlData.title ? urlData.title : "";
             linkSummary.description = urlData.description ? urlData.description : "";
-            linkSummary.imgUrl = urlData.image ? urlData.image : "";
+            linkSummary.imageUrl = urlData.image ? urlData.image : "";
         }).catch(err => {
             console.error(err)
         }).then(() => linkSummary)        
-    }
-
-    function addMessageToDB(userId, messageData) {
-        /*
-        messageData = {
-			url -> url that was sent in the message
-			platform -> platform it came from
-			domain -> url's domain name
-			title -> from 344 api, title of article
-			description -> from 344 api, description of article
-			url -> link url
-			imgUrl -> from 344 api, image in article
-			sender -> who sent the link 
-			note -> the text of the message
-			timeStamp -> string timestamp of when the message was sent
-            type
-		}
-        */
     }
 
 
@@ -459,7 +442,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                 var linkInfo = {
                     platform : 'slack',
                     timeStamp: info.event_ts,
-                    bodyText: info.text
+                    bodyText: (info.text).replace(/[<>]/g,'')
                 };
 
                 // identify the user through the Slack API
@@ -477,13 +460,13 @@ module.exports.Router = function (MessageDB, socketIo) {
                         // add the message to the database
                         console.log("link summary:", linkSummary);
                         return MessageDB.insertMessage(1, linkSummary)
-                    }).then((messageId) => {
-                        console.log(messageId);
+                    }).then((message) => {
+                        console.log(message);
 
-                        socketIo.emit("new_message", {message: messageId});
+                        socketIo.emit("new_message", {message: message});
                         // send the added message back to the user through web socket
                         // this should broadcast to users
-                        res.status(200).send(messageId);
+                        res.status(200).send(message);
                     }).catch(console.log)
                 });
                 

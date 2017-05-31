@@ -14,17 +14,17 @@ export default class extends React.Component {
         this.state = {
             activeTab: "browse" 
         }
-
+        this.ws = io("https://lynxapp.me");
     }
 
-    componentDidMount() {
-        let ws = io("https://lynxapp.me")
-        // example of how to send data - if needed
-        // ws.emit("message", "this is some data")
-        ws.on("new_message", data => {
-            console.log(data)
-        })
-    }
+    // componentDidMount() {
+    //     let ws = io("https://lynxapp.me")
+    //     // example of how to send data - if needed
+    //     // ws.emit("message", "this is some data")
+    //     ws.on("new_message", data => {
+    //         console.log(data)
+    //     })
+    // }
 
     handleTabClick(e, newTab) {
         e.preventDefault()
@@ -36,7 +36,7 @@ export default class extends React.Component {
         let content;
         switch (this.state.activeTab) {
             case "browse":
-                content = <Browse />
+                content = <Browse ws={this.ws}/>
                 break;
             case "search":
                 content = <SearchPage />

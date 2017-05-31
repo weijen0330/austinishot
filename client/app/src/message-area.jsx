@@ -22,6 +22,8 @@ export default class extends React.Component {
                 return (
                     <Message 
                         key={msg.messageId}
+                        removeMessageFromUi={this.props.removeMessageFromUi} 
+                        updateSeenStatus={this.props.updateSeenStatus}
                         msg={msg}
                     />
                 )

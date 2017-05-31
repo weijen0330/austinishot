@@ -8,9 +8,10 @@ export default class extends React.Component {
         super(props);
         this.state = {
             editing: false,
-            tags: (this.props.msg ? this.props.msg.tags : []),
-            isRead: this.props.msg.isRead 
+            tags: [],
+            isRead: Number(this.props.msg.isRead)
 		}
+     
     }
 
     componentDidMount() {
@@ -31,10 +32,15 @@ export default class extends React.Component {
     }
 
     handleSeenButtonClicked() {
-        const isRead = this.state.isRead
-        this.setState({isRead: !isRead})
+        const isRead = !this.state.isRead
+        this.setState({isRead: isRead})
         
-        fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+        let url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId
+        if (!isRead) { 
+            url = "https://lynxapp.me/api/messages/unread/" + this.props.msg.messageId
+        } 
+
+        fetch(url, {
             method: "PATCH"            
         }).then(response => {
             if (response.ok) {
@@ -43,6 +49,9 @@ export default class extends React.Component {
                 console.log("error editing message")
             }
         })
+        
+        this.props.msg.isRead = isRead
+        this.props.updateSeenStatus(this.props.msg)
     }
     
     handleDeleteMessageClick() {
@@ -52,14 +61,20 @@ export default class extends React.Component {
             if (response.ok) {
                 console.log("msg deleted")
             } else {
-                console.log("error deleting message")
+                throw new Error()
             }
+        }).catch(console.log)
+
+        this.props.removeMessageFromUi({
+            messageId: this.props.msg.messageId,
+            type: this.props.msg.type,
+            isRead: this.state.isRead
         })
     }
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = [], addTags = ""
+        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {
                 return (
@@ -106,6 +121,37 @@ export default class extends React.Component {
                 </a>
             )
         }
+        
+        if (urlData.title.length > 0) {
+            titleAndDesc = (
+                <div style={{marginBottom: '10px'}}>
+                    <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.title}</a></h3>
+                    <p>
+                        {urlData.description} &nbsp;                                
+                        <small >from {urlData.domainName}</small>
+                    </p>
+                </div>
+            )
+        } else {
+            titleAndDesc = <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.url}</a></h3>
+        }
+        
+
+        if (urlData.imageUrl.length > 0) {
+            mediaLeft = (
+                <div className="media-left" style={{width: '25%'}}>
+                    <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>
+                        <img src={urlData.imageUrl} alt="" />
+                    </figure>
+                </div>
+            )
+        }
+
+        if (urlData.timeSent) {
+            time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString()
+        }
+
+
 
         return (
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
@@ -120,26 +166,18 @@ export default class extends React.Component {
 
                <article className="media" style={{marginBottom: '5px'}}>
 
-                   <div className="media-left" style={{width: '25%'}}>
-                       <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>
-                           <img src={urlData.imageUrl} alt="" />
-                       </figure>
-                   </div>
+                   {mediaLeft}
 
                    <div className="media-content">
                        <div className="content">                           
-                           <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.title}</a></h3>
-                           <p>
-                                {urlData.description} 
-                                <br /> 
-                                <small >from {urlData.domainName}</small>
-                            </p>
+                           {titleAndDesc}
+
                            <p style={{marginBottom: '5px'}}>
                                <strong>{urlData.sender}</strong>
                                 <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>
-                                <small style={{marginLeft: '5px'}}>{urlData.timeSent} ago</small>                                
+                                <small style={{marginLeft: '5px'}}>{time}</small>                                
                            </p>
-                           <p>{urlData.note}</p>
+                           <p>"{urlData.note}"</p>
                        </div>
                    </div>
                </article>

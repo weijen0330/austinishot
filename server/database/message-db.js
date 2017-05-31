@@ -1,17 +1,22 @@
+var dbConfig = require(__base + 'secret/config-db.json');
+var MariaSql = require('mariasql');
+var bluebird = require('bluebird');
+
 var MessageDB = {
-	insertMessage(userId, messageData) {				
+	insertMessage(userId, messageData) {	
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));			
 		/*
 		messageData = {
 			url -> url that was sent in the message
-			platform -> platform it came from
-			domain -> url's domain name
+			platformName -> platform it came from
+			domainName -> url's domain name
 			title -> from 344 api, title of article
 			description -> from 344 api, description of article
 			type -> from 344 
-			imgUrl -> from 344 api, image in article
+			imageUrl -> from 344 api, image in article
 			sender -> who sent the link 
 			note -> the text of the message
-			timeStamp -> string timestamp of when the message was sent
+			timeSent -> string timestamp of when the message was sent
 		}
 
 		1. check if link exists
@@ -27,7 +32,7 @@ var MessageDB = {
 		*/
 		
 		// TODO: check if message is already if there before adding again
-		return this._connection.queryAsync(
+		return connection.queryAsync(
 			"SELECT link_id FROM LINKS WHERE url = :url",
 			{url: messageData.url}
 		).then(linkRows => {
@@ -37,21 +42,21 @@ var MessageDB = {
 				// link doesnt exist
 
 				//check if domain exists
-				return this._connection.queryAsync(
+				return connection.queryAsync(
 					"SELECT domain_id FROM DOMAIN WHERE domain_name = :domain",
-					{domain: messageData.domain}
+					{domain: messageData.domainName}
 				).then(domainRows => {
 					if (domainRows && domainRows.length > 0) {
 						return domainRows[0].domainId
 					} else {
-						return this._connection.queryAsync(
+						return connection.queryAsync(
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",
-							{domain: messageData.domain}
+							{domain: messageData.domainName}
 						).then(() => {							
-							return this._connection.lastInsertId()
+							return connection.lastInsertId()
 						}).then(domainId => {
 							
-							this._connection.queryAsync(
+							connection.queryAsync(
 								"INSERT INTO USER_DOMAINS VALUES (:userId, :domainId)",
 								{userId: userId, domainId: domainId}
 							)
@@ -60,7 +65,7 @@ var MessageDB = {
 					}
 				}).then(domainId => {
 					// insert link, return id
-					return this._connection.queryAsync(
+					return connection.queryAsync(
 						"INSERT INTO LINKS (title, description, type, domain_id, url, img_url) " +
 						"VALUES (:title, :description, :type, :domainId, :url, :imgUrl)",
 						{
@@ -69,18 +74,18 @@ var MessageDB = {
 							type: messageData.type,
 							domainId: domainId,
 							url: messageData.url,
-							imgUrl: messageData.imgUrl
+							imgUrl: messageData.imageUrl
 						}
 					).then(() => {
-						return this._connection.lastInsertId()
+						return connection.lastInsertId()
 					})
 				}) 
 			}
 		}).then(linkId => {
 			// get platform id
-			return this._connection.queryAsync(
+			return connection.queryAsync(
 				"SELECT platform_id FROM PLATFORM WHERE platform_name = :platform",
-				{platform: messageData.platform}
+				{platform: messageData.platformName}
 			).then(platformRows => {
 				return {
 					platformId: platformRows[0].platform_id,
@@ -88,7 +93,7 @@ var MessageDB = {
 				}
 			})
 		}).then(ids => {
-			return this._connection.queryAsync(
+			return connection.queryAsync(
 				"INSERT INTO MESSAGE (link_id, sender, recipient_id, platform_id, note, timeSent, is_read, deleted) " + 
 				"VALUES (:linkId, :sender, :recipId, :platId, :note, :time, :isRead, :deleted)",
 				{
@@ -97,35 +102,36 @@ var MessageDB = {
 					recipId: userId,
 					platId: ids.platformId,
 					note: messageData.note,
-					time: messageData.timeStamp,
+					time: messageData.timeSent,
 					isRead: false,
 					deleted: false
 				}
 			).then(() => {
-				return this._connection.lastInsertId()
+				return connection.lastInsertId()
 			})
 		}).then(messageId => {
-			return this._connection.queryAsync(
+			return connection.queryAsync(
 				"INSERT INTO USER_MESSAGES (user_id, message_id) VALUES (:userId, :messageId)",
 				{userId: userId, messageId: messageId}
 			).then(() => {
 				return messageId
 			})
-		}).then((message_id) => {
-			this._connection.end()
-			return message_id;
+		}).then((messageId) => {
+			connection.end()
+			messageData.messageId = messageId
+			return messageData
 		})
 
 	},
 
-	getMessages(whereClause, options) {
+	getMessages(whereClause) {
 		return this._getObjects(
 			(
 				'SELECT ' +
-					'm.message_id AS messageId' +
+					'm.message_id AS messageId, ' +
 					'm.sender, ' +
 					'm.note, ' +
-					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
+					'm.timeSent, ' +
 					'm.is_read AS isRead, ' +
 					'p.platform_name AS platformName, ' +
 					'l.title, ' +
@@ -133,14 +139,14 @@ var MessageDB = {
 					'l.type, ' +
 					'l.url, ' +
 					'l.img_url AS imgUrl, ' +
-					'd.domain_name AS domainName' +
-					't.tag_text AS tag ' + 
-				'FROM MESSAGE ' + 
+					'd.domain_name AS domainName ' +
+					// 't.tag_text AS tag ' + 
+				'FROM MESSAGE m ' + 
 				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
 				'JOIN LINKS l ON m.link_id = l.link_id ' + 
 				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
-				'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
-				'JOIN TAGS t ON lt.tag_id = t.tag_id' +
+				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
+				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
 				whereClause
 			), 
 			options
@@ -148,33 +154,71 @@ var MessageDB = {
 	},
 
 	getUnreadMessages(userId) {
-		return this.getMessages(
-			(
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
+		const query = (
+			'SELECT ' +
+					'm.message_id AS messageId, ' +
+					'm.sender, ' +
+					'm.note, ' +
+					'm.timeSent, ' +
+					'm.is_read AS isRead, ' +
+					'p.platform_name AS platformName, ' +
+					'l.title, ' +
+					'l.description, ' +
+					'l.type, ' +
+					'l.url, ' +
+					'l.img_url AS imageUrl, ' +
+					'd.domain_name AS domainName ' +
+					// 't.tag_text AS tag ' + 
+				'FROM MESSAGE m ' + 
+				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
+				'JOIN LINKS l ON m.link_id = l.link_id ' + 
+				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
+				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
+				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
 				'WHERE m.recipient_id = :userId ' + 
 				'AND m.is_read = :isRead ' + 
-				'AND m.deleted = :isDeleted'
-			),
-			{
-				userId: userId,
-				isRead: false,
-				isDeleted: false
-			}
+				'AND m.deleted = :deleted '
 		)
+		
+		return connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0}).then(messages => {
+			connection.end()
+			return messages
+		})
 	},	
 
 	getReadMessages(userId) {
-		return this.getMessages(
-			(
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
+		const query = (
+			'SELECT ' +
+					'm.message_id AS messageId, ' +
+					'm.sender, ' +
+					'm.note, ' +
+					'm.timeSent, ' +
+					'm.is_read AS isRead, ' +
+					'p.platform_name AS platformName, ' +
+					'l.title, ' +
+					'l.description, ' +
+					'l.type, ' +
+					'l.url, ' +
+					'l.img_url AS imageUrl, ' +
+					'd.domain_name AS domainName ' +
+					// 't.tag_text AS tag ' + 
+				'FROM MESSAGE m ' + 
+				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
+				'JOIN LINKS l ON m.link_id = l.link_id ' + 
+				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
+				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
+				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
 				'WHERE m.recipient_id = :userId ' + 
 				'AND m.is_read = :isRead ' + 
-				'AND m.deleted = :isDeleted'
-			),
-			{
-				userId: userId,
-				isRead: true,
-				isDeleted: false
-			}
+				'AND m.deleted = :deleted '
 		)
+		
+		return connection.queryAsync(query, {userId: 1, isRead: 1, deleted: 0}).then(messages => {
+			connection.end()
+			return messages
+		})
 	},
 
 	getMessageWithTag(userId, tag) {
@@ -242,17 +286,35 @@ var MessageDB = {
 	},
 
 	markRead(messageId) {
-		return this._connection.queryAsync(
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		return connection.queryAsync(
 			'UPDATE MESSAGE SET is_read = 1 WHERE message_id = :messageId',
 			{messageId: messageId}
-		)
+		).then((info) => {
+			console.log(info)
+			connection.end()
+		})
+	},
+
+	markUnRead(messageId) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		return connection.queryAsync(
+			'UPDATE MESSAGE SET is_read = 0 WHERE message_id = :messageId',
+			{messageId: messageId}
+		).then((info) => {
+			console.log(info)
+			connection.end()
+		})
 	},
 
 	markDeleted(messageId) {
-		return this._connection.queryAsync(
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));		
+		return connection.queryAsync(
 			'UPDATE MESSAGE SET deleted = 1 WHERE message_id = :messageId',
 			{messageId: messageId}
-		);
+		).then(() => {
+			connection.end()
+		})
 	},
 
 	// TODO: this probably has to be modified too

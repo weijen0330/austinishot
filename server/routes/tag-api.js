@@ -7,31 +7,19 @@ const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).
 module.exports.Router = function (TagDB) {
 	var router = express.Router();
 
-/*
-	delete specific category 
-	app.delete('/:cat', function (req, res, next) {
-		req.params.cat <- get the param passes in
-	});
-
-	get messages with specific category?
-	app.get('/:cat/mesages', function (req, res, next) {
-		req.params.cat
-	})
-
-	get messages but execute specific query
-	app.get('/messages?query=jsdhfs', function req, res, next) {
-		req.query.query <- getting the query
-	});
-*/
-
 	router.get('/', (req, res, next) => {
-		// TagDB.getTags(req.user.user_id)
-		let tags = []
-		messages.forEach(msg => {
-			tags = tags.concat(msg.tags)
+		TagDB.getTags().then(rows => {
+			res.json(rows)
 		})
-		res.json(tags)
 	});	
+
+	// adds tags to message
+	router.post('/:messageId', (req, res, next) => {
+		const tags = req.body.tags
+		if (tags && tags.length) {
+			
+		}
+	})
 
 	return router;
 }

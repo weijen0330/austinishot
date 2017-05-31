@@ -59,9 +59,12 @@ export default class extends React.Component {
                 <Navbar 
                     activeTab={this.state.activeTab} 
                     handleTabClick={this.handleTabClick.bind(this)}
-                    handleModalClick={this.handleModalClick.bind(this)} /> 
+                    handleModalClick={this.handleModalClick.bind(this)} 
+                /> 
 
-                <Modal active={this.state.modal} />              
+                <Modal active={this.state.modal} 
+                handleModalClick={this.handleModalClick.bind(this)}
+                />              
                     
                 {content}
             </div>

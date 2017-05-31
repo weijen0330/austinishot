@@ -26507,8 +26507,11 @@
 	                _react2.default.createElement(_navbar2.default, {
 	                    activeTab: this.state.activeTab,
 	                    handleTabClick: this.handleTabClick.bind(this),
-	                    handleModalClick: this.handleModalClick.bind(this) }),
-	                _react2.default.createElement(_modal2.default, { active: this.state.modal }),
+	                    handleModalClick: this.handleModalClick.bind(this)
+	                }),
+	                _react2.default.createElement(_modal2.default, { active: this.state.modal,
+	                    handleModalClick: this.handleModalClick.bind(this)
+	                }),
 	                content
 	            );
 	        }
@@ -29195,6 +29198,7 @@
 	    _createClass(_class, [{
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
 	
 	            var modalClass;
 	            switch (this.props.active) {
@@ -29221,12 +29225,19 @@
 	                            { className: "modal-card-title" },
 	                            "Modal title"
 	                        ),
-	                        _react2.default.createElement("button", { className: "delete" })
+	                        _react2.default.createElement("button", { onClick: function onClick(e) {
+	                                return _this2.props.handleModalClick(e, "false");
+	                            }, className: "delete" })
 	                    ),
 	                    _react2.default.createElement(
 	                        "section",
 	                        { className: "modal-card-body" },
-	                        _react2.default.createElement("img", { src: "img/browse.png" })
+	                        _react2.default.createElement("img", { src: "img/browse.png" }),
+	                        _react2.default.createElement(
+	                            "p",
+	                            null,
+	                            "hello"
+	                        )
 	                    ),
 	                    _react2.default.createElement(
 	                        "footer",

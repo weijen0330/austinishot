@@ -24,10 +24,11 @@ export default class extends React.Component {
                 <div className="modal-card">
                     <header className="modal-card-head">
                         <p className="modal-card-title">Modal title</p>
-                        <button className="delete"></button>
+                        <button onClick={e => this.props.handleModalClick(e, "false")} className="delete"></button>
                     </header>
                     <section className="modal-card-body">
                         <img src="img/browse.png" />
+                        <p>hello</p>
                     </section>
                     <footer className="modal-card-foot">
                         <a className="button is-success">Save changes</a>

@@ -4,16 +4,25 @@ var DomainDB = {
 	// If userId does not exist in db or no domains have been found in relation
 	// to that user, returns a promise containing null
 	getDomains(userId) {
-		return this._getObjects(
-			(
-				'SELECT d.domain_name AS domain FROM DOMAIN d ' +
-				'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
-				'WHERE ud.user_id = :userId'
-			),
-			{
-				userId: userId
-			}
+		const query = (
+			'SELECT d.domain_name AS domain FROM DOMAIN d ' +
+			'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
+			'WHERE ud.user_id = :userId'
 		)
+		return this._connection.queryAsync(query, {userId: 1}).then(rows => {
+			this._connection.end()
+			return rows
+		})
+		// return this._getObjects(
+		// 	(
+		// 		'SELECT d.domain_name AS domain FROM DOMAIN d ' +
+		// 		'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
+		// 		'WHERE ud.user_id = :userId'
+		// 	),
+		// 	{
+		// 		userId: userId
+		// 	}
+		// )
 	},
 
 	// Given connection, query and params, returns a promise containing query contents

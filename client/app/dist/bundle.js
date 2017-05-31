@@ -26866,7 +26866,7 @@
 				var _this2 = this;
 	
 				if (this.props.ws) {
-					ws.on("new_message", function (data) {
+					this.props.ws.on("new_message", function (data) {
 						console.log(data);
 					});
 				}

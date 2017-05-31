@@ -28,7 +28,7 @@ export default class extends React.Component {
     }
 	componentDidMount() {
 		if (this.props.ws) {
-			ws.on("new_message", data => {
+			this.props.ws.on("new_message", data => {
 				console.log(data)
 			})
 		}

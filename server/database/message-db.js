@@ -242,7 +242,6 @@ var MessageDB = {
 						result = result && true
 					}
 				}
-				console.log("tags", tags)
 				if (tags.length) {
 					if (message.tags.includes(tags)) {
 						hitCriteria = true
@@ -267,10 +266,11 @@ var MessageDB = {
 						result = result && true
 					}
 				}
-
+				console.log("hit criteria", hitCriteria)
+				console.log("hit result", result)
 				return hitCriteria && result
 			})
-
+			
 			return filteredMessages
 		});
 	},

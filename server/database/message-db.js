@@ -123,7 +123,7 @@ var MessageDB = {
 		return this._getObjects(
 			(
 				'SELECT ' +
-					'm.message_id AS messageId' +
+					'm.message_id AS messageId, ' +
 					'm.sender, ' +
 					'm.note, ' +
 					'm.timeSent, ' +

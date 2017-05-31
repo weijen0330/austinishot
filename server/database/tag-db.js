@@ -28,10 +28,30 @@ var TagDB = {
 			const insertTagLink = "INSERT INTO LINKS_TAGS (link_id, tag_id) VALUES (:linkId, :tagId)"
 			const insertTagUser = "INSERT INTO USER_TAGS (user_id, tag_id) VALUES (:userId, :tagId)"
 			
-			return connection.queryAsync(insertTag, {tagText: tag}).then(() => {
+			return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
 				const tagId = connection.lastInsertId()
-				//do the rest
-			})
+				
+				return connection.queryAsync(getLink, {messageId: messageId}).then(rows => {
+					if (rows && rows.length) {
+						const linkId = rows[0]
+						return {
+							tagId: tagId,
+							linkId: linkId
+						}						
+					} 
+					return {}
+				}).catch(next)
+			}).then(linkAndTag => {
+				const link = linkAndTag.linkId
+				const tag = linkAndTag.tagId
+
+				console.log(linkAndTag)
+				
+				if (link && tag) {
+					connection.queryAsync(insertTagLink, {linkId: link, tagId: tag}).catch(next)
+					connection.queryAsync(insertTagUser, {userId: 1, tagId: tag}).catch(next)
+				}
+			}).catch(next)
 		})
 	}
 }

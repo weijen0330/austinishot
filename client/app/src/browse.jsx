@@ -29,6 +29,7 @@ export default class extends React.Component {
 	componentDidMount() {
 		if (this.props.ws) {
 			this.props.ws.on("new_message", data => {
+				console.log("got a new message!")
 				const msg = data.message
 				
 				let all = this.state.allNew.concat(msg)

@@ -26867,6 +26867,7 @@
 	
 				if (this.props.ws) {
 					this.props.ws.on("new_message", function (data) {
+						console.log("got a new message!");
 						var msg = data.message;
 	
 						var all = _this2.state.allNew.concat(msg);
@@ -27988,7 +27989,6 @@
 	            } else {
 	                title = urlData.url;
 	            }
-	            console.log(urlData);
 	
 	            if (urlData.imageUrl.length > 0) {
 	                mediaLeft = _react2.default.createElement(

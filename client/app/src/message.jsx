@@ -117,7 +117,7 @@ export default class extends React.Component {
         } else {
             title = urlData.url
         }
-        console.log(urlData)
+        
 
         if (urlData.imageUrl.length > 0) {
             mediaLeft = (

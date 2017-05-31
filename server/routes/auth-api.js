@@ -470,22 +470,23 @@ module.exports.Router = function (MessageDB, socketIo) {
                     } else {
                         linkInfo.sender = usersInfo.name;
                     }
+                    
+                    // send the urls through 344 handler
+                    // generate link summary is expecting url object ( new URL() )
+                    generateLinkSummary(links[0], linkInfo).then(linkSummary => {
+                        // add the message to the database
+                        console.log("link summary:", linkSummary);
+                        return MessageDB.insertMessage(1, linkSummary)
+                    }).then((messageId) => {
+                        console.log(messageId);
+
+                        socketIo.emit("new_message", {message: messageId});
+                        // send the added message back to the user through web socket
+                        // this should broadcast to users
+                        res.status(200).send(messageId);
+                    }).catch(console.log)
                 });
-
-                // send the urls through 344 handler
-                // generate link summary is expecting url object ( new URL() )
-                generateLinkSummary(links[0], linkInfo).then(linkSummary => {
-                    // add the message to the database
-                    console.log("link summary:", linkSummary);
-                    return MessageDB.insertMessage(1, linkSummary)
-                }).then((messageId) => {
-                    console.log(messageId);
-
-                    socketIo.emit("new_message", {message: messageId});
-                    // send the added message back to the user through web socket
-                    // this should broadcast to users
-                    res.status(200).send(messageId);
-                }).catch(console.log)
+                
             } else {
                 res.status(200).send("did not have a link");
             }

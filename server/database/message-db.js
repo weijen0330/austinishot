@@ -208,8 +208,7 @@ var MessageDB = {
 		// might now use this
 		const sender = criteria.senderOrReceiver
 
-		this.getAllMessages().then(allMessages => {
-			console.log(allMessages)
+		this.getAllMessages().then(allMessages => {			
 			let filteredMessages = allMessages.filter(message => {
 				/*
 					messageId
@@ -269,7 +268,7 @@ var MessageDB = {
 				return hitCriteria && result
 			})
 
-			console.log(filteredMessages)
+			console.log("filtered messages", filteredMessages)
 
 		});
 	},

@@ -13,6 +13,15 @@ module.exports.Router = function (TagDB, socketIo) {
 		})
 	});	
 
+	// get all tags for message id
+	router.get('/:messageId', (req, res, next) => {
+		const messageId = req.params.messageId
+		TagDB.getTagsForMessage(messageId).then(rows => {
+			console.log(rows)
+			res.send("got rows")
+		})
+	})
+
 	// adds tags to message
 	router.post('/:messageId', (req, res, next) => {
 		const messageId = req.params.messageId

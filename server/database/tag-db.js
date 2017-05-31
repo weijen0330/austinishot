@@ -16,6 +16,20 @@ var TagDB = {
 		})
 	},
 
+	getTagsForMessage(messageId) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		const query = (
+			'SELECT DISTINCT t.tag_text AS tag FROM TAGS t ' +
+			'JOIN LINKS_TAGS lt ON t.tag_id = lt.tag_id ' + 
+			'JOIN LINKS l ON lt.link_id = l.link_id ' + 
+			'JOIN MESSAGE m ON l.link_id = m.link_id ' + 
+			'WHERE m.message_id = :messageId'
+		)
+		return connection.queryAsync(query, {messageId: messageId}, {useArray: true}).then(rows => {
+			console.log(rows)
+		})
+	},
+
 	addTags(messageId, tags) {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
 		console.log(tags)
@@ -45,24 +59,7 @@ var TagDB = {
 					} 
 					return {}
 				})
-			})
-
-			// return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
-			// 	const tagId = connection.lastInsertId()
-				
-			// 	return connection.queryAsync(getLink, {messageId: messageId}, {useArray: true}).then(rows => {
-			// 		if (rows && rows.length) {
-			// 			const linkId = rows[0]
-			// 			console.log("link rows", rows)
-			// 			return {
-			// 				tagId: tagId,
-			// 				linkId: linkId
-			// 			}						
-			// 		} 
-			// 		return {}
-			// 	})
-			// })
-			.then(linkAndTag => {
+			}).then(linkAndTag => {
 				const link = linkAndTag.linkId
 				const tag = linkAndTag.tagId
 

@@ -4,7 +4,7 @@ const request = require('request');
 const requestProm = require('request-promise');
 const fs = require('fs');
 const base64url = require('base64url');
-const URL = require('url').URL
+const URL = require('url').URL;
 
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
@@ -53,19 +53,19 @@ module.exports.Router = function (currentUser, MessageDB) {
         // defensive
         if (message) {            
             // Slack puts brackets around their links, so we need to remove them.
-            const words = message.replace(/[<>]/g,'').split(' ');
+            var words = message.replace(/[<>]/g,'').split(' ');
 
-            const urls = [];
+            var urls = [];
 
             for (i = 0; i < words.length; i++) {
                 console.log('The word is: ' + words[i]);
                                 
                 // if it is a link, we will call the link summary API
                 try {
-                    const url = new URL(words[i])
+                    const url = new URL(words[i]);
                     urls.push(url);
                 } catch (e) {
-                    console.log("not a link")
+                    console.log("not a link");
                 }
             }
             return urls;
@@ -90,15 +90,15 @@ module.exports.Router = function (currentUser, MessageDB) {
             description: "",
             imgUrl: "",
 
-        }
+        };
         
         const prefix = 'https://info344api.enamarkovic.com/v1/summary?url=';
         return requestProm(prefix + url.href).then(body => {                
-            const urlData = JSON.parse(body)
-            linkSummary.type = urlData.type ? urlData.type : ""
-            linkSummary.title = urlData.title ? urlData.title : ""
-            linkSummary.description = urlData.description ? urlData.description : ""
-            linkSummary.imgUrl = urlData.image ? urlData.image : ""                
+            const urlData = JSON.parse(body);
+            linkSummary.type = urlData.type ? urlData.type : "";
+            linkSummary.title = urlData.title ? urlData.title : "";
+            linkSummary.description = urlData.description ? urlData.description : "";
+            linkSummary.imgUrl = urlData.image ? urlData.image : "";
         }).catch(err => {
             console.error(err)
         }).then(() => linkSummary)        
@@ -152,11 +152,22 @@ module.exports.Router = function (currentUser, MessageDB) {
                 };
 
                 const reqParam = {
-                    fields:"type,caption,description,link"
+                    fields : 'type,caption,description,link,updated_time,from'
                 };
 
                 // Grab all the statuses on the feed.
                 graph.setOptions(fboptions).get("/me/feed", reqParam, function(err, res) {
+                    var messages = res.data;
+                    for (i = 0; i < messages.length; i++) {
+                        if (messages) {
+
+                        }
+                        var linkInfo = {
+                            platform : 'facebook'
+                        };
+
+                        if
+                    }
                     console.log(res);
                 });
 
@@ -184,10 +195,12 @@ module.exports.Router = function (currentUser, MessageDB) {
         //              id: '44444444_444444444',
         //              value: 'This is an Example Status.' } ]
         const text = req.body.entry[0].changes[0].value;
-        const linkinfo = {
-            service : 'facebook',
-            time: Date.now(),
-            sender: ''
+        var linkInfo = {
+
+            platform : 'facebook',
+            bodyText : req.body.entry[0].changes[0].value,
+            timeStamp : Date.now(),
+
         };
 
         res.status(200).send(regParser(text, linkinfo));
@@ -257,7 +270,6 @@ module.exports.Router = function (currentUser, MessageDB) {
             + '&code=' + slackReq.query.code
             + '&redirect_uri=' + authConf.slack.redirectUri;
 
-        const linkSummaries = [];
         // Send request to Slack server for an API token
         request(apiTokenUrl, function (err, res, body) {
             // If successful, parse the response and save the token so we can call the API multiple times
@@ -273,31 +285,44 @@ module.exports.Router = function (currentUser, MessageDB) {
                     if (channelListErr || !channelListInfo.ok) {
                         console.log('Error: Unable to retrieve public channel list.');
                     } else {
-
                         // Use the channel IDs to grab the messages
                         for (i = 0; i < channelListInfo.channels.length; i++) {
                             slackWeb.channels.history(channelListInfo.channels[i].id, function(channelHistErr, channelHistInfo) {
-
                                 if (channelHistErr || !channelHistInfo.ok) {
                                     console.log('Error: Unable to retrieve messages for channel with ID: ' + channelListInfo.channels[i].id);
                                 } else {
+                                    var linkInfo = {
+                                        platform : 'slack'
+                                    };
                                     for (j = 0; j < channelHistInfo.messages.length; j++) {
-                                        linkinfo.service = 'slack';
-                                        linkinfo.time = channelHistInfo.messages[j].ts;
+                                        let links = regParser(channelHistInfo.messages[j].text);
+                                        if (links.length > 0) {
+                                            linkInfo.timeStamp = channelHistInfo.messages[j].ts;
+                                            linkInfo.bodyText = channelHistInfo.messages[j].text;
 
-                                        slackWeb.users.info(channelHistInfo.messages[j].user, function(usersInfoErr, usersInfo) {
-                                            if (usersInfoErr || !usersInfo.ok) {
-                                                console.log('Error: Unable to identify user while fetching public channel messages.');
-                                                linkinfo.from = '';
-                                            } else {
-                                                linkinfo.from = usersInfo.real_name;
+                                            slackWeb.users.info(channelHistInfo.messages[j].user, function(usersInfoErr, usersInfo) {
+                                                if (usersInfoErr || !usersInfo.ok) {
+                                                    console.log('Error: Unable to identify user while fetching public channel messages.');
+                                                    linkInfo.sender = '';
+                                                } else {
+                                                    linkInfo.sender = usersInfo.real_name;
+                                                }
+                                            });
+
+                                            for (k = 0; k < links.length; k++) {
+                                                generateLinkSummary(links[k], linkInfo).then(linkSummary => {
+                                                    // add the message to the database
+                                                    console.log("link summary:", linkSummary);
+                                                    return MessageDB.insertMessage(currentUser, linkSummary)
+                                                }).then((messageId) => {
+
+                                                    // send the added message back to the user through web socket
+                                                    // this should broadcast to users
+                                                    res.status(200).send(messageId);
+                                                }).catch(console.log);
                                             }
-                                        });
-
-                                        regParser(channelHistInfo.messages[j], linkinfo);
-                                        generat
+                                        }
                                     }
-                                    console.log(channelHistInfo.messages);
                                 }
                             });
                         }
@@ -314,25 +339,40 @@ module.exports.Router = function (currentUser, MessageDB) {
                                 if (imHistErr || !imHistInfo.ok) {
                                     console.log('Error: Unable to retrieve messages for direct message with ID: ' + imListInfo.ims[i].id);
                                 } else {
+
+                                    var linkInfo = {
+                                        platform : 'slack'
+                                    };
+
                                     for (j = 0; j < imHistInfo.messages.length; j++) {
 
+                                        let links = regParser(imHistInfo.messages[j].text);
+                                        if (links.length > 0) {
+                                            linkInfo.timeStamp = imHistInfo.messages[j].ts;
+                                            linkInfo.bodyText = imHistInfo.messages[j].text;
 
-                                        var linkinfo = {
-                                            service: 'slack',
-                                            time: imHistInfo.messages[j].ts
-                                        };
+                                            slackWeb.users.info(imHistInfo.messages[j].user, function(usersInfoErr, usersInfo) {
+                                                if (usersInfoErr || !usersInfo.ok) {
+                                                    console.log('Error: Unable to identify user while fetching public channel messages.');
+                                                    linkInfo.sender = '';
+                                                } else {
+                                                    linkInfo.sender = usersInfo.real_name;
+                                                }
+                                            });
 
-                                        slackWeb.users.info(imHistInfo.messages[j].user, function (usersInfoErr, usersInfo) {
-                                            if (usersInfoErr || !usersInfo.ok) {
-                                                console.log('Error: Unable to identify user while fetching direct messages.');
-                                                linkinfo.from = '';
-                                            } else {
-                                                linkinfo.from = usersInfo.real_name;
+                                            for (k = 0; k < links.length; k++) {
+                                                generateLinkSummary(links[k], linkInfo).then(linkSummary => {
+                                                    // add the message to the database
+                                                    console.log("link summary:", linkSummary);
+                                                    return MessageDB.insertMessage(currentUser, linkSummary)
+                                                }).then((messageId) => {
+
+                                                    // send the added message back to the user through web socket
+                                                    // this should broadcast to users
+                                                    res.status(200).send(messageId);
+                                                }).catch(console.log);
                                             }
-                                        });
-
-                                        regParser(imHistInfo.messages[j], linkinfo);
-                                        console.log(imHistInfo.messages);
+                                        }
                                     }
                                 }
                             });
@@ -350,23 +390,38 @@ module.exports.Router = function (currentUser, MessageDB) {
                                 if (mpimHistErr || !mpimHistInfo.ok) {
                                     console.log('Error: Unable to retrieve messages for group direct message with ID: ' + mpimHistInfo.groups[i].id);
                                 } else {
-                                    for (j = 0; j < mpimHistInfo.messages.length; j++) {
-                                        var linkinfo = {
-                                            service: 'slack',
-                                            time: mpimHistInfo.messages[j].ts
-                                        };
+                                    var linkInfo = {
+                                        platform : 'slack'
+                                    };
 
-                                        slackWeb.users.info(mpimHistInfo.messages[j].user, function (usersInfoErr, usersInfo) {
-                                            if (usersInfoErr || !usersInfo.ok) {
-                                                console.log('Error: Unable to identify user while fetching direct messages.');
-                                                linkinfo.from = '';
-                                            } else {
-                                                linkinfo.from = usersInfo.real_name;
+                                    for (j = 0; j < imHistInfo.messages.length; j++) {
+                                        let links = regParser(mpimHistInfo.messages[j].text);
+                                        if (links.length > 0) {
+                                            linkInfo.timeStamp = mpimHistInfo.messages[j].ts;
+                                            linkInfo.bodyText = mpimHistInfo.messages[j].text;
+
+                                            slackWeb.users.info(mpimHistInfo.messages[j].user, function (usersInfoErr, usersInfo) {
+                                                if (usersInfoErr || !usersInfo.ok) {
+                                                    console.log('Error: Unable to identify user while fetching public channel messages.');
+                                                    linkInfo.sender = '';
+                                                } else {
+                                                    linkInfo.sender = usersInfo.real_name;
+                                                }
+                                            });
+
+                                            for (k = 0; k < links.length; k++) {
+                                                generateLinkSummary(links[k], linkInfo).then(linkSummary => {
+                                                    // add the message to the database
+                                                    console.log("link summary:", linkSummary);
+                                                    return MessageDB.insertMessage(currentUser, linkSummary)
+                                                }).then((messageId) => {
+
+                                                    // send the added message back to the user through web socket
+                                                    // this should broadcast to users
+                                                    res.status(200).send(messageId);
+                                                }).catch(console.log);
                                             }
-                                        });
-
-                                        regParser(mpimHistInfo.messages[j], linkinfo);
-                                        console.log(mpimHistInfo.messages);
+                                        }
                                     }
                                 }
                             });
@@ -377,8 +432,6 @@ module.exports.Router = function (currentUser, MessageDB) {
                 console.error('Slack API call error: ' + err);
             }
         });
-        // When we are done, sends back an array of link summaries
-        slackRes.status(200).send(linkSummaries);
     });
 
     router.post('/slack_incoming', function(req, res) {        
@@ -386,7 +439,6 @@ module.exports.Router = function (currentUser, MessageDB) {
         // the verification expires in the future.
         // res.type('html');
         // res.status(200).send(req.body.challenge);
-        //
         // event:
         //        { type: 'message',
         //          user: 'U50SS1PLJ',
@@ -397,47 +449,77 @@ module.exports.Router = function (currentUser, MessageDB) {
         if (req.body.event.text) {
 
             var info =  req.body.event;
-
-            var linkInfo = {
-                //sender
-                platform : 'slack',
-                timeStamp: info.event_ts,
-                bodyText: info.text
-            };
-
             const slackWeb = new slackWebClient(authConf.slack.accessToken);
 
-            // identify the user through the Slack API
-            slackWeb.users.info(info.user, function(usersInfoErr, usersInfo) {
-                if (usersInfoErr || !usersInfo.ok) {
-                    console.log('Error: Unable to identify user.');
-                    linkInfo.sender = '';
-                } else {
-                    linkInfo.sender = usersInfo.name;
-                }
+            let links = regParser(info.text);
 
-                // parsed data will be the urls 
-                let links = regParser(req.body.event.text, linkInfo)            
-                if (links.length > 0) {
-                    // send the urls through 344 handler
-                    // generate link summary is expecting url object ( new URL() )
-                    generateLinkSummary(links[0], linkInfo).then(linkSummary => {
-                        // add the message to the database
-                        console.log("link summary:", linkSummary)
-                        return MessageDB.insertMessage(currentUser, linkSummary)
-                    }).then((messageId) => {
-                        
+            // parsed data will be the urls
+            // let links = regParser(req.body.event.text);
+            if (links.length > 0) {
 
-                        // send the added message back to the user through web socket
-                        // this should broadcast to users       
-                        res.status(200).send(messageId);
-                    }).catch(console.log)
-                } else {
-                    res.status(200).send("did not have a link");
-                }           
-                                                
-                                         
-            });
+                var linkInfo = {
+                    platform : 'slack',
+                    timeStamp: info.event_ts,
+                    bodyText: info.text
+                };
+
+                // identify the user through the Slack API
+                slackWeb.users.info(info.user, function(usersInfoErr, usersInfo) {
+                    if (usersInfoErr || !usersInfo.ok) {
+                        console.log('Error: Unable to identify user.');
+                        linkInfo.sender = '';
+                    } else {
+                        linkInfo.sender = usersInfo.name;
+                    }
+                });
+
+                // send the urls through 344 handler
+                // generate link summary is expecting url object ( new URL() )
+                generateLinkSummary(links[0], linkInfo).then(linkSummary => {
+                    // add the message to the database
+                    console.log("link summary:", linkSummary);
+                    return MessageDB.insertMessage(currentUser, linkSummary)
+                }).then((messageId) => {
+
+                    // send the added message back to the user through web socket
+                    // this should broadcast to users
+                    res.status(200).send(messageId);
+                }).catch(console.log)
+            } else {
+                res.status(200).send("did not have a link");
+            }
+            // var linkInfo = {
+            //     platform : 'slack',
+            //     timeStamp: info.event_ts,
+            //     bodyText: info.text
+            // };
+            // // identify the user through the Slack API
+            // slackWeb.users.info(info.user, function(usersInfoErr, usersInfo) {
+            //     if (usersInfoErr || !usersInfo.ok) {
+            //         console.log('Error: Unable to identify user.');
+            //         linkInfo.sender = '';
+            //     } else {
+            //         linkInfo.sender = usersInfo.name;
+            //     }
+            //
+            //     // parsed data will be the urls
+            //     // let links = regParser(req.body.event.text);
+            //     if (links.length > 0) {
+            //         // send the urls through 344 handler
+            //         // generate link summary is expecting url object ( new URL() )
+            //         generateLinkSummary(links[0], linkInfo).then(linkSummary => {
+            //             // add the message to the database
+            //             console.log("link summary:", linkSummary);
+            //             return MessageDB.insertMessage(currentUser, linkSummary)
+            //         }).then((messageId) => {
+            //             // send the added message back to the user through web socket
+            //             // this should broadcast to users
+            //             res.status(200).send(messageId);
+            //         }).catch(console.log)
+            //     } else {
+            //         res.status(200).send("did not have a link");
+            //     }
+            // });
 /*
             if (info.channel) {
                 slackWeb.channels.info(info.channel, function(channelInfoErr, channelInfo) {

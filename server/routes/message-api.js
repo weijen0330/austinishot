@@ -97,12 +97,12 @@ module.exports.Router = function (MessageDB) {
 		res.json(msgs)
 	})
 
-	// router.patch('read/:messageId', (req, res, next) => {
-	// 	const messageId = req.params.messageId
-	// 	MessageDb.markRead(messageId).then(() => {
-	// 		res.send("marking message with id: " + messageId + " as read")
-	// 	})		
-	// })
+	router.patch('read/:messageId', (req, res, next) => {
+		const messageId = req.params.messageId
+		MessageDb.markRead(messageId).then(() => {
+			res.send("marking message with id: " + messageId + " as read")
+		})		
+	})
 
 	router.patch("/unread/:messageId", (req, res, next) => {
 		const messageId = req.params.messageId

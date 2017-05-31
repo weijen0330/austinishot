@@ -28120,8 +28120,8 @@
 	    }, {
 	        key: "handleSeenButtonClicked",
 	        value: function handleSeenButtonClicked() {
-	            var isRead = this.state.isRead;
-	            this.setState({ isRead: !isRead });
+	            var isRead = !this.state.isRead;
+	            this.setState({ isRead: isRead });
 	
 	            var url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId;
 	            if (!isRead) {

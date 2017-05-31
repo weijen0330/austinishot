@@ -290,7 +290,8 @@ var MessageDB = {
 		return connection.queryAsync(
 			'UPDATE MESSAGE SET is_read = 1 WHERE message_id = :messageId',
 			{messageId: messageId}
-		).then(() => {
+		).then((info) => {
+			console.log(info)
 			connection.end()
 		})
 	},

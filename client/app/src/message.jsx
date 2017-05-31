@@ -32,8 +32,8 @@ export default class extends React.Component {
     }
 
     handleSeenButtonClicked() {
-        const isRead = this.state.isRead
-        this.setState({isRead: !isRead})
+        const isRead = !this.state.isRead
+        this.setState({isRead: isRead})
         
         let url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId
         if (!isRead) { // mark read

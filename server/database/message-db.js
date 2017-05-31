@@ -176,7 +176,7 @@ var MessageDB = {
 				'AND m.deleted = :deleted '
 		)
 		
-		return this._connection.queryAsync(query, {userId: 1, isRead: false, deleted: false})
+		return this._connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0})
 	},	
 
 	getReadMessages(userId) {

@@ -28845,7 +28845,7 @@
 	
 	            var headers = new Headers();
 	            headers.append("Content-Type", "application/json");
-	
+	            console.log(this.state);
 	            fetch("https://lynxapp.me/api/messages/search", {
 	                method: "POST",
 	                headers: headers,

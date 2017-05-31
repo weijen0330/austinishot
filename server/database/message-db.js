@@ -230,7 +230,7 @@ var MessageDB = {
 				let hitCriteria = false
 				let result = false
 
-				if (keywords.length) {					
+				if (keywords && keywords.length) {					
 					if (message.note.includes(keywords) ||
 							message.platformName.includes(keywords) ||
 							message.title.includes(keywords) ||
@@ -247,7 +247,7 @@ var MessageDB = {
 						
 					}
 				}
-				if (tags.length) {
+				if (tags && tags.length) {
 					if (message.tags.includes(tags)) {
 						if (!hitCriteria) {
 							hitCriteria = true
@@ -258,7 +258,7 @@ var MessageDB = {
 						
 					}
 				}
-				if (platform.length) {
+				if (platform && platform.length) {
 					if (message.platformName == platform) {
 						if (!hitCriteria) {
 							hitCriteria = true
@@ -269,7 +269,7 @@ var MessageDB = {
 						
 					}
 				}
-				if (type.length) {
+				if (type && type.length) {
 					if (message.type == type) {
 						if (!hitCriteria) {
 							hitCriteria = true
@@ -280,7 +280,7 @@ var MessageDB = {
 						
 					}
 				}
-				if (domain.length) {
+				if (domain && domain.length) {
 					if (message.domainName.contains(domain)) {
 						if (!hitCriteria) {
 							hitCriteria = true

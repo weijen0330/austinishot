@@ -176,7 +176,10 @@ var MessageDB = {
 				'AND m.deleted = :deleted '
 		)
 		
-		return this._connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0})
+		return this._connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0}).then(messages => {
+			this._connection.end()
+			return messages
+		})
 	},	
 
 	getReadMessages(userId) {
@@ -219,7 +222,10 @@ var MessageDB = {
 				'AND m.deleted = :deleted '
 		)
 		
-		return this._connection.queryAsync(query, {userId: 1, isRead: 1, deleted: 0})
+		return this._connection.queryAsync(query, {userId: 1, isRead: 1, deleted: 0}).then(messages => {
+			this._connection.end()
+			return messages
+		})
 	},
 
 	getMessageWithTag(userId, tag) {

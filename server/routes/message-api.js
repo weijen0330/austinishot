@@ -153,13 +153,13 @@ module.exports.Router = function (MessageDB) {
 */
 	router.get('/new', (req, res, next) => {
 		MessageDB.getUnreadMessages(1).then(messages => {
-			console.log("messages", messages)
+			res.json(messages);
 		})
 
-		const newMsgs = messages.filter(msg => {
-			return !msg.isRead
-		})
-		res.json(newMsgs)		
+		// const newMsgs = messages.filter(msg => {
+		// 	return !msg.isRead
+		// })
+		// res.json(newMsgs)		
 	})
 
 	router.get('/old', (req, res, next) => {

@@ -253,6 +253,8 @@ var MessageDB = {
 							hitCriteria = true
 							result = true
 						} else {
+							result = result && true
+						}
 						
 					}
 				}
@@ -262,6 +264,8 @@ var MessageDB = {
 							hitCriteria = true
 							result = true
 						} else {
+							result = result && true
+						}
 						
 					}
 				}
@@ -271,6 +275,8 @@ var MessageDB = {
 							hitCriteria = true
 							result = true
 						} else {
+							result = result && true
+						}
 						
 					}
 				}
@@ -280,6 +286,8 @@ var MessageDB = {
 							hitCriteria = true
 							result = true
 						} else {
+							result = result && true
+						}
 						
 					}
 				}

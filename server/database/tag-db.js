@@ -1,5 +1,5 @@
 var TagDB = {
-	getTags(userId) {		
+	getTags() {		
 		const query = (
 			'SELECT DISTINCT t.tag_name AS tag FROM TAGS t ' +
 			'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +

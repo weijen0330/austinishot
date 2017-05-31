@@ -25,7 +25,7 @@ module.exports.Router = function (TagDB) {
 */
 
 	router.get('/', (req, res, next) => {
-		TagDB.getTags(req.user.user_id).then(rows => {
+		TagDB.getTags().then(rows => {
 			console.log(rows)
 		})
 

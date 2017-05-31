@@ -28203,7 +28203,6 @@
 	            var _this3 = this;
 	
 	            var urlData = this.props.msg;
-	            console.log(urlData);
 	            var tags = [],
 	                addTags = "",
 	                titleAndDesc = "",

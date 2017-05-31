@@ -200,6 +200,7 @@ var MessageDB = {
 		const keywords = criteria.keywords
 		// tags is an array?
 		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []
+		console.log("tags", tags)
 		const platform = criteria.from
 		const type = criteria.type
 		// might not use this

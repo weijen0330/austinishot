@@ -168,7 +168,7 @@ var MessageDB = {
 				'FROM MESSAGE m ' + 
 				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
 				'JOIN LINKS l ON m.link_id = l.link_id ' + 
-				// 'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
+				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
 				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
 				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
 				'WHERE m.recipient_id = :userId ' + 

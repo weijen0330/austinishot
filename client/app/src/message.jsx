@@ -59,7 +59,7 @@ export default class extends React.Component {
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = ""
+        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {
                 return (
@@ -106,12 +106,7 @@ export default class extends React.Component {
                 </a>
             )
         }
-
-        /*
-        - if there is no title - use the link as the title
-        - if there is no imgUrl - dont have media left
-
-        */
+        
         if (urlData.title.length > 0) {
             titleAndDesc = (
                 <div style={{marginBottom: '10px'}}>
@@ -135,6 +130,10 @@ export default class extends React.Component {
                     </figure>
                 </div>
             )
+        }
+
+        if (urlData.timeSent) {
+            time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString()
         }
 
 
@@ -161,7 +160,7 @@ export default class extends React.Component {
                            <p style={{marginBottom: '5px'}}>
                                <strong>{urlData.sender}</strong>
                                 <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>
-                                <small style={{marginLeft: '5px'}}>{urlData.timeSent} ago</small>                                
+                                <small style={{marginLeft: '5px'}}>{time}</small>                                
                            </p>
                            <p>"{urlData.note}"</p>
                        </div>

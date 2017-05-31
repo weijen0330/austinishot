@@ -32,19 +32,19 @@ export default class extends React.Component {
 				console.log("got a new message!")
 				const msg = data.message
 				
-				let all = this.state.allNew.concat(msg)
+				let all = [msg].concat(this.state.allNew)
 				
 				switch (msg.type) {
 					case "article":
-						let articles = this.state.articlesNew.concat(msg)
+						let articles = [msg].concat(this.state.articlesNew)
 						this.setState({allNew: all, articlesNew: articles})
 						break
 					case "image":
-						let images = this.state.imagesNew.concat(msg)
+						let images = [msg].concat(this.state.imagesNew)
 						this.setState({allNew: all, imagesNew: images})
 						break
 					case "video":
-						let videos = this.state.videosNew.concat(msg)
+						let videos = [msg].concat(this.state.videosNew)
 						this.setState({allNew: all, videosNew: videos})
 						break
 				}

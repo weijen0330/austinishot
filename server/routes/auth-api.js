@@ -442,7 +442,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                 var linkInfo = {
                     platform : 'slack',
                     timeStamp: info.event_ts,
-                    bodyText: info.text
+                    bodyText: (info.text).replace(/[<>]/g,'')
                 };
 
                 // identify the user through the Slack API

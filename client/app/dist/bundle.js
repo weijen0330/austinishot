@@ -26870,19 +26870,19 @@
 						console.log("got a new message!");
 						var msg = data.message;
 	
-						var all = _this2.state.allNew.concat(msg);
+						var all = [msg].concat(_this2.state.allNew);
 	
 						switch (msg.type) {
 							case "article":
-								var articles = _this2.state.articlesNew.concat(msg);
+								var articles = [msg].concat(_this2.state.articlesNew);
 								_this2.setState({ allNew: all, articlesNew: articles });
 								break;
 							case "image":
-								var images = _this2.state.imagesNew.concat(msg);
+								var images = [msg].concat(_this2.state.imagesNew);
 								_this2.setState({ allNew: all, imagesNew: images });
 								break;
 							case "video":
-								var videos = _this2.state.videosNew.concat(msg);
+								var videos = [msg].concat(_this2.state.videosNew);
 								_this2.setState({ allNew: all, videosNew: videos });
 								break;
 						}
@@ -27916,7 +27916,8 @@
 	            var tags = [],
 	                addTags = "",
 	                titleAndDesc = "",
-	                mediaLeft = "";
+	                mediaLeft = "",
+	                time;
 	            if (this.state.tags) {
 	                tags = this.state.tags.map(function (tag, i) {
 	                    return _react2.default.createElement(
@@ -27980,10 +27981,6 @@
 	                );
 	            }
 	
-	            /*
-	            - if there is no title - use the link as the title
-	            - if there is no imgUrl - dont have media left
-	             */
 	            if (urlData.title.length > 0) {
 	                titleAndDesc = _react2.default.createElement(
 	                    "div",
@@ -28034,6 +28031,10 @@
 	                );
 	            }
 	
+	            if (urlData.timeSent) {
+	                time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString();
+	            }
+	
 	            return _react2.default.createElement(
 	                "div",
 	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
@@ -28073,8 +28074,7 @@
 	                                _react2.default.createElement(
 	                                    "small",
 	                                    { style: { marginLeft: '5px' } },
-	                                    urlData.timeSent,
-	                                    " ago"
+	                                    time
 	                                )
 	                            ),
 	                            _react2.default.createElement(

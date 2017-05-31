@@ -33,9 +33,8 @@ module.exports.Router = function (MessageDB) {
 	
 	router.post("/search", (req, res, next) => {
 		console.log(req.body)
-		MessageDB.getAllMessages().then(allMessages => {
-			res.json(allMessages)
-		})
+		MessageDB.searchMessages()
+		res.send("got msgs")
 	})
 
 	router.get('/new', (req, res, next) => {

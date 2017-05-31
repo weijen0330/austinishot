@@ -50,7 +50,7 @@ export default class extends React.Component {
 				}
 			})
 
-			this.props.on("tags_added", data => {
+			this.props.ws.on("tags_added", data => {
 				this.getAllTags()
 			})
 		}

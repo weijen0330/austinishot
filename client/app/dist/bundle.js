@@ -26888,7 +26888,7 @@
 						}
 					});
 	
-					this.props.on("tags_added", function (data) {
+					this.props.ws.on("tags_added", function (data) {
 						_this2.getAllTags();
 					});
 				}

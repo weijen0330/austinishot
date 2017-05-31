@@ -156,7 +156,7 @@ var MessageDB = {
 					'm.sender, ' +
 					'm.note, ' +
 					'm.timeSent, ' +
-					'm.is_read AS isRead, ' +
+					'm.is_read AS isRead ' +
 					// 'p.platform_name AS platformName, ' +
 					// 'l.title, ' +
 					// 'l.description, ' +

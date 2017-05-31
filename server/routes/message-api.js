@@ -154,7 +154,7 @@ module.exports.Router = function (MessageDB) {
 	router.get('/new', (req, res, next) => {
 		MessageDB.getUnreadMessages(1).then(messages => {
 			res.json(messages);
-		})
+		}).catch(next)
 
 		// const newMsgs = messages.filter(msg => {
 		// 	return !msg.isRead
@@ -164,13 +164,13 @@ module.exports.Router = function (MessageDB) {
 
 	router.get('/old', (req, res, next) => {
 		MessageDB.getReadMessages(1).then(messages => {
-			console.log("messages", messages)
-		})
+			res.json(messages)
+		}).catch(next)
 
-		const oldMsgs = messages.filter(msg => {
-			return msg.isRead
-		})
-		res.json(oldMsgs)
+		// const oldMsgs = messages.filter(msg => {
+		// 	return msg.isRead
+		// })
+		// res.json(oldMsgs)
 	})
 
 	router.get('/tag/:tag', (req, res, next) => {

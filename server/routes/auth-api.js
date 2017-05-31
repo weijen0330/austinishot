@@ -203,6 +203,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                         bodyText: facebookReq.body.entry[0].changes[0].value ? facebookReq.body.entry[0].changes[0].value : "",
                         timeStamp: res.updated_time
                     };
+                    console.log("link info", linkInfo)
                     // generateLinkSummary(res.link, linkInfo).then(linkSummary => {
                     //     // add the message to the database
                     //     console.log("link summary:", linkSummary);

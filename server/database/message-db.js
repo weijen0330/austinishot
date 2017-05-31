@@ -293,10 +293,13 @@ var MessageDB = {
 	},
 
 	markDeleted(messageId) {
-		return this._connection.queryAsync(
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));		
+		return connection.queryAsync(
 			'UPDATE MESSAGE SET deleted = 1 WHERE message_id = :messageId',
 			{messageId: messageId}
-		);
+		).then(() => {
+			connection.end()
+		})
 	},
 
 	// TODO: this probably has to be modified too

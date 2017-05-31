@@ -30,127 +30,7 @@ const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).
 
 module.exports.Router = function (MessageDB) {
 	var router = express.Router();
-/*
-	// get all new messages
-	// grt
 
-	// // new message
-	// router.post('/', (req, res, next) => {
-	// 	var url = req.body.url,
-	// 		inTitleElem = false,
-	// 		inImgElem = false;
-
-	// 	req.body.domain = Url.parse(url).hostname;
-	// 	req.body.senderId = req.user.id;
-
-	// 	var parser = new htmlparser.WritableStream({
-	// 		onopentag: function (name, attrs) {
-	// 			if (name === 'title') {
-	// 				inTitleElem = true;
-	// 			}
-
-	// 			if (name === 'img') {
-	// 				if (attrs.src) {
-	// 					req.body.imgUrl = req.body.imgUrl ? req.body.imgUrl : attrs.src;
-	// 				}
-	// 			}
-
-	// 			if (name === 'meta') {
-	// 				var prop = attrs.property,
-	// 					nameAttr = attrs.name;
-	// 				if (prop) {
-	// 					switch(prop) {
-	// 						case 'og:image': 
-	// 							req.body.imgUrl = attrs.content;
-	// 							break;
-
-	// 						case 'og:title': 
-	// 							req.body.title = attrs.content;
-	// 							break;
-
-	// 						case 'og:description':
-	// 							req.body.description = attrs.content;
-	// 							break;							
-	// 					}
-	// 				}
-
-	// 				if (nameAttr) {
-	// 					switch(nameAttr) {
-	// 						case 'description':
-	// 							req.body.description = req.body.description ? req.body.description : attrs.content;
-	// 					}
-	// 				}
-
-	// 			}
-	// 		},
-
-	// 		ontext: function (text) {
-	// 			if (inTitleElem) {
-	// 				if (!req.body.title) {
-	// 					req.body.title = text;
-	// 				}
-	// 			}
-	// 		},
-
-	// 		onclosetag: function () {
-	// 			inTitleElem = false;
-	// 		}
-
-	// 	}, {decodeEntities: true});
-
-	// 	request.get(url, {followRedirect: false})
-	// 		.on('error', function () {
-	// 			console.error('error requesting page ' + url);
-	// 		})
-	// 		.on('end', function () {
-	// 			MessageDB.newMessage(req.body)
-	// 				.then(rows => res.json(rows));
-				
-	// 		})
-	// 		.pipe(parser);
-	// });
-
-	// router.get('/', (req, res, next) => {
-	// 	MessageDB.getMessages(req.user.id) 
-	// 		.then(rows => {
-	// 			res.json(mergeOnCategory(rows))
-	// 		})
-	// 		.catch(next);
-	// });
-
-	// router.get('/sent', (req, res, next) => {
-	// 	MessageDB.getSentMessages(req.user.id)
-	// 		.then(rows => res.json(mergeOnCategory(rows)))
-	// 		.catch(next);
-	// });	
-
-	// router.get('/received', (req, res, next) => {
-	// 	MessageDB.getRecievedMessages(req.user.id)
-	// 		.then(rows => res.json(mergeOnCategory(rows)))
-	// 		.catch(next);
-	// });	
-
-	// router.get('/starred', (req, res, next) => {
-	// 	MessageDB.getStarredMessages(req.user.id)
-	// 		.then(rows => {
-				
-	// 			res.json(mergeOnCategory(rows))
-	// 		})
-	// 		.catch(next);
-	// })
-
-	// router.get('/favorite/:messageId', (req, res, next) => {
-	// 	var messageId = req.params.messageId;
-	// 	MessageDB.favoriteMessage(messageId)
-	// 		.then(() => res.json(messageId));
-	// });
-
-	// router.get('/delete/:messageId', (req, res, next) => {
-	// 	var messageId = req.params.messageId;
-	// 	MessageDB.markDeleted(messageId)
-	// 		.then(() => res.json(messageId));
-	// })
-*/
 	router.get('/new', (req, res, next) => {
 		MessageDB.getUnreadMessages(1).then(messages => {
 			res.json(messages);
@@ -225,7 +105,9 @@ module.exports.Router = function (MessageDB) {
 
 	router.delete("/:messageId", (req, res, next) => {
 		const messageId = req.params.messageId
-		res.send("marking message with id: " + messageId + " as deleted")
+		MessageDB.markDeleted(messageId).then(() => {
+			res.send("marking message with id: " + messageId + " as deleted")
+		}).catch(next)	
 	})
 
 	router.post('/search', (req, res, next) => {

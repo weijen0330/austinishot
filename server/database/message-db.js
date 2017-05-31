@@ -196,8 +196,26 @@ var MessageDB = {
 	},
 
 	searchMessages(criteria) {
+		const keywords = criteria.keywords
+		// tags is an array?
+		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []
+		const platform = criteria.from
+		const type = criteria.type
+		// might not use this
+		const sentOrReceived = criteria.sentOrReceived
+		const timeSent = criteria.when 
+		const domain = criteria.domain
+		// might now use this
+		const sender = criteria.senderOrReceiver
+
 		this.getAllMessages().then(allMessages => {
-			
+			console.log(allMessages)
+			let filteredMessages = allMessages.filter(message => {
+				if (keywords.length) {
+					// message
+				}
+			})
+
 		});
 	},
 

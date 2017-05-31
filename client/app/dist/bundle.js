@@ -28130,7 +28130,7 @@
 	            }
 	
 	            fetch(url, {
-	                method: "GET"
+	                method: "PATCH"
 	            }).then(function (response) {
 	                if (response.ok) {
 	                    console.log("msg mofifies");

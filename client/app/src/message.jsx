@@ -41,7 +41,7 @@ export default class extends React.Component {
         } 
 
         fetch(url, {
-            method: "GET"            
+            method: "PATCH"            
         }).then(response => {
             if (response.ok) {
                 console.log("msg mofifies")

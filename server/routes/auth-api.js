@@ -177,53 +177,75 @@ module.exports.Router = function (MessageDB, socketIo) {
         const newStatus = facebookReq.body.entry[0].changes[0];
         console.log("value from fb", facebookReq.body.entry[0].changes);
 
-        const fboptions = {
-            timeout: 3000,
-            pool: { maxSockets:  Infinity },
-            headers: { connection:  "keep-alive" }
-        };
-        // full scope: type,caption,description,link,updated_time,from,message
-        const reqParam = {
-            fields: 'type,caption,description,link,updated_time,from,message'
-        };
-
-        // Grab information about the status via the API
-        graph.setOptions(fboptions).get(newStatus.id, reqParam, function(err, res) {
-            console.log(err)
-            if (err) {
-                console.log("Error: Unable to get information from a single status from the API");
-                facebookRes.status(200).send();
-            } else {
-                var message = res;
-                console.log(res);
-
-                if (res.type === 'video'|| res.type === 'link') {
-                    var linkInfo = {
-                        platform: 'facebook',
-                        sender: res.from.name,
-                        bodyText: facebookReq.body.entry[0].changes[0].value ? facebookReq.body.entry[0].changes[0].value : "",
-                        timeStamp: res.updated_time
-                    };
-                    console.log("link info", linkInfo)
-                    // generateLinkSummary(res.link, linkInfo).then(linkSummary => {
-                    //     // add the message to the database
-                    //     console.log("link summary:", linkSummary);
-                    //     return MessageDB.insertMessage(1, linkSummary)
-                    // }).then((message) => {
-                    //     console.log(message);
-                    //
-                    //     socketIo.emit("new_message", {message: message});
-                    //     // send the added message back to the user through web socket
-                    //     // this should broadcast to users
-                    //     facebookRes.status(200).send(message);
-                    // }).catch(console.log);
-                    facebookRes.status(200).send();
-
-                } else {
-                    facebookRes.status(200).send("not a link");
-                }
+        const statusValue = facebookReq.body.entry[0].changes;
+        const links = regParser(statusValue)        
+        if (links.length) {
+            var linkInfo = {
+                platform: "facebook",
+                sender: "",
+                bodyText: statusValue, 
+                timeStamp: Date.now()            
             }
-        });
+            generateLinkSummary(links[0], linkInfo).then(linkSummary => {
+                console.log("fb link sum", linkSummary)
+                return MessageDB.insertMessage(1, linkSummary)
+            }).then(message => {
+                socketIo.emit("new_message", {message: message});
+                // send the added message back to the user through web socket
+                // this should broadcast to users
+                res.status(200).send(message);
+            })
+        }
+
+
+
+        // const fboptions = {
+        //     timeout: 3000,
+        //     pool: { maxSockets:  Infinity },
+        //     headers: { connection:  "keep-alive" }
+        // };
+        // // full scope: type,caption,description,link,updated_time,from,message
+        // const reqParam = {
+        //     fields: 'type,caption,description,link,updated_time,from,message'
+        // };
+
+        // // Grab information about the status via the API
+        // graph.setOptions(fboptions).get(newStatus.id, reqParam, function(err, res) {
+        //     console.log(err)
+        //     if (err) {
+        //         console.log("Error: Unable to get information from a single status from the API");
+        //         facebookRes.status(200).send();
+        //     } else {
+        //         var message = res;
+        //         console.log(res);
+
+        //         if (res.type === 'video'|| res.type === 'link') {
+        //             var linkInfo = {
+        //                 platform: 'facebook',
+        //                 sender: res.from.name,
+        //                 bodyText: facebookReq.body.entry[0].changes[0].value ? facebookReq.body.entry[0].changes[0].value : "",
+        //                 timeStamp: res.updated_time
+        //             };
+        //             console.log("link info", linkInfo)
+        //             // generateLinkSummary(res.link, linkInfo).then(linkSummary => {
+        //             //     // add the message to the database
+        //             //     console.log("link summary:", linkSummary);
+        //             //     return MessageDB.insertMessage(1, linkSummary)
+        //             // }).then((message) => {
+        //             //     console.log(message);
+        //             //
+        //             //     socketIo.emit("new_message", {message: message});
+        //             //     // send the added message back to the user through web socket
+        //             //     // this should broadcast to users
+        //             //     facebookRes.status(200).send(message);
+        //             // }).catch(console.log);
+        //             facebookRes.status(200).send();
+
+        //         } else {
+        //             facebookRes.status(200).send("not a link");
+        //         }
+        //     }
+        // });
     });
 
     // Gmail Oauth: https://developers.google.com/identity/protocols/OAuth2WebServer

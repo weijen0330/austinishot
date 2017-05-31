@@ -22,6 +22,8 @@ export default class extends React.Component {
 
                 domain: "",
                 senderOrReceiver: "", 
+
+                messages: []
             }                       
         }
     }
@@ -46,15 +48,27 @@ export default class extends React.Component {
             method: "POST",
             headers: headers,
             body: JSON.stringify(this.state.search)
-        }).then(response => response.json()).then(console.log)
+        }).then(response => response.json()).then(messages => {
+            this.setState({messages: messages})
+        })
     }
 
     render() {
-        let search;
+        let search, messages;
         if (this.state.advancedSearch) {
             search = <AdvancedSearch updateSearchCriteria={(state) => this.updateSearchCriteria(state)}/>
         } else {
             search = <NormalSearch updateSearchCriteria={(state) => this.updateSearchCriteria(state)}/>
+        }
+
+        if (this.state.messages && this.state.messages.length) {
+            messages = (
+                <MessageArea 
+                    fromSearch={true}
+                    messages={this.state.messages} 
+                    title="Search results" 
+                />
+            )
         }
 
         return (

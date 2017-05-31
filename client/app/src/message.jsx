@@ -96,7 +96,7 @@ export default class extends React.Component {
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time
+        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time, readBtn = "", deleteBtn = ""
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {
                 return (
@@ -173,18 +173,34 @@ export default class extends React.Component {
             time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString()
         }
 
-
-
-        return (
-           <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
-               
-               {/*unread and delete btns*/}
-               <div style={{textAlign: 'right'}}>
+        if (!this.props.fromSearch) {
+            readBtn = (
+                <div style={{textAlign: 'right'}}>
                    <div 
                         className={this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread"}
                         onClick={this.handleSeenButtonClicked.bind(this)}
                     ></div>                   
                </div>
+            )
+
+            deleteBtn = (
+                <div style={{textAlign: "right"}}>
+                    <span 
+                        onClick={this.handleDeleteMessageClick.bind(this)}
+                        className="icon message-delete"
+                    >
+                        <i className="fa fa-trash-o"></i>
+                    </span>
+                </div> 
+            )
+        }
+
+
+
+        return (
+           <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
+               
+               {readBtn}
 
                <article className="media" style={{marginBottom: '5px'}}>
 
@@ -206,16 +222,9 @@ export default class extends React.Component {
 
                <div>{tags}</div>               
 
-               {addTags}        
+                {addTags}        
 
-                <div style={{textAlign: "right"}}>
-                    <span 
-                        onClick={this.handleDeleteMessageClick.bind(this)}
-                        className="icon message-delete"
-                    >
-                        <i className="fa fa-trash-o"></i>
-                    </span>
-                </div>        
+                {deleteBtn}       
            </div>
         )
     }

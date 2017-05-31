@@ -28023,6 +28023,7 @@
 	            if (this.props.messages) {
 	                messages = this.props.messages.map(function (msg) {
 	                    return _react2.default.createElement(_message2.default, {
+	                        fromSearch: _this2.props.fromSearch,
 	                        key: msg.messageId,
 	                        removeMessageFromUi: _this2.props.removeMessageFromUi,
 	                        updateSeenStatus: _this2.props.updateSeenStatus,
@@ -28206,7 +28207,9 @@
 	                addTags = "",
 	                titleAndDesc = "",
 	                mediaLeft = "",
-	                time;
+	                time,
+	                readBtn = "",
+	                deleteBtn = "";
 	            if (this.state.tags) {
 	                tags = this.state.tags.map(function (tag, i) {
 	                    return _react2.default.createElement(
@@ -28324,17 +28327,34 @@
 	                time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString();
 	            }
 	
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
-	                _react2.default.createElement(
+	            if (!this.props.fromSearch) {
+	                readBtn = _react2.default.createElement(
 	                    "div",
 	                    { style: { textAlign: 'right' } },
 	                    _react2.default.createElement("div", {
 	                        className: this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread",
 	                        onClick: this.handleSeenButtonClicked.bind(this)
 	                    })
-	                ),
+	                );
+	
+	                deleteBtn = _react2.default.createElement(
+	                    "div",
+	                    { style: { textAlign: "right" } },
+	                    _react2.default.createElement(
+	                        "span",
+	                        {
+	                            onClick: this.handleDeleteMessageClick.bind(this),
+	                            className: "icon message-delete"
+	                        },
+	                        _react2.default.createElement("i", { className: "fa fa-trash-o" })
+	                    )
+	                );
+	            }
+	
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
+	                readBtn,
 	                _react2.default.createElement(
 	                    "article",
 	                    { className: "media", style: { marginBottom: '5px' } },
@@ -28382,18 +28402,7 @@
 	                    tags
 	                ),
 	                addTags,
-	                _react2.default.createElement(
-	                    "div",
-	                    { style: { textAlign: "right" } },
-	                    _react2.default.createElement(
-	                        "span",
-	                        {
-	                            onClick: this.handleDeleteMessageClick.bind(this),
-	                            className: "icon message-delete"
-	                        },
-	                        _react2.default.createElement("i", { className: "fa fa-trash-o" })
-	                    )
-	                )
+	                deleteBtn
 	            );
 	        }
 	    }]);
@@ -28802,7 +28811,9 @@
 	                when: "",
 	
 	                domain: "",
-	                senderOrReceiver: ""
+	                senderOrReceiver: "",
+	
+	                messages: []
 	            }
 	        };
 	        return _this;
@@ -28826,6 +28837,8 @@
 	    }, {
 	        key: "handleSubmit",
 	        value: function handleSubmit() {
+	            var _this2 = this;
+	
 	            var headers = new Headers();
 	            headers.append("Content-Type", "application/json");
 	
@@ -28835,22 +28848,33 @@
 	                body: JSON.stringify(this.state.search)
 	            }).then(function (response) {
 	                return response.json();
-	            }).then(console.log);
+	            }).then(function (messages) {
+	                _this2.setState({ messages: messages });
+	            });
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 	
-	            var search = void 0;
+	            var search = void 0,
+	                messages = void 0;
 	            if (this.state.advancedSearch) {
 	                search = _react2.default.createElement(_advancedSearch2.default, { updateSearchCriteria: function updateSearchCriteria(state) {
-	                        return _this2.updateSearchCriteria(state);
+	                        return _this3.updateSearchCriteria(state);
 	                    } });
 	            } else {
 	                search = _react2.default.createElement(_normalSearch2.default, { updateSearchCriteria: function updateSearchCriteria(state) {
-	                        return _this2.updateSearchCriteria(state);
+	                        return _this3.updateSearchCriteria(state);
 	                    } });
+	            }
+	
+	            if (this.state.messages && this.state.messages.length) {
+	                messages = _react2.default.createElement(MessageArea, {
+	                    fromSearch: true,
+	                    messages: this.state.messages,
+	                    title: "Search results"
+	                });
 	            }
 	
 	            return _react2.default.createElement(

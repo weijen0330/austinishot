@@ -18,9 +18,10 @@ export default class extends React.Component {
         var messages = []
         
         if (this.props.messages) {
-            messages = this.props.messages.map(msg => {
+            messages = this.props.messages.map(msg => {                
                 return (
                     <Message 
+                        fromSearch={this.props.fromSearch}
                         key={msg.messageId}
                         removeMessageFromUi={this.props.removeMessageFromUi} 
                         updateSeenStatus={this.props.updateSeenStatus}

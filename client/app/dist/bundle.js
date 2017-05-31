@@ -27914,7 +27914,8 @@
 	            var urlData = this.props.msg;
 	            var tags = [],
 	                addTags = "",
-	                title = "";
+	                title = "",
+	                mediaLeft = "";
 	            if (this.state.tags) {
 	                tags = this.state.tags.map(function (tag, i) {
 	                    return _react2.default.createElement(
@@ -27980,11 +27981,24 @@
 	
 	            /*
 	            - if there is no title - use the link as the title
+	            - if there is no imgUrl - dont have media left
 	             */
 	            if (urlData.title.length > 0) {
 	                title = urlData.title;
 	            } else {
 	                title = urlData.url;
+	            }
+	
+	            if (urlData.imageUrl.length > 0) {
+	                mediaLeft = _react2.default.createElement(
+	                    "div",
+	                    { className: "media-left", style: { width: '25%' } },
+	                    _react2.default.createElement(
+	                        "figure",
+	                        { className: "image", style: { maxHeight: '100%', maxWidth: '100%' } },
+	                        _react2.default.createElement("img", { src: urlData.imageUrl, alt: "" })
+	                    )
+	                );
 	            }
 	
 	            return _react2.default.createElement(
@@ -28001,15 +28015,7 @@
 	                _react2.default.createElement(
 	                    "article",
 	                    { className: "media", style: { marginBottom: '5px' } },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "media-left", style: { width: '25%' } },
-	                        _react2.default.createElement(
-	                            "figure",
-	                            { className: "image", style: { maxHeight: '100%', maxWidth: '100%' } },
-	                            _react2.default.createElement("img", { src: urlData.imageUrl, alt: "" })
-	                        )
-	                    ),
+	                    mediaLeft,
 	                    _react2.default.createElement(
 	                        "div",
 	                        { className: "media-content" },
@@ -28029,7 +28035,6 @@
 	                                "p",
 	                                null,
 	                                urlData.description,
-	                                _react2.default.createElement("br", null),
 	                                _react2.default.createElement(
 	                                    "small",
 	                                    null,
@@ -28061,7 +28066,9 @@
 	                            _react2.default.createElement(
 	                                "p",
 	                                null,
-	                                urlData.note
+	                                "\"",
+	                                urlData.note,
+	                                "\""
 	                            )
 	                        )
 	                    )

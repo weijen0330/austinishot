@@ -59,7 +59,7 @@ export default class extends React.Component {
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = [], addTags = "", title= ""
+        var tags = [], addTags = "", title = "", mediaLeft = ""
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {
                 return (
@@ -109,6 +109,7 @@ export default class extends React.Component {
 
         /*
         - if there is no title - use the link as the title
+        - if there is no imgUrl - dont have media left
 
         */
         if (urlData.title.length > 0) {
@@ -116,6 +117,18 @@ export default class extends React.Component {
         } else {
             title = urlData.url
         }
+
+        if (urlData.imageUrl.length > 0) {
+            mediaLeft = (
+                <div className="media-left" style={{width: '25%'}}>
+                    <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>
+                        <img src={urlData.imageUrl} alt="" />
+                    </figure>
+                </div>
+            )
+        }
+
+
 
         return (
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
@@ -130,18 +143,13 @@ export default class extends React.Component {
 
                <article className="media" style={{marginBottom: '5px'}}>
 
-                   <div className="media-left" style={{width: '25%'}}>
-                       <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>
-                           <img src={urlData.imageUrl} alt="" />
-                       </figure>
-                   </div>
+                   {mediaLeft}
 
                    <div className="media-content">
                        <div className="content">                           
                            <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{title}</a></h3>
                            <p>
-                                {urlData.description} 
-                                <br /> 
+                                {urlData.description}                                 
                                 <small >from {urlData.domainName}</small>
                             </p>
                            <p style={{marginBottom: '5px'}}>
@@ -149,7 +157,7 @@ export default class extends React.Component {
                                 <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>
                                 <small style={{marginLeft: '5px'}}>{urlData.timeSent} ago</small>                                
                            </p>
-                           <p>{urlData.note}</p>
+                           <p>"{urlData.note}"</p>
                        </div>
                    </div>
                </article>

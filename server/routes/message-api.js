@@ -30,7 +30,9 @@ const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).
 
 module.exports.Router = function (MessageDB) {
 	var router = express.Router();
-	router.get("/search", (req, res, next) => {
+	
+	router.post("/search", (req, res, next) => {
+		console.log(req.body)
 		MessageDB.getAllMessages().then(allMessages => {
 			res.json(allMessages)
 		})

@@ -191,6 +191,12 @@ var MessageDB = {
 		
 	},
 
+	searchMessages(criteria) {
+		this.getAllMessages().then(allMessages => {
+			
+		});
+	},
+
 	getMessages(whereClause) {
 		return this._getObjects(
 			(

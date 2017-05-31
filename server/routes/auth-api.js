@@ -205,7 +205,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                         console.log("link summary:", linkSummary);
                         return MessageDB.insertMessage(1, linkSummary)
                     }).then((message) => {
-                        console.log(message);
+                        
 
                         socketIo.emit("new_message", {message: message});
                         // send the added message back to the user through web socket
@@ -454,19 +454,6 @@ module.exports.Router = function (MessageDB, socketIo) {
             } else {
                 res.status(200).send("did not have a link");
             }
-
-            /* Keeping below in case we want to include channel name in future
-            if (info.channel) {
-                slackWeb.channels.info(info.channel, function(channelInfoErr, channelInfo) {
-                    if (channelInfoErr || !channelInfo.ok) {
-                        console.log('Error: Unable to identify channel.');
-                        linkinfo.channel_name = '';
-                    } else {
-                        linkinfo.channel_name = channelInfo.channel.name;
-                    }
-                });
-            }   
-            */
         } else {
             res.status(200).send("non-text event");
         }

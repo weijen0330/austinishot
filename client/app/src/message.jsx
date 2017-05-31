@@ -94,8 +94,10 @@ export default class extends React.Component {
         })
     }
 
-	render() {              
+	render() {      
+                
         var urlData = this.props.msg 
+        console.log(urlData)
         var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time, readBtn = "", deleteBtn = ""
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {

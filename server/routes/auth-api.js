@@ -43,7 +43,7 @@ const oauth2Client = new oauth2(
     authConf.gmail.redirectUri
 );
 
-module.exports.Router = function (MessageDB, app) {
+module.exports.Router = function (MessageDB, socketIo) {
 	const router = express.Router();
 
     // Parses a string and returns an array of links if there are any.
@@ -395,10 +395,7 @@ module.exports.Router = function (MessageDB, app) {
         //          channel: 'D51MCEQ1M',
         //          event_ts: '1495684015.632873' },
         
-        const socket = app.get('socket')
-        if (socket) {
-            socket.emit("message", "this is a message from auth")
-        }
+        socketIo.emit("message", "from slack_incoming")
         
 
         if (req.body.event.text) {            

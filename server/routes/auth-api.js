@@ -31,7 +31,7 @@ const authConf = {
     'slack' : {
         'clientID' : authTokens.slackClientID,
         'clientSecret' : authTokens.slackClientSecret,
-        'scope': 'channels%3Ahistory+channels%3Aread+im%3Aread+im%3Ahistory+mpim%3Aread+mpim%3Ahistory',
+        'scope': 'users%3Aread+channels%3Ahistory+channels%3Aread+im%3Aread+im%3Ahistory+mpim%3Aread+mpim%3Ahistory',
         'redirectUri' : 'https://lynxapp.me/api/auth/slack'
     }
 };
@@ -146,9 +146,9 @@ module.exports.Router = function (MessageDB, socketIo) {
                 graph.setAccessToken(info.access_token);
 
                 const fboptions = {
-                    timeout: 3000
-                    , pool: { maxSockets:  Infinity }
-                    , headers: { connection:  "keep-alive" }
+                    timeout: 3000,
+                    pool: { maxSockets:  Infinity },
+                    headers: { connection:  "keep-alive" }
                 };
 
                 const reqParam = {
@@ -196,9 +196,9 @@ module.exports.Router = function (MessageDB, socketIo) {
         //              value: 'This is an Example Status.' } ]
         const text = req.body.entry[0].changes[0].value;
         var linkInfo = {
-            platform : 'facebook',
-            bodyText : req.body.entry[0].changes[0].value,
-            timeStamp : Date.now(),
+            platform: 'facebook',
+            bodyText: req.body.entry[0].changes[0].value,
+            timeStamp: Date.now(),
 
         };
 
@@ -304,7 +304,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                                                     console.log('Error: Unable to identify user while fetching public channel messages.');
                                                     linkInfo.sender = '';
                                                 } else {
-                                                    linkInfo.sender = usersInfo.real_name;
+                                                    linkInfo.sender = usersInfo.user.profile.real_name;
                                                 }
                                             });
 
@@ -312,7 +312,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                                                 generateLinkSummary(links[k], linkInfo).then(linkSummary => {
                                                     // add the message to the database
                                                     console.log("link summary:", linkSummary);
-                                                    return MessageDB.insertMessage(currentUser, linkSummary)
+                                                    return MessageDB.insertMessage(1, linkSummary)
                                                 }).then((messageId) => {
 
                                                     // send the added message back to the user through web socket
@@ -355,7 +355,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                                                     console.log('Error: Unable to identify user while fetching public channel messages.');
                                                     linkInfo.sender = '';
                                                 } else {
-                                                    linkInfo.sender = usersInfo.real_name;
+                                                    linkInfo.sender = usersInfo.user.profile.real_name;
                                                 }
                                             });
 
@@ -363,7 +363,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                                                 generateLinkSummary(links[k], linkInfo).then(linkSummary => {
                                                     // add the message to the database
                                                     console.log("link summary:", linkSummary);
-                                                    return MessageDB.insertMessage(currentUser, linkSummary)
+                                                    return MessageDB.insertMessage(1, linkSummary)
                                                 }).then((messageId) => {
 
                                                     // send the added message back to the user through web socket
@@ -404,7 +404,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                                                     console.log('Error: Unable to identify user while fetching public channel messages.');
                                                     linkInfo.sender = '';
                                                 } else {
-                                                    linkInfo.sender = usersInfo.real_name;
+                                                    linkInfo.sender = usersInfo.user.profile.real_name;
                                                 }
                                             });
 
@@ -412,7 +412,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                                                 generateLinkSummary(links[k], linkInfo).then(linkSummary => {
                                                     // add the message to the database
                                                     console.log("link summary:", linkSummary);
-                                                    return MessageDB.insertMessage(currentUser, linkSummary)
+                                                    return MessageDB.insertMessage(1, linkSummary)
                                                 }).then((messageId) => {
 
                                                     // send the added message back to the user through web socket
@@ -468,7 +468,7 @@ module.exports.Router = function (MessageDB, socketIo) {
                         console.log('Error: Unable to identify user.');
                         linkInfo.sender = '';
                     } else {
-                        linkInfo.sender = usersInfo.name;
+                        linkInfo.sender = usersInfo.user.profile.real_name;
                     }
                     
                     // send the urls through 344 handler

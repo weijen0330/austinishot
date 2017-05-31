@@ -157,14 +157,14 @@ var MessageDB = {
 					'm.note, ' +
 					'm.timeSent, ' +
 					'm.is_read AS isRead, ' +
-					'p.platform_name AS platformName, ' +
-					'l.title, ' +
-					'l.description, ' +
-					'l.type, ' +
-					'l.url, ' +
-					'l.img_url AS imageUrl, ' +
-					'd.domain_name AS domainName, ' +
-					't.tag_text AS tag ' + 
+					// 'p.platform_name AS platformName, ' +
+					// 'l.title, ' +
+					// 'l.description, ' +
+					// 'l.type, ' +
+					// 'l.url, ' +
+					// 'l.img_url AS imageUrl, ' +
+					// 'd.domain_name AS domainName, ' +
+					// 't.tag_text AS tag ' + 
 				'FROM MESSAGE m ' + 
 				// 'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
 				// 'JOIN LINKS l ON m.link_id = l.link_id ' + 

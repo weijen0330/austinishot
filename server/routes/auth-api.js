@@ -43,7 +43,7 @@ const oauth2Client = new oauth2(
     authConf.gmail.redirectUri
 );
 
-module.exports.Router = function (currentUser, MessageDB) {
+module.exports.Router = function (MessageDB, socketIo) {
 	const router = express.Router();
 
     // Parses a string and returns an array of links if there are any.
@@ -146,13 +146,13 @@ module.exports.Router = function (currentUser, MessageDB) {
                 graph.setAccessToken(info.access_token);
 
                 const fboptions = {
-                    timeout:  3000
-                    , pool:     { maxSockets:  Infinity }
-                    , headers:  { connection:  "keep-alive" }
+                    timeout: 3000
+                    , pool: { maxSockets:  Infinity }
+                    , headers: { connection:  "keep-alive" }
                 };
 
                 const reqParam = {
-                    fields : 'type,caption,description,link,updated_time,from'
+                    fields: 'type,caption,description,link,updated_time,from'
                 };
 
                 // Grab all the statuses on the feed.
@@ -166,7 +166,7 @@ module.exports.Router = function (currentUser, MessageDB) {
                             platform : 'facebook'
                         };
 
-                        if
+
                     }
                     console.log(res);
                 });
@@ -196,7 +196,6 @@ module.exports.Router = function (currentUser, MessageDB) {
         //              value: 'This is an Example Status.' } ]
         const text = req.body.entry[0].changes[0].value;
         var linkInfo = {
-
             platform : 'facebook',
             bodyText : req.body.entry[0].changes[0].value,
             timeStamp : Date.now(),
@@ -446,12 +445,12 @@ module.exports.Router = function (currentUser, MessageDB) {
         //          ts: '1495684015.632873',
         //          channel: 'D51MCEQ1M',
         //          event_ts: '1495684015.632873' },
-        if (req.body.event.text) {
+        if (req.body.event.text) {            
 
             var info =  req.body.event;
             const slackWeb = new slackWebClient(authConf.slack.accessToken);
 
-            let links = regParser(info.text);
+            var links = regParser(info.text);
 
             // parsed data will be the urls
             // let links = regParser(req.body.event.text);
@@ -478,9 +477,11 @@ module.exports.Router = function (currentUser, MessageDB) {
                 generateLinkSummary(links[0], linkInfo).then(linkSummary => {
                     // add the message to the database
                     console.log("link summary:", linkSummary);
-                    return MessageDB.insertMessage(currentUser, linkSummary)
+                    return MessageDB.insertMessage(1, linkSummary)
                 }).then((messageId) => {
+                    console.log(messageId);
 
+                    socketIo.emit("new_message", {message: messageId});
                     // send the added message back to the user through web socket
                     // this should broadcast to users
                     res.status(200).send(messageId);
@@ -488,39 +489,8 @@ module.exports.Router = function (currentUser, MessageDB) {
             } else {
                 res.status(200).send("did not have a link");
             }
-            // var linkInfo = {
-            //     platform : 'slack',
-            //     timeStamp: info.event_ts,
-            //     bodyText: info.text
-            // };
-            // // identify the user through the Slack API
-            // slackWeb.users.info(info.user, function(usersInfoErr, usersInfo) {
-            //     if (usersInfoErr || !usersInfo.ok) {
-            //         console.log('Error: Unable to identify user.');
-            //         linkInfo.sender = '';
-            //     } else {
-            //         linkInfo.sender = usersInfo.name;
-            //     }
-            //
-            //     // parsed data will be the urls
-            //     // let links = regParser(req.body.event.text);
-            //     if (links.length > 0) {
-            //         // send the urls through 344 handler
-            //         // generate link summary is expecting url object ( new URL() )
-            //         generateLinkSummary(links[0], linkInfo).then(linkSummary => {
-            //             // add the message to the database
-            //             console.log("link summary:", linkSummary);
-            //             return MessageDB.insertMessage(currentUser, linkSummary)
-            //         }).then((messageId) => {
-            //             // send the added message back to the user through web socket
-            //             // this should broadcast to users
-            //             res.status(200).send(messageId);
-            //         }).catch(console.log)
-            //     } else {
-            //         res.status(200).send("did not have a link");
-            //     }
-            // });
-/*
+
+            /* Keeping below in case we want to include channel name in future
             if (info.channel) {
                 slackWeb.channels.info(info.channel, function(channelInfoErr, channelInfo) {
                     if (channelInfoErr || !channelInfo.ok) {
@@ -531,7 +501,7 @@ module.exports.Router = function (currentUser, MessageDB) {
                     }
                 });
             }   
-*/         
+            */
         } else {
             res.status(200).send("non-text event");
         }
@@ -539,3 +509,4 @@ module.exports.Router = function (currentUser, MessageDB) {
 
 	return router;
 };
+

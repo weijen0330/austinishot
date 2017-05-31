@@ -26,7 +26,7 @@ var MessageDB = {
 		5. insert to user_messages		
 		*/
 		
-
+		// TODO: check if message is already if there before adding again
 		return this._connection.queryAsync(
 			"SELECT link_id FROM LINKS WHERE url = :url",
 			{url: messageData.url}
@@ -108,9 +108,12 @@ var MessageDB = {
 			return this._connection.queryAsync(
 				"INSERT INTO USER_MESSAGES (user_id, message_id) VALUES (:userId, :messageId)",
 				{userId: userId, messageId: messageId}
-			)
-		}).then(() => {
+			).then(() => {
+				return messageId
+			})
+		}).then((message_id) => {
 			this._connection.end()
+			return message_id;
 		})
 
 	},

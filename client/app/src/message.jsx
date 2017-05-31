@@ -8,7 +8,8 @@ export default class extends React.Component {
         super(props);
         this.state = {
             editing: false,
-            tags: (this.props.msg ? this.props.msg.tags : [])
+            tags: (this.props.msg ? this.props.msg.tags : []),
+            isRead: this.props.msg.isRead 
 		}
     }
 
@@ -27,6 +28,33 @@ export default class extends React.Component {
         var tags = this.state.tags;
         tags = tags.concat(value)
         this.setState({editing: false, tags: tags}) 
+    }
+
+    handleSeenButtonClicked() {
+        const isRead = this.state.isRead
+        this.setState({isRead: !isRead})
+        
+        fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+            method: "PATCH"            
+        }).then(response => {
+            if (response.ok) {
+                console.log("msg mofifies")
+            } else {
+                console.log("error editing message")
+            }
+        })
+    }
+    
+    handleDeleteMessageClick() {
+        fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+            method: "DELETE"            
+        }).then(response => {
+            if (response.ok) {
+                console.log("msg deleted")
+            } else {
+                console.log("error deleting message")
+            }
+        })
     }
 
 	render() {              
@@ -81,6 +109,15 @@ export default class extends React.Component {
 
         return (
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
+               
+               {/*unread and delete btns*/}
+               <div style={{textAlign: 'right'}}>
+                   <div 
+                        className={this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread"}
+                        onClick={this.handleSeenButtonClicked.bind(this)}
+                    ></div>                   
+               </div>
+
                <article className="media" style={{marginBottom: '5px'}}>
 
                    <div className="media-left" style={{width: '25%'}}>
@@ -107,9 +144,18 @@ export default class extends React.Component {
                    </div>
                </article>
 
-               <div>{tags}</div>
+               <div>{tags}</div>               
 
-               {addTags}                
+               {addTags}        
+
+                <div style={{textAlign: "right"}}>
+                    <span 
+                        onClick={this.handleDeleteMessageClick.bind(this)}
+                        className="icon message-delete"
+                    >
+                        <i className="fa fa-trash-o"></i>
+                    </span>
+                </div>        
            </div>
         )
     }

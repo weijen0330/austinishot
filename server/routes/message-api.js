@@ -219,6 +219,11 @@ module.exports.Router = function (MessageDB) {
 		res.send("marking message with id: " + messageId + " as read")
 	})
 
+	router.delete("/:messageId", (req, res, next) => {
+		const messageId = req.params.messageId
+		res.send("marking message with id: " + messageId + " as deleted")
+	})
+
 	router.post('/search', (req, res, next) => {
 		console.log(req.body)
 		res.json(req.body)

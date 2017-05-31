@@ -80,6 +80,7 @@ module.exports.start = function (connection) {
 
     // public
     app.post('/api/signin', passport.authenticate('local'), function (req, res) {
+        console.log(req.user)
         res.json({message: 'Authenticated'});
     });
 
@@ -111,6 +112,23 @@ module.exports.start = function (connection) {
         });
     });
 
+    const options = {
+        cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
+        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
+    };   
+    const server = https.createServer(options, app);
+    const socketIo = require('socket.io')(server);    
+
+    
+    
+
+    socketIo.on('connection', socket => {
+        
+        socket.on('message', data => {
+            console.log(data);
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
     //
@@ -119,22 +137,21 @@ module.exports.start = function (connection) {
         // if (!req.secure) {
         //     return res.redirect(['https://', req.get('Host'), req.url].join(''));
         // }
-        // un comment when we want authentication again
-        // else if (req.isAuthenticated()) {
+        
+        // if (req.isAuthenticated()) {
+            
         //     return next();
         // } else {
         //     res.status(401).json({message: 'Must sign in.'});
         // }
     // });
 
-    // tryng to enable preflight
-    app.options("/api/auth/facebook_oauth", cors())
 
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
         messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
         tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
-        authApi = require(__base + 'routes/auth-api.js').Router(1, MessageDB);
+        authApi = require(__base + 'routes/auth-api.js').Router(MessageDB, socketIo);
 
     app.use('/api/users', usersApi);
     app.use('/api/domains', domainApi);
@@ -145,21 +162,7 @@ module.exports.start = function (connection) {
     app.use(function (err, req, res, next) {
         console.error(err.stack);
         res.status(err.status || 500).send({message: err.message});
-    });
-
-    const options = {
-        cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
-        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
-    };
-
-    const server = https.createServer(options, app);
-    const io = require('socket.io')(server);
-
-    io.on('connection', socket => {
-        socket.on('message', data => {
-            console.log(data);
-        });
-    });
+    });     
 
     server.listen(443);
     app.listen(80);

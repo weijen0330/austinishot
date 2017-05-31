@@ -126,7 +126,7 @@ var MessageDB = {
 					'm.message_id AS messageId' +
 					'm.sender, ' +
 					'm.note, ' +
-					'UNIX_TIMESTAMP(m.timeSent) AS timeSent, ' +
+					'm.timeSent, ' +
 					'm.is_read AS isRead, ' +
 					'p.platform_name AS platformName, ' +
 					'l.title, ' +

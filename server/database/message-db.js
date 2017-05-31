@@ -156,8 +156,8 @@ var MessageDB = {
 					'm.sender, ' +
 					'm.note, ' +
 					'm.timeSent, ' +
-					'm.is_read AS isRead ' +
-					// 'p.platform_name AS platformName, ' +
+					'm.is_read AS isRead, ' +
+					'p.platform_name AS platformName ' +
 					// 'l.title, ' +
 					// 'l.description, ' +
 					// 'l.type, ' +
@@ -166,7 +166,7 @@ var MessageDB = {
 					// 'd.domain_name AS domainName, ' +
 					// 't.tag_text AS tag ' + 
 				'FROM MESSAGE m ' + 
-				// 'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
+				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
 				// 'JOIN LINKS l ON m.link_id = l.link_id ' + 
 				// 'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
 				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +

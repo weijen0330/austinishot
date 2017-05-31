@@ -49,6 +49,10 @@ export default class extends React.Component {
 						break
 				}
 			})
+
+			this.props.on("tags_added", data => {
+				this.getAllTags()
+			})
 		}
 
 		fetch("https://lynxapp.me/api/messages/new")

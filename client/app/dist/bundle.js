@@ -26887,6 +26887,10 @@
 								break;
 						}
 					});
+	
+					this.props.on("tags_added", function (data) {
+						_this2.getAllTags();
+					});
 				}
 	
 				fetch("https://lynxapp.me/api/messages/new").then(function (response) {

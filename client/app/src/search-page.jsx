@@ -50,6 +50,7 @@ export default class extends React.Component {
             headers: headers,
             body: JSON.stringify(this.state.search)
         }).then(response => response.json()).then(messages => {
+            console.log(messages)
             this.setState({messages: messages})
         })
     }
@@ -63,6 +64,7 @@ export default class extends React.Component {
         }
 
         if (this.state.messages && this.state.messages.length) {
+            console.log("setting messages")
             messages = (
                 <MessageArea 
                     fromSearch={true}
@@ -109,6 +111,8 @@ export default class extends React.Component {
                         Submit
                     </a> 
                 </div>
+
+                {messages}
             </div>
         )
     }

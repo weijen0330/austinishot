@@ -28853,6 +28853,7 @@
 	            }).then(function (response) {
 	                return response.json();
 	            }).then(function (messages) {
+	                console.log(messages);
 	                _this2.setState({ messages: messages });
 	            });
 	        }
@@ -28874,6 +28875,7 @@
 	            }
 	
 	            if (this.state.messages && this.state.messages.length) {
+	                console.log("setting messages");
 	                messages = _react2.default.createElement(_messageArea2.default, {
 	                    fromSearch: true,
 	                    messages: this.state.messages,
@@ -28930,7 +28932,8 @@
 	                        },
 	                        "Submit"
 	                    )
-	                )
+	                ),
+	                messages
 	            );
 	        }
 	    }]);

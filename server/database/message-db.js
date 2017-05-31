@@ -156,11 +156,7 @@ var MessageDB = {
 			'WHERE m.deleted = 0'			
 		)
 
-		connection.queryAsync(getMessages, {}).then(rows => {
-			console.log(rows)
-		})
-
-		connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
+		return connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
 			if (rows && rows.length) {
 				let tagsForMessages = {}
 				rows.forEach(row => {
@@ -171,8 +167,6 @@ var MessageDB = {
 					}
 					tagsForMessages[messageId].push(tag)
 				})
-
-				console.log(tagsForMessages)
 				return tagsForMessages
 			}
 			return {}			
@@ -186,12 +180,15 @@ var MessageDB = {
 							row.tags = []
 						}
 					})
-					console.log(rows)
+					return rows
 				}
+				return []
 			})
-		}) 
-
-		connection.end()
+		}).then(allMessages => {
+			connection.end()
+			return allMessages
+		})
+		
 	},
 
 	getMessages(whereClause) {

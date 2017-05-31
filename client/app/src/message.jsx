@@ -44,6 +44,9 @@ export default class extends React.Component {
                 console.log("error editing message")
             }
         })
+        
+        // this.props.msg.isRead = isRead
+        // this.props.updateSeenStatus(this.props.msg)
     }
     
     handleDeleteMessageClick() {
@@ -56,7 +59,7 @@ export default class extends React.Component {
                 throw new Error()
             }
         }).catch(console.log)
-        
+
         this.props.removeMessageFromUi({
             messageId: this.props.msg.messageId,
             type: this.props.msg.type,

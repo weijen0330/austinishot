@@ -27108,12 +27108,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: newMessages, title: "New links" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+								},
+								messages: newMessages,
+								title: "New links"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: oldMessages, title: "Older links" }) : ""
+								},
+								messages: oldMessages,
+								title: "Older links"
+							}) : ""
 						);
 	
 						break;
@@ -27128,12 +27142,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: newMessages, title: "New articles" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+								},
+								messages: newMessages,
+								title: "New articles"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: oldMessages, title: "Older articles" }) : ""
+								},
+								messages: oldMessages,
+								title: "Older articles"
+							}) : ""
 						);
 	
 						break;
@@ -27148,12 +27176,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: newMessages, title: "New images" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+								},
+								messages: newMessages,
+								title: "New images"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: oldMessages, title: "Older images" }) : ""
+								},
+								messages: oldMessages,
+								title: "Older images"
+							}) : ""
 						);
 	
 						break;
@@ -27169,12 +27211,26 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: newMessages, title: "New videos" }) : "",
-							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+								},
+								messages: newMessages,
+								title: "New videos"
+							}) : "",
+							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: oldMessages, title: "Older videos" }) : ""
+								},
+								messages: oldMessages,
+								title: "Older videos"
+							}) : ""
 						);
 	
 						break;
@@ -27197,9 +27253,16 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: allMessages, title: "Links with tag '" + this.state.view + "'" }) : "No messages with tag '" + this.state.view + "'"
+								},
+								messages: allMessages,
+								title: "Links with tag '" + this.state.view + "'"
+							}) : "No messages with tag '" + this.state.view + "'"
 						);
 	
 						break;
@@ -27219,9 +27282,16 @@
 						content = _react2.default.createElement(
 							"div",
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
-							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, { removeMessageFromUi: function removeMessageFromUi(messageData) {
+							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
+								updateSeenStatus: function updateSeenStatus(msg) {
+									return _this3.updateSeenStatus(msg);
+								},
+								removeMessageFromUi: function removeMessageFromUi(messageData) {
 									return _this3.removeMessageFromUi(messageData);
-								}, messages: allMessages, title: "Links with domain '" + this.state.view + "'" }) : "No messages with domain '" + this.state.view + "'"
+								},
+								messages: allMessages,
+								title: "Links with domain '" + this.state.view + "'"
+							}) : "No messages with domain '" + this.state.view + "'"
 						);
 	
 						break;
@@ -27943,6 +28013,7 @@
 	                    return _react2.default.createElement(_message2.default, {
 	                        key: msg.messageId,
 	                        removeMessageFromUi: _this2.props.removeMessageFromUi,
+	                        updateSeenStatus: _this2.props.updateSeenStatus,
 	                        msg: msg
 	                    });
 	                });
@@ -28061,6 +28132,9 @@
 	                    console.log("error editing message");
 	                }
 	            });
+	
+	            // this.props.msg.isRead = isRead
+	            // this.props.updateSeenStatus(this.props.msg)
 	        }
 	    }, {
 	        key: "handleDeleteMessageClick",

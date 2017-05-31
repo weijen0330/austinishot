@@ -32,8 +32,8 @@ module.exports.Router = function (MessageDB) {
 	var router = express.Router();
 	
 	router.post("/search", (req, res, next) => {
-		console.log(req.body)
-		MessageDB.searchMessages()
+		
+		MessageDB.searchMessages(req.body)
 		res.send("got msgs")
 	})
 

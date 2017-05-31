@@ -286,10 +286,23 @@ var MessageDB = {
 	},
 
 	markRead(messageId) {
-		return this._connection.queryAsync(
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		return connection.queryAsync(
 			'UPDATE MESSAGE SET is_read = 1 WHERE message_id = :messageId',
 			{messageId: messageId}
-		)
+		).then(() => {
+			connection.end()
+		})
+	},
+
+	markUnRead(messageId) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		return onnection.queryAsync(
+			'UPDATE MESSAGE SET is_read = 0 WHERE message_id = :messageId',
+			{messageId: messageId}
+		).then(() => {
+			connection.end()
+		})
 	},
 
 	markDeleted(messageId) {

@@ -28123,7 +28123,13 @@
 	            var isRead = this.state.isRead;
 	            this.setState({ isRead: !isRead });
 	
-	            fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+	            var url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId;
+	            if (!isRead) {
+	                // mark read
+	                url = "https://lynxapp.me/api/messages/unread/" + this.props.msg.messageId;
+	            }
+	
+	            fetch(url, {
 	                method: "PATCH"
 	            }).then(function (response) {
 	                if (response.ok) {

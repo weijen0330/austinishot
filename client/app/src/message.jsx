@@ -35,7 +35,12 @@ export default class extends React.Component {
         const isRead = this.state.isRead
         this.setState({isRead: !isRead})
         
-        fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+        let url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId
+        if (!isRead) { // mark read
+            url = "https://lynxapp.me/api/messages/unread/" + this.props.msg.messageId
+        } 
+
+        fetch(url, {
             method: "PATCH"            
         }).then(response => {
             if (response.ok) {

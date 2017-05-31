@@ -297,7 +297,7 @@ var MessageDB = {
 
 	markUnRead(messageId) {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
-		return onnection.queryAsync(
+		return connection.queryAsync(
 			'UPDATE MESSAGE SET is_read = 0 WHERE message_id = :messageId',
 			{messageId: messageId}
 		).then(() => {

@@ -26922,8 +26922,11 @@
 					});
 				});
 	
-				// fetch("https://lynxapp.me/api/domains/")	
-				// 	.then(response => response.json()).then(data => this.setState({domains: data}))
+				fetch("https://lynxapp.me/api/domains/").then(function (response) {
+					return response.json();
+				}).then(function (data) {
+					return _this2.setState({ domains: data });
+				});
 				// fetch("https://lynxapp.me/api/tags/")	
 				// 	.then(response => response.json()).then(data => this.setState({tags: data}))
 			}

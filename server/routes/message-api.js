@@ -30,6 +30,10 @@ const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).
 
 module.exports.Router = function (MessageDB) {
 	var router = express.Router();
+	router.get("/search", (req, res, next) => {
+		MessageDB.getAllMessages()
+		res.send("got messages")
+	})
 
 	router.get('/new', (req, res, next) => {
 		MessageDB.getUnreadMessages(1).then(messages => {
@@ -118,11 +122,6 @@ module.exports.Router = function (MessageDB) {
 		}).catch(next)	
 	})
 
-	router.get('/search', (req, res, next) => {
-		MessageDB.getAllMessages()
-		res.send("hello world")
-	})
-	
 
 	return router;
 }

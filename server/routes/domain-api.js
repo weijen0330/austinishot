@@ -9,14 +9,14 @@ module.exports.Router = function (DomainDB) {
 
 	router.get('/', (req, res, next) => {
 		DomainDB.getDomains(1).then(rows => {
-			console.log("domains", rows)
+			res.json(rows)
 		}).catch(next)
 
-		let domains = []
-		messages.forEach(msg => {
-			domains.push(msg.domainName)
-		})
-		res.json(domains)
+		// let domains = []
+		// messages.forEach(msg => {
+		// 	domains.push(msg.domainName)
+		// })
+		// res.json(domains)
 	});
 
 	return router;

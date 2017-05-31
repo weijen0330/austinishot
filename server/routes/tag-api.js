@@ -26,13 +26,13 @@ module.exports.Router = function (TagDB) {
 
 	router.get('/', (req, res, next) => {
 		TagDB.getTags().then(rows => {
-			console.log(rows)
+			res.json(rows)
 		})
 
-		let tags = []
-		messages.forEach(msg => {
-			tags = tags.concat(msg.tags)
-		})
+		// let tags = []
+		// messages.forEach(msg => {
+		// 	tags = tags.concat(msg.tags)
+		// })
 		res.json(tags)
 	});	
 

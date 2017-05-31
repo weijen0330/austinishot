@@ -53,8 +53,14 @@ export default class extends React.Component {
             if (response.ok) {
                 console.log("msg deleted")
             } else {
-                console.log("error deleting message")
+                throw new Error()
             }
+        }).catch(console.log)
+        
+        this.props.removeMessageFromUi({
+            messageId: this.props.msg.messageId,
+            type: this.props.msg.type,
+            isRead: this.state.isRead
         })
     }
 

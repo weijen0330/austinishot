@@ -84,6 +84,62 @@ export default class extends React.Component {
 		}		
 	}
 
+	removeMessageFromUi(messageData) {
+		/*
+		messageData = {
+			messageId,
+			type,
+			isRead
+		}
+		*/
+
+		const compareIds = function (m) {
+			return m.messageId != messageData.messageId
+		}
+
+		switch(messageData.type) {
+			case "image":
+				if (messageData.isRead) { //old
+					this.setState({
+						allOld: this.state.allOld.filter(compareIds),
+						imagesOld: this.state.imagesOld.filter(compareIds)
+					})
+				} else { //new
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						imagesNew: this.state.imagesNew.filter(compareIds)
+					})
+				}
+				break;
+			case "video":
+				if (messageData.isRead) { //old
+					this.setState({
+						allOld: this.state.allOld.filter(compareIds),
+						videosOld: this.state.videosOld.filter(compareIds)
+					})
+				} else { //new
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						videosNew: this.state.videosNew.filter(compareIds)
+					})
+				}
+				break;
+			default:
+				if (messageData.isRead) { //old
+					this.setState({
+						allOld: this.state.allOld.filter(compareIds),
+						articlesOld: this.state.articlesOld.filter(compareIds)
+					})
+				} else { //new
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						articlesNew: this.state.articlesNew.filter(compareIds)
+					})
+				}
+				break;
+		}
+	}
+
 	render() {
 		var newMessages = [],
 			oldMessages = [],
@@ -101,8 +157,8 @@ export default class extends React.Component {
 				
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New links" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older links" /> : ""}
+						{newMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={newMessages} title="New links" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={oldMessages} title="Older links" /> : ""}
 					</div>
 				)
 
@@ -117,8 +173,8 @@ export default class extends React.Component {
 
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New articles" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older articles" /> : ""}
+						{newMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={newMessages} title="New articles" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={oldMessages} title="Older articles" /> : ""}
 					</div>
 				)
 
@@ -133,8 +189,8 @@ export default class extends React.Component {
 
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New images" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older images" /> : ""}
+						{newMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={newMessages} title="New images" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={oldMessages} title="Older images" /> : ""}
 					</div>
 				)
 
@@ -150,8 +206,8 @@ export default class extends React.Component {
 				
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New videos" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older videos" /> : ""}
+						{newMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={newMessages} title="New videos" /> : ""}
+						{oldMessages.length > 0 ? <MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={oldMessages} title="Older videos" /> : ""}
 					</div>
 				)
 
@@ -171,7 +227,7 @@ export default class extends React.Component {
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 							{allMessages.length > 0 ? (
-								<MessageArea messages={allMessages} title={"Links with tag '" + this.state.view + "'"} />
+								<MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={allMessages} title={"Links with tag '" + this.state.view + "'"} />
 							) : (
 								"No messages with tag '" + this.state.view + "'"
 							)}
@@ -191,7 +247,7 @@ export default class extends React.Component {
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 							{allMessages.length > 0 ? (
-								<MessageArea messages={allMessages} title={"Links with domain '" + this.state.view + "'"} />
+								<MessageArea removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} messages={allMessages} title={"Links with domain '" + this.state.view + "'"} />
 							) : (
 								"No messages with domain '" + this.state.view + "'"
 							)}

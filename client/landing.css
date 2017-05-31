@@ -131,7 +131,7 @@ footer {
 
 }
 
-@media(max-width: 770px){
+@media(max-width: 767px){
 	.integration {
 		width: 30%;
 	}

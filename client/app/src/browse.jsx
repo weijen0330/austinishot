@@ -72,8 +72,8 @@ export default class extends React.Component {
 		
 		fetch("https://lynxapp.me/api/domains/")	
 			.then(response => response.json()).then(data => this.setState({domains: data}))
-		// fetch("https://lynxapp.me/api/tags/")	
-		// 	.then(response => response.json()).then(data => this.setState({tags: data}))
+		fetch("https://lynxapp.me/api/tags/")	
+			.then(response => response.json()).then(data => this.setState({tags: data}))
 	}
 
 	changeView(view, viewType) {

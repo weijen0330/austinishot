@@ -1,15 +1,14 @@
 var TagDB = {
-	getTags(userId) {
-		return this._getObjects(
-			(
-				'SELECT DISTINCT t.tag_text AD tag FROM TAGS t ' +
-				'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
-				'WHERE ur.user_id = :userId'
-			),
-			{
-				userId: userId
-			}
+	getTags(userId) {		
+		const query = (
+			'SELECT DISTINCT t.tag_name AS tag FROM TAGS t ' +
+			'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
+			'WHERE ut.user_id = :userId'
 		)
+		return this._connection.queryAsync(query, {userId: 1}, {useArray: true}).then(rows => {
+			this._connection.end()
+			return rows.map(row => row[0])			
+		})
 	},	
 
 	// Given connection, query and params, returns a promise containing query contents

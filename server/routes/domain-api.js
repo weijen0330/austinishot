@@ -11,12 +11,6 @@ module.exports.Router = function (DomainDB) {
 		DomainDB.getDomains(1).then(rows => {
 			res.json(rows)
 		}).catch(next)
-
-		// let domains = []
-		// messages.forEach(msg => {
-		// 	domains.push(msg.domainName)
-		// })
-		// res.json(domains)
 	});
 
 	return router;

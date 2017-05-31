@@ -25,7 +25,10 @@ module.exports.Router = function (TagDB) {
 */
 
 	router.get('/', (req, res, next) => {
-		// TagDB.getTags(req.user.user_id)
+		TagDB.getTags(req.user.user_id).then(rows => {
+			console.log(rows)
+		})
+
 		let tags = []
 		messages.forEach(msg => {
 			tags = tags.concat(msg.tags)

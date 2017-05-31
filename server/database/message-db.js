@@ -183,19 +183,6 @@ var MessageDB = {
 	},	
 
 	getReadMessages(userId) {
-		// return this.getMessages(
-		// 	(
-		// 		'WHERE m.recipient_id = :userId ' + 
-		// 		'AND m.is_read = :isRead ' + 
-		// 		'AND m.deleted = :isDeleted'
-		// 	),
-		// 	{
-		// 		userId: userId,
-		// 		isRead: true,
-		// 		isDeleted: false
-		// 	}
-		// )
-
 		const query = (
 			'SELECT ' +
 					'm.message_id AS messageId, ' +

@@ -13,16 +13,6 @@ var DomainDB = {
 			this._connection.end()
 			return rows.map(row => row[0])			
 		})
-		// return this._getObjects(
-		// 	(
-		// 		'SELECT d.domain_name AS domain FROM DOMAIN d ' +
-		// 		'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
-		// 		'WHERE ud.user_id = :userId'
-		// 	),
-		// 	{
-		// 		userId: userId
-		// 	}
-		// )
 	},
 
 	// Given connection, query and params, returns a promise containing query contents

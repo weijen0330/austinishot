@@ -31,7 +31,7 @@ const authConf = {
     'slack' : {
         'clientID' : authTokens.slackClientID,
         'clientSecret' : authTokens.slackClientSecret,
-        'scope': 'users%3Aread+channels%3Ahistory+channels%3Aread+im%3Aread+im%3Ahistory+mpim%3Aread+mpim%3Ahistory',
+        'scope': 'users.profile%3Aread+users%3Aread+channels%3Ahistory+channels%3Aread+im%3Aread+im%3Ahistory+mpim%3Aread+mpim%3Ahistory',
         'redirectUri' : 'https://lynxapp.me/api/auth/slack'
     }
 };
@@ -185,7 +185,7 @@ module.exports.Router = function (MessageDB, socketIo) {
 
         };
 
-        res.status(200).send(regParser(text, linkinfo));
+        res.status(200).send(regParser(text, linkInfo));
         console.log(req.body.entry[0].changes[0].value);
     });
 

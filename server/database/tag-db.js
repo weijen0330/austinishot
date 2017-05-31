@@ -18,7 +18,21 @@ var TagDB = {
 
 	addTags(messageId, tags) {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
-		
+
+		const promiseTags = tags.map(tag => {
+			// insert tag
+			// hook tag to message
+			// hook tag to user
+			const insertTag = "INSERT INTO TAGS (tag_text) VALUES (:tagText)"
+			const getLink = "SELECT link_id FROM MESSAGE WHERE message_id = :messageId"
+			const insertTagLink = "INSERT INTO LINKS_TAGS (link_id, tag_id) VALUES (:linkId, :tagId)"
+			const insertTagUser = "INSERT INTO USER_TAGS (user_id, tag_id) VALUES (:userId, :tagId)"
+			
+			return connection.queryAsync(insertTag, {tagText: tag}).then(() => {
+				const tagId = connection.lastInsertId()
+				//do the rest
+			})
+		})
 	}
 }
 

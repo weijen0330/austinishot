@@ -29,7 +29,24 @@ export default class extends React.Component {
 	componentDidMount() {
 		if (this.props.ws) {
 			this.props.ws.on("new_message", data => {
-				console.log(data)
+				const msg = data.message
+				
+				let all = this.state.allNew.concat(msg)
+				
+				switch (msg.type) {
+					case "article":
+						let articles = this.state.articlesNew.concat(msg)
+						this.setState({allNew: all, articlesNew: articles})
+						break
+					case "image":
+						let images = this.state.imagesNew.concat(msg)
+						this.setState({allNew: all, imagesNew: images})
+						break
+					case "video":
+						let videos = this.state.videosNew.concat(msg)
+						this.setState({allNew: all, videosNew: videos})
+						break
+				}
 			})
 		}
 

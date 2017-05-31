@@ -26867,7 +26867,24 @@
 	
 				if (this.props.ws) {
 					this.props.ws.on("new_message", function (data) {
-						console.log(data);
+						var msg = data.message;
+	
+						var all = _this2.state.allNew.concat(msg);
+	
+						switch (msg.type) {
+							case "article":
+								var articles = _this2.state.articlesNew.concat(msg);
+								_this2.setState({ allNew: all, articlesNew: articles });
+								break;
+							case "image":
+								var images = _this2.state.imagesNew.concat(msg);
+								_this2.setState({ allNew: all, imagesNew: images });
+								break;
+							case "video":
+								var videos = _this2.state.videosNew.concat(msg);
+								_this2.setState({ allNew: all, videosNew: videos });
+								break;
+						}
 					});
 				}
 	

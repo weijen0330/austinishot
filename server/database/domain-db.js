@@ -5,7 +5,7 @@ var DomainDB = {
 	// to that user, returns a promise containing null
 	getDomains(userId) {
 		const query = (
-			'SELECT d.domain_name AS domain FROM DOMAIN d ' +
+			'SELECT DISTINCT d.domain_name AS domain FROM DOMAIN d ' +
 			'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
 			'WHERE ud.user_id = :userId'
 		)

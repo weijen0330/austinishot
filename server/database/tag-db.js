@@ -14,6 +14,11 @@ var TagDB = {
 			connection.end()
 			return rows.map(row => row[0])			
 		})
+	},
+
+	addTags(messageId, tags) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		
 	}
 }
 

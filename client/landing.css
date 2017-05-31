@@ -99,7 +99,7 @@ footer {
 	font-weight: 200;
 	color:gray;
 	margin-bottom: 100px;
-	font-size: 60pt;
+	font-size: 50pt;
 }
 
 .screenshot {
@@ -123,5 +123,22 @@ footer {
 	color: lightgray;
 }
 
+@media(max-width: 1000px){
+	.title-large {
+		
+		font-size: 40pt;
+	}
+
+}
+
+@media(max-width: 770px){
+	.integration {
+		width: 30%;
+	}
+	.integrate-column {
+		display:inline;
+		width:30%;
+	}
+}
 
 

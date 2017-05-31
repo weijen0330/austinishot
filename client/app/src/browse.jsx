@@ -84,6 +84,86 @@ export default class extends React.Component {
 		}		
 	}
 
+	updateSeenStatus(msg) {
+		// msg is the whole msg obj
+		// isRead = true - marked as read, move from new to old
+		// isRead = false - marked as unread, move from old to new
+		// messageId, type
+		
+
+		const compareIds = function (m) {
+			return m.messageId != msg.messageId
+		}
+
+		// remove from old status and put into new status		
+
+		switch(msg.type) {
+			case "image":
+				if (msg.isRead) {
+					//marked as read, move from new to old
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						allOld: [msg].concat(this.state.allOld),
+
+						imagesNew: this.state.imagesNew.filter(compareIds),	
+						imagesOld: [msg].concat(this.state.imagesOld)					
+					})
+				} else {
+					//marked as unread, move from old to new
+					this.setState({						
+						allOld: this.state.allOld.filter(compareIds),						
+						allNew: [msg].concat(this.state.allNew),
+
+						imagesOld: this.state.imagesOld.filter(compareIds),	
+						imagesNew: [msg].concat(this.state.imagesNew)					
+					})
+				}
+				break;
+			case "video":
+				if (msg.isRead) {
+					//marked as read, move from new to old
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						allOld: [msg].concat(this.state.allOld),
+
+						videosNew: this.state.videosNew.filter(compareIds),	
+						videosOld: [msg].concat(this.state.videosOld)					
+					})
+				} else {
+					//marked as unread, move from old to new
+					this.setState({						
+						allOld: this.state.allOld.filter(compareIds),						
+						allNew: [msg].concat(this.state.allNew),
+
+						videosOld: this.state.videosOld.filter(compareIds),	
+						videosNew: [msg].concat(this.state.videosNew)					
+					})
+				}
+				break;
+			default:
+				if (msg.isRead) {
+					//marked as read, move from new to old
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						allOld: [msg].concat(this.state.allOld),
+
+						articlesNew: this.state.articlesNew.filter(compareIds),	
+						articlesOld: [msg].concat(this.state.articlesOld)					
+					})
+				} else {
+					//marked as unread, move from old to new
+					this.setState({						
+						allOld: this.state.allOld.filter(compareIds),						
+						allNew: [msg].concat(this.state.allNew),
+
+						articlesOld: this.state.articlesOld.filter(compareIds),	
+						articlesNew: [msg].concat(this.state.articlesNew)					
+					})
+				}
+				break;
+		}
+	}
+
 	removeMessageFromUi(messageData) {
 		/*
 		messageData = {

@@ -27849,9 +27849,9 @@
 	        _this.state = {
 	            editing: false,
 	            tags: [],
-	            isRead: _this.props.msg.isRead
+	            isRead: Number(_this.props.msg.isRead)
 	        };
-	        console.log(_this.props.msg);
+	
 	        return _this;
 	    }
 	

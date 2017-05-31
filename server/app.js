@@ -120,6 +120,7 @@ module.exports.start = function (connection) {
     const socketIo = require('socket.io')(server);    
 
     socketIo.emit("message", "testing emit")
+    
 
     socketIo.on('connection', socket => {
         app.set("socket", socket)

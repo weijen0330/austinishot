@@ -21,6 +21,9 @@ export default class extends React.Component {
         let ws = io("https://lynxapp.me")
         // example of how to send data - if needed
         // ws.emit("message", "this is some data")
+        ws.on("message", data => {
+            console.log(data)
+        })
     }
 
     handleTabClick(e, newTab) {

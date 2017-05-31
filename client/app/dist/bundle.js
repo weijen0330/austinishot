@@ -29192,10 +29192,22 @@
 	    function _class(props) {
 	        _classCallCheck(this, _class);
 	
-	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+	
+	        _this.state = {
+	            tab: 0
+	        };
+	        return _this;
 	    }
 	
 	    _createClass(_class, [{
+	        key: "increaseIndex",
+	        value: function increaseIndex(e, amount) {
+	            e.preventDefault();
+	            var current = this.state.tab;
+	            this.setState({ tab: current + amount });
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
 	            var _this2 = this;
@@ -29209,6 +29221,10 @@
 	                    modalClass = "modal";
 	                    break;
 	            }
+	
+	            var images = ["img/browse.png", "img/search-page.png"];
+	
+	            var text = ["The Browse tab is where all of your recent activity (sent and received links) are displayed.", "Links you sent and received will be shown here with the corresponding link description, message information, and all associated tags."];
 	
 	            return _react2.default.createElement(
 	                "div",
@@ -29232,11 +29248,11 @@
 	                    _react2.default.createElement(
 	                        "section",
 	                        { className: "modal-card-body" },
-	                        _react2.default.createElement("img", { src: "img/browse.png" }),
+	                        _react2.default.createElement("img", { src: images[this.state.tab] }),
 	                        _react2.default.createElement(
 	                            "p",
 	                            null,
-	                            "hello"
+	                            text[this.state.tab]
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -29244,13 +29260,17 @@
 	                        { className: "modal-card-foot" },
 	                        _react2.default.createElement(
 	                            "a",
-	                            { className: "button is-success" },
-	                            "Save changes"
+	                            { onClick: function onClick(e) {
+	                                    return _this2.increaseIndex(e, -1);
+	                                }, className: "button is-success" },
+	                            "< previous"
 	                        ),
 	                        _react2.default.createElement(
 	                            "a",
-	                            { className: "button" },
-	                            "Cancel"
+	                            { onClick: function onClick(e) {
+	                                    return _this2.increaseIndex(e, 1);
+	                                }, className: "button" },
+	                            "next > "
 	                        )
 	                    )
 	                )

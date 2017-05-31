@@ -47,6 +47,7 @@ var MessageDB = {
 					{domain: messageData.domainName}
 				).then(domainRows => {
 					if (domainRows && domainRows.length > 0) {
+						console.log("print domain rows", domainRows)
 						return domainRows[0].domainId
 					} else {
 						return connection.queryAsync(
@@ -55,7 +56,7 @@ var MessageDB = {
 						).then(() => {							
 							return connection.lastInsertId()
 						}).then(domainId => {
-							console.log("domain after insert domain:", domainId)
+							
 							connection.queryAsync(
 								"INSERT INTO USER_DOMAINS VALUES (:userId, :domainId)",
 								{userId: userId, domainId: domainId}
@@ -65,7 +66,7 @@ var MessageDB = {
 					}
 				}).then(domainId => {
 					// insert link, return id
-					
+
 					// console.log("inserting link, domain id", domainId) domain id is undefined
 					return connection.queryAsync(
 						"INSERT INTO LINKS (title, description, type, domain_id, url, img_url) " +

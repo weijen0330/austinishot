@@ -178,7 +178,8 @@ module.exports.Router = function (MessageDB, socketIo) {
         console.log("value from fb", facebookReq.body.entry[0].changes);
 
         const statusValue = facebookReq.body.entry[0].changes.value;
-        const links = regParser(statusValue)        
+        const links = regParser(statusValue)       
+        console.log("links", links) 
         if (links.length) {
             var linkInfo = {
                 platform: "facebook",

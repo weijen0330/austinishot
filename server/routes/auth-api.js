@@ -211,11 +211,11 @@ module.exports.Router = function (MessageDB, socketIo) {
                         socketIo.emit("new_message", {message: message});
                         // send the added message back to the user through web socket
                         // this should broadcast to users
-                        res.status(200).send(message);
+                        facebookRes.status(200).send(message);
                     }).catch(console.log);
-                    res.status(200).send()
+                    facebookRes.status(200).send()
                 } else {
-                    res.status(200).send("not a link");
+                    facebookRes.status(200).send("not a link");
                 }
             }
         });

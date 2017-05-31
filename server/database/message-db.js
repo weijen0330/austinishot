@@ -171,7 +171,7 @@ var MessageDB = {
 				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
 				'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
 				'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
-				'WHERE m.recipiend_id = :userId ' + 
+				'WHERE m.recipient_id = :userId ' + 
 				'AND m.is_read = :isRead ' + 
 				'AND m.deleted = :deleted '
 		)

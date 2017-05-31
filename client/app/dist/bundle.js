@@ -26873,10 +26873,6 @@
 						var all = [msg].concat(_this2.state.allNew);
 	
 						switch (msg.type) {
-							case "article":
-								var articles = [msg].concat(_this2.state.articlesNew);
-								_this2.setState({ allNew: all, articlesNew: articles });
-								break;
 							case "image":
 								var images = [msg].concat(_this2.state.imagesNew);
 								_this2.setState({ allNew: all, imagesNew: images });
@@ -26884,6 +26880,10 @@
 							case "video":
 								var videos = [msg].concat(_this2.state.videosNew);
 								_this2.setState({ allNew: all, videosNew: videos });
+								break;
+							default:
+								var articles = [msg].concat(_this2.state.articlesNew);
+								_this2.setState({ allNew: all, articlesNew: articles });
 								break;
 						}
 					});
@@ -27848,9 +27848,10 @@
 	
 	        _this.state = {
 	            editing: false,
-	            tags: _this.props.msg ? _this.props.msg.tags : [],
+	            tags: [],
 	            isRead: _this.props.msg.isRead
 	        };
+	        console.log(_this.props.msg);
 	        return _this;
 	    }
 	

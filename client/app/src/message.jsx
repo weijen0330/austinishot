@@ -8,9 +8,10 @@ export default class extends React.Component {
         super(props);
         this.state = {
             editing: false,
-            tags: (this.props.msg ? this.props.msg.tags : []),
+            tags: [],
             isRead: this.props.msg.isRead 
 		}
+        console.log(this.props.msg)
     }
 
     componentDidMount() {

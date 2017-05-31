@@ -35,10 +35,6 @@ export default class extends React.Component {
 				let all = [msg].concat(this.state.allNew)
 				
 				switch (msg.type) {
-					case "article":
-						let articles = [msg].concat(this.state.articlesNew)
-						this.setState({allNew: all, articlesNew: articles})
-						break
 					case "image":
 						let images = [msg].concat(this.state.imagesNew)
 						this.setState({allNew: all, imagesNew: images})
@@ -46,6 +42,10 @@ export default class extends React.Component {
 					case "video":
 						let videos = [msg].concat(this.state.videosNew)
 						this.setState({allNew: all, videosNew: videos})
+						break
+					default:
+						let articles = [msg].concat(this.state.articlesNew)
+						this.setState({allNew: all, articlesNew: articles})
 						break
 				}
 			})

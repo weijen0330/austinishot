@@ -27,6 +27,12 @@ export default class extends React.Component {
 		};
     }
 	componentDidMount() {
+		if (this.props.ws) {
+			ws.on("new_message", data => {
+				console.log(data)
+			})
+		}
+
 		fetch("https://lynxapp.me/api/messages/new")
 			.then(response => response.json()).then(data => {
 				this.setState({

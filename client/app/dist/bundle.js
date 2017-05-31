@@ -26733,21 +26733,20 @@
 	        _this.state = {
 	            activeTab: "browse"
 	        };
-	
+	        _this.ws = io("https://lynxapp.me");
 	        return _this;
 	    }
 	
+	    // componentDidMount() {
+	    //     let ws = io("https://lynxapp.me")
+	    //     // example of how to send data - if needed
+	    //     // ws.emit("message", "this is some data")
+	    //     ws.on("new_message", data => {
+	    //         console.log(data)
+	    //     })
+	    // }
+	
 	    _createClass(_class, [{
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            var ws = io("https://lynxapp.me");
-	            // example of how to send data - if needed
-	            // ws.emit("message", "this is some data")
-	            ws.on("new_message", function (data) {
-	                console.log(data);
-	            });
-	        }
-	    }, {
 	        key: "handleTabClick",
 	        value: function handleTabClick(e, newTab) {
 	            e.preventDefault();
@@ -26760,7 +26759,7 @@
 	            var content = void 0;
 	            switch (this.state.activeTab) {
 	                case "browse":
-	                    content = _react2.default.createElement(_browse2.default, null);
+	                    content = _react2.default.createElement(_browse2.default, { ws: this.ws });
 	                    break;
 	                case "search":
 	                    content = _react2.default.createElement(_searchPage2.default, null);
@@ -26865,6 +26864,12 @@
 			key: "componentDidMount",
 			value: function componentDidMount() {
 				var _this2 = this;
+	
+				if (this.props.ws) {
+					ws.on("new_message", function (data) {
+						console.log(data);
+					});
+				}
 	
 				fetch("https://lynxapp.me/api/messages/new").then(function (response) {
 					return response.json();

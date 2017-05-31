@@ -3,15 +3,15 @@ var MessageDB = {
 		/*
 		messageData = {
 			url -> url that was sent in the message
-			platform -> platform it came from
-			domain -> url's domain name
+			platformName -> platform it came from
+			domainName -> url's domain name
 			title -> from 344 api, title of article
 			description -> from 344 api, description of article
 			type -> from 344 
 			imgUrl -> from 344 api, image in article
 			sender -> who sent the link 
 			note -> the text of the message
-			timeStamp -> string timestamp of when the message was sent
+			timeSent -> string timestamp of when the message was sent
 		}
 
 		1. check if link exists
@@ -39,14 +39,14 @@ var MessageDB = {
 				//check if domain exists
 				return this._connection.queryAsync(
 					"SELECT domain_id FROM DOMAIN WHERE domain_name = :domain",
-					{domain: messageData.domain}
+					{domain: messageData.domainName}
 				).then(domainRows => {
 					if (domainRows && domainRows.length > 0) {
 						return domainRows[0].domainId
 					} else {
 						return this._connection.queryAsync(
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",
-							{domain: messageData.domain}
+							{domain: messageData.domainName}
 						).then(() => {							
 							return this._connection.lastInsertId()
 						}).then(domainId => {
@@ -80,7 +80,7 @@ var MessageDB = {
 			// get platform id
 			return this._connection.queryAsync(
 				"SELECT platform_id FROM PLATFORM WHERE platform_name = :platform",
-				{platform: messageData.platform}
+				{platform: messageData.platformName}
 			).then(platformRows => {
 				return {
 					platformId: platformRows[0].platform_id,
@@ -97,7 +97,7 @@ var MessageDB = {
 					recipId: userId,
 					platId: ids.platformId,
 					note: messageData.note,
-					time: messageData.timeStamp,
+					time: messageData.timeSent,
 					isRead: false,
 					deleted: false
 				}

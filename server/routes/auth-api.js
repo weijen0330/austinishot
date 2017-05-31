@@ -80,16 +80,17 @@ module.exports.Router = function (MessageDB, socketIo) {
         // defensive
         let linkSummary = {
             url: url.href,
-            platform: linkInfo.platform,
+            platformName: linkInfo.platform,
             sender: linkInfo.sender,
-            timeStamp: linkInfo.timeStamp,
-            domain: url.hostname,
+            timeSent: linkInfo.timeStamp,
+            domainName: url.hostname,
             note: linkInfo.bodyText,
+            isRead: false,
+            tags: [],
             type: "article",
             title: "",
             description: "",
-            imgUrl: "",
-
+            imgUrl: ""                       
         };
         
         const prefix = 'https://info344api.enamarkovic.com/v1/summary?url=';
@@ -102,24 +103,6 @@ module.exports.Router = function (MessageDB, socketIo) {
         }).catch(err => {
             console.error(err)
         }).then(() => linkSummary)        
-    }
-
-    function addMessageToDB(userId, messageData) {
-        /*
-        messageData = {
-			url -> url that was sent in the message
-			platform -> platform it came from
-			domain -> url's domain name
-			title -> from 344 api, title of article
-			description -> from 344 api, description of article
-			url -> link url
-			imgUrl -> from 344 api, image in article
-			sender -> who sent the link 
-			note -> the text of the message
-			timeStamp -> string timestamp of when the message was sent
-            type
-		}
-        */
     }
 
 

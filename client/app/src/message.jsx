@@ -29,6 +29,7 @@ export default class extends React.Component {
         var tags = this.state.tags;
         tags = tags.concat(value)
         this.setState({editing: false, tags: tags}) 
+        console.log(tags)
 
         let headers = new Headers()
         headers.set("Content-Type", "application/json")

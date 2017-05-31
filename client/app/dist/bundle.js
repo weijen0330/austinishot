@@ -28128,6 +28128,7 @@
 	            var tags = this.state.tags;
 	            tags = tags.concat(value);
 	            this.setState({ editing: false, tags: tags });
+	            console.log(tags);
 	
 	            var headers = new Headers();
 	            headers.set("Content-Type", "application/json");

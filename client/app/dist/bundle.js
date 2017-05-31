@@ -28586,7 +28586,6 @@
 	                        "Recent Activity"
 	                    ),
 	                    typesArr,
-	                    tagArea,
 	                    _react2.default.createElement(
 	                        "dl",
 	                        { style: { marginTop: '5px' } },
@@ -28600,7 +28599,8 @@
 	                            )
 	                        ),
 	                        domainsArr
-	                    )
+	                    ),
+	                    tagArea
 	                )
 	            );
 	        }

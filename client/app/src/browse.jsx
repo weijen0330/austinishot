@@ -358,11 +358,14 @@ export default class extends React.Component {
 
 				break;			
 		}
-		consle.log(this.state.allNew)
+		
 		switch (this.state.viewType) {			
 			case "tag":
 				if (this.state.allNew) {
-					newMessages = this.state.allNew.filter(msg => msg.tags.includes(this.state.view))					
+					newMessages = this.state.allNew.filter(msg => {
+						console.log(msg)
+						msg.tags.includes(this.state.view)
+					})					
 				}
 				if (this.state.allOld) {
 					oldMessages = this.state.allOld.filter(msg => msg.tags.includes(this.state.view))

@@ -182,6 +182,8 @@ var MessageDB = {
 					rows.forEach(row => {						
 						if (tagsForMessages[row.messageId]) {
 							row.tags = tagsForMessages[row.messageId]
+						} else {
+							row.tags = []
 						}
 					})
 					console.log(rows)

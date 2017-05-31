@@ -59,7 +59,7 @@ export default class extends React.Component {
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = [], addTags = "", title = "", mediaLeft = ""
+        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = ""
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {
                 return (
@@ -113,9 +113,17 @@ export default class extends React.Component {
 
         */
         if (urlData.title.length > 0) {
-            title = urlData.title
+            titleAndDesc = (
+                <div>
+                    <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.title}</a></h3>
+                    <p>
+                        {urlData.description} &nbsp;                                
+                        <small >from {urlData.domainName}</small>
+                    </p>
+                </div>
+            )
         } else {
-            title = urlData.url
+            titleAndDesc = <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.url}</a></h3>
         }
         
 
@@ -148,11 +156,8 @@ export default class extends React.Component {
 
                    <div className="media-content">
                        <div className="content">                           
-                           <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{title}</a></h3>
-                           <p>
-                                {urlData.description} &nbsp;                                
-                                <small >from {urlData.domainName}</small>
-                            </p>
+                           {titleAndDesc}
+                           
                            <p style={{marginBottom: '5px'}}>
                                <strong>{urlData.sender}</strong>
                                 <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>

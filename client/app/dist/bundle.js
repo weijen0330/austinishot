@@ -27915,7 +27915,7 @@
 	            var urlData = this.props.msg;
 	            var tags = [],
 	                addTags = "",
-	                title = "",
+	                titleAndDesc = "",
 	                mediaLeft = "";
 	            if (this.state.tags) {
 	                tags = this.state.tags.map(function (tag, i) {
@@ -27985,9 +27985,41 @@
 	            - if there is no imgUrl - dont have media left
 	             */
 	            if (urlData.title.length > 0) {
-	                title = urlData.title;
+	                titleAndDesc = _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    _react2.default.createElement(
+	                        "h3",
+	                        { className: "title", style: { marginBottom: 0 } },
+	                        _react2.default.createElement(
+	                            "a",
+	                            { target: "_blank", href: urlData.url },
+	                            urlData.title
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "p",
+	                        null,
+	                        urlData.description,
+	                        " \xA0",
+	                        _react2.default.createElement(
+	                            "small",
+	                            null,
+	                            "from ",
+	                            urlData.domainName
+	                        )
+	                    )
+	                );
 	            } else {
-	                title = urlData.url;
+	                titleAndDesc = _react2.default.createElement(
+	                    "h3",
+	                    { className: "title", style: { marginBottom: 0 } },
+	                    _react2.default.createElement(
+	                        "a",
+	                        { target: "_blank", href: urlData.url },
+	                        urlData.url
+	                    )
+	                );
 	            }
 	
 	            if (urlData.imageUrl.length > 0) {
@@ -28023,27 +28055,7 @@
 	                        _react2.default.createElement(
 	                            "div",
 	                            { className: "content" },
-	                            _react2.default.createElement(
-	                                "h3",
-	                                { className: "title", style: { marginBottom: 0 } },
-	                                _react2.default.createElement(
-	                                    "a",
-	                                    { target: "_blank", href: urlData.url },
-	                                    title
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                "p",
-	                                null,
-	                                urlData.description,
-	                                " \xA0",
-	                                _react2.default.createElement(
-	                                    "small",
-	                                    null,
-	                                    "from ",
-	                                    urlData.domainName
-	                                )
-	                            ),
+	                            titleAndDesc,
 	                            _react2.default.createElement(
 	                                "p",
 	                                { style: { marginBottom: '5px' } },

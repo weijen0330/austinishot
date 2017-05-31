@@ -1,3 +1,5 @@
+var dbConfig = require(__base + 'secret/config-db.json');
+
 var MessageDB = {
 	insertMessage(userId, messageData) {				
 		/*
@@ -150,6 +152,7 @@ var MessageDB = {
 	},
 
 	getUnreadMessages(userId) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
 		const query = (
 			'SELECT ' +
 					'm.message_id AS messageId, ' +
@@ -176,13 +179,14 @@ var MessageDB = {
 				'AND m.deleted = :deleted '
 		)
 		
-		return this._connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0}).then(messages => {
-			this._connection.end()
+		return connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0}).then(messages => {
+			connection.end()
 			return messages
 		})
 	},	
 
 	getReadMessages(userId) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
 		const query = (
 			'SELECT ' +
 					'm.message_id AS messageId, ' +
@@ -209,8 +213,8 @@ var MessageDB = {
 				'AND m.deleted = :deleted '
 		)
 		
-		return this._connection.queryAsync(query, {userId: 1, isRead: 1, deleted: 0}).then(messages => {
-			this._connection.end()
+		return connection.queryAsync(query, {userId: 1, isRead: 1, deleted: 0}).then(messages => {
+			connection.end()
 			return messages
 		})
 	},

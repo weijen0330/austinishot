@@ -286,7 +286,7 @@ var MessageDB = {
 					'l.description, ' +
 					'l.type, ' +
 					'l.url, ' +
-					'l.img_url AS imgUrl, ' +
+					'l.img_url AS imageUrl, ' +
 					'd.domain_name AS domainName ' +
 					// 't.tag_text AS tag ' + 
 				'FROM MESSAGE m ' + 

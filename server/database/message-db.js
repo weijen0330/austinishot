@@ -44,11 +44,12 @@ var MessageDB = {
 				//check if domain exists
 				return connection.queryAsync(
 					"SELECT domain_id FROM DOMAIN WHERE domain_name = :domain",
-					{domain: messageData.domainName}
+					{domain: messageData.domainName},
+					{useArray: true}
 				).then(domainRows => {
-					if (domainRows && domainRows.length > 0) {
-						console.log("print domain rows", domainRows)
-						return domainRows[0].domainId
+					if (domainRows && domainRows.length) {
+						console.log("print domain rows", domainRows[0])
+						return domainRows[0]
 					} else {
 						return connection.queryAsync(
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",

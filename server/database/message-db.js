@@ -240,6 +240,7 @@ var MessageDB = {
 						result = result && true
 					}
 				}
+				console.log("tags")
 				if (tags.length) {
 					if (message.tags.includes(tags)) {
 						hitCriteria = true

@@ -24,14 +24,21 @@ var TagDB = {
 			// insert tag
 			// hook tag to message
 			// hook tag to user
+			const getTag = "SELECT tag_id FROM TAGS WHERE tag_text = :tagText"
 			const insertTag = "INSERT INTO TAGS (tag_text) VALUES (:tagText)"
 			const getLink = "SELECT link_id FROM MESSAGE WHERE message_id = :messageId"
 			const insertTagLink = "INSERT INTO LINKS_TAGS (link_id, tag_id) VALUES (:linkId, :tagId)"
 			const insertTagUser = "INSERT INTO USER_TAGS (user_id, tag_id) VALUES (:userId, :tagId)"
 			
-			return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
-				const tagId = connection.lastInsertId()
-				
+			connection.queryAsync(getTag, {tagText: tag}, {useArray: true}).then(rows => {
+				if (rows && rows.length) {
+					return row[0]
+				} else {
+					return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
+						return connection.lastInsertId()
+					})
+				}
+			}).then(tagId => {
 				return connection.queryAsync(getLink, {messageId: messageId}, {useArray: true}).then(rows => {
 					if (rows && rows.length) {
 						const linkId = rows[0]
@@ -43,7 +50,24 @@ var TagDB = {
 					} 
 					return {}
 				})
-			}).then(linkAndTag => {
+			})
+
+			// return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
+			// 	const tagId = connection.lastInsertId()
+				
+			// 	return connection.queryAsync(getLink, {messageId: messageId}, {useArray: true}).then(rows => {
+			// 		if (rows && rows.length) {
+			// 			const linkId = rows[0]
+			// 			console.log("link rows", rows)
+			// 			return {
+			// 				tagId: tagId,
+			// 				linkId: linkId
+			// 			}						
+			// 		} 
+			// 		return {}
+			// 	})
+			// })
+			.then(linkAndTag => {
 				const link = linkAndTag.linkId
 				const tag = linkAndTag.tagId
 

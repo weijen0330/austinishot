@@ -152,9 +152,9 @@ var MessageDB = {
 	getUnreadMessages(userId) {
 		return this.getMessages(
 			(
-				'WHERE m.recipient_id = :userId ' + 
-				'AND m.is_read = :isRead ' + 
-				'AND m.deleted = :isDeleted'
+				'WHERE m.recipient_id = 1 ' + 
+				'AND m.is_read = false ' + 
+				'AND m.deleted = false'
 			),
 			{
 				userId: userId,

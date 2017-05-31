@@ -28458,7 +28458,7 @@
 	                        _this2.props[key + 'New'].length ? _react2.default.createElement(
 	                            "span",
 	                            { className: "tag is-info", style: { float: 'right' } },
-	                            _this2.props[key + "New"].length + ' new'
+	                            _this2.props[key + "New"].length + ' unseen'
 	                        ) : ""
 	                    );
 	                });

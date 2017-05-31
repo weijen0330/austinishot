@@ -40,7 +40,7 @@ export default class extends React.Component {
 
                         {this.props[key + 'New'].length ? (
                             <span className="tag is-info" style={{float: 'right'}}>
-                                {this.props[key + "New"].length + ' new'}
+                                {this.props[key + "New"].length + ' unseen'}
                             </span>
                         ) : ""}					
                     </p>

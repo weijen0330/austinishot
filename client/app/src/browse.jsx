@@ -27,7 +27,36 @@ export default class extends React.Component {
 		};
     }
 	componentDidMount() {
-		fetch("http://localhost:1234/api/messages/new")
+		if (this.props.ws) {
+			this.props.ws.on("new_message", data => {
+				console.log("got a new message!")
+				const msg = data.message
+				
+				let all = [msg].concat(this.state.allNew)
+				
+				switch (msg.type) {
+					case "image":
+						let images = [msg].concat(this.state.imagesNew)
+						this.setState({allNew: all, imagesNew: images})
+						break
+					case "video":
+						let videos = [msg].concat(this.state.videosNew)
+						this.setState({allNew: all, videosNew: videos})
+						break
+					default:
+						let articles = [msg].concat(this.state.articlesNew)
+						this.setState({allNew: all, articlesNew: articles})
+						break
+				}
+			})
+
+			this.props.ws.on("tags_added", data => {
+				console.log("tags added, webhook")
+				this.getAllTags()
+			})
+		}
+
+		fetch("https://lynxapp.me/api/messages/new")
 			.then(response => response.json()).then(data => {
 				this.setState({
 					allNew: data,
@@ -36,7 +65,7 @@ export default class extends React.Component {
 					videosNew: data.filter(msg => msg.type == "video")
 				})
 			})
-		fetch("http://localhost:1234/api/messages/old")
+		fetch("https://lynxapp.me/api/messages/old")
 			.then(response => response.json()).then(data => {
 				this.setState({
 					allOld: data,
@@ -45,10 +74,14 @@ export default class extends React.Component {
 					videosOld: data.filter(msg => msg.type == "video")
 				})
 		})
-
-		fetch("http://localhost:1234/api/domains/")	
+		
+		fetch("https://lynxapp.me/api/domains/")	
 			.then(response => response.json()).then(data => this.setState({domains: data}))
-		fetch("http://localhost:1234/api/tags/")	
+		this.getAllTags()
+	}
+
+	getAllTags() {
+		fetch("https://lynxapp.me/api/tags/")	
 			.then(response => response.json()).then(data => this.setState({tags: data}))
 	}
 
@@ -58,6 +91,142 @@ export default class extends React.Component {
 		} else {
 			this.setState({view: view, viewType: ""})
 		}		
+	}
+
+	updateSeenStatus(msg) {
+		// msg is the whole msg obj
+		// isRead = true - marked as read, move from new to old
+		// isRead = false - marked as unread, move from old to new
+		// messageId, type
+		
+
+		const compareIds = function (m) {
+			return m.messageId != msg.messageId
+		}
+
+		// remove from old status and put into new status		
+
+		switch(msg.type) {
+			case "image":
+				if (msg.isRead) {
+					//marked as read, move from new to old
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						allOld: [msg].concat(this.state.allOld),
+
+						imagesNew: this.state.imagesNew.filter(compareIds),	
+						imagesOld: [msg].concat(this.state.imagesOld)					
+					})
+				} else {
+					//marked as unread, move from old to new
+					this.setState({						
+						allOld: this.state.allOld.filter(compareIds),						
+						allNew: [msg].concat(this.state.allNew),
+
+						imagesOld: this.state.imagesOld.filter(compareIds),	
+						imagesNew: [msg].concat(this.state.imagesNew)					
+					})
+				}
+				break;
+			case "video":
+				if (msg.isRead) {
+					//marked as read, move from new to old
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						allOld: [msg].concat(this.state.allOld),
+
+						videosNew: this.state.videosNew.filter(compareIds),	
+						videosOld: [msg].concat(this.state.videosOld)					
+					})
+				} else {
+					//marked as unread, move from old to new
+					this.setState({						
+						allOld: this.state.allOld.filter(compareIds),						
+						allNew: [msg].concat(this.state.allNew),
+
+						videosOld: this.state.videosOld.filter(compareIds),	
+						videosNew: [msg].concat(this.state.videosNew)					
+					})
+				}
+				break;
+			default:
+				if (msg.isRead) {
+					//marked as read, move from new to old
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						allOld: [msg].concat(this.state.allOld),
+
+						articlesNew: this.state.articlesNew.filter(compareIds),	
+						articlesOld: [msg].concat(this.state.articlesOld)					
+					})
+				} else {
+					//marked as unread, move from old to new
+					this.setState({						
+						allOld: this.state.allOld.filter(compareIds),						
+						allNew: [msg].concat(this.state.allNew),
+
+						articlesOld: this.state.articlesOld.filter(compareIds),	
+						articlesNew: [msg].concat(this.state.articlesNew)					
+					})
+				}
+				break;
+		}
+	}
+
+	removeMessageFromUi(messageData) {
+		/*
+		messageData = {
+			messageId,
+			type,
+			isRead
+		}
+		*/
+
+		const compareIds = function (m) {
+			return m.messageId != messageData.messageId
+		}
+
+		switch(messageData.type) {
+			case "image":
+				if (messageData.isRead) { //old
+					this.setState({
+						allOld: this.state.allOld.filter(compareIds),
+						imagesOld: this.state.imagesOld.filter(compareIds)
+					})
+				} else { //new
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						imagesNew: this.state.imagesNew.filter(compareIds)
+					})
+				}
+				break;
+			case "video":
+				if (messageData.isRead) { //old
+					this.setState({
+						allOld: this.state.allOld.filter(compareIds),
+						videosOld: this.state.videosOld.filter(compareIds)
+					})
+				} else { //new
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						videosNew: this.state.videosNew.filter(compareIds)
+					})
+				}
+				break;
+			default:
+				if (messageData.isRead) { //old
+					this.setState({
+						allOld: this.state.allOld.filter(compareIds),
+						articlesOld: this.state.articlesOld.filter(compareIds)
+					})
+				} else { //new
+					this.setState({
+						allNew: this.state.allNew.filter(compareIds),
+						articlesNew: this.state.articlesNew.filter(compareIds)
+					})
+				}
+				break;
+		}
 	}
 
 	render() {
@@ -77,8 +246,22 @@ export default class extends React.Component {
 				
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New links" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older links" /> : ""}
+						{newMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={newMessages} 
+								title="New links" 
+							/>
+						) : ""}
+						{oldMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={oldMessages} 
+								title="Older links" 
+							/>
+						) : ""}
 					</div>
 				)
 
@@ -93,8 +276,22 @@ export default class extends React.Component {
 
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New articles" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older articles" /> : ""}
+						{newMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={newMessages} 
+								title="New articles" 
+							/>
+						) : ""}
+						{oldMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={oldMessages} 
+								title="Older articles" 
+							/>
+						) : ""}
 					</div>
 				)
 
@@ -109,8 +306,22 @@ export default class extends React.Component {
 
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New images" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older images" /> : ""}
+						{newMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={newMessages} 
+								title="New images" 
+							/>
+						) : ""}
+						{oldMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={oldMessages} 
+								title="Older images" 
+							/>
+						) : ""}
 					</div>
 				)
 
@@ -126,8 +337,22 @@ export default class extends React.Component {
 				
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
-						{newMessages.length > 0 ? <MessageArea messages={newMessages} title="New videos" /> : ""}
-						{oldMessages.length > 0 ? <MessageArea messages={oldMessages} title="Older videos" /> : ""}
+						{newMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={newMessages} 
+								title="New videos" 
+							/>
+						) : ""}
+						{oldMessages.length > 0 ? (
+							<MessageArea 
+								updateSeenStatus={msg => this.updateSeenStatus(msg)}
+								removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+								messages={oldMessages} 
+								title="Older videos" 
+							/> 
+						) : ""}
 					</div>
 				)
 
@@ -147,7 +372,12 @@ export default class extends React.Component {
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 							{allMessages.length > 0 ? (
-								<MessageArea messages={allMessages} title={"Links with tag '" + this.state.view + "'"} />
+								<MessageArea 
+									updateSeenStatus={msg => this.updateSeenStatus(msg)}
+									removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+									messages={allMessages} 
+									title={"Links with tag '" + this.state.view + "'"} 
+								/>
 							) : (
 								"No messages with tag '" + this.state.view + "'"
 							)}
@@ -167,7 +397,12 @@ export default class extends React.Component {
 				content = (
 					<div className="column is-9" style={{height: '100vh', overflowY: 'scroll'}}>						
 							{allMessages.length > 0 ? (
-								<MessageArea messages={allMessages} title={"Links with domain '" + this.state.view + "'"} />
+								<MessageArea 
+									updateSeenStatus={msg => this.updateSeenStatus(msg)}
+									removeMessageFromUi={(messageData) => this.removeMessageFromUi(messageData)} 
+									messages={allMessages} 
+									title={"Links with domain '" + this.state.view + "'"} 
+								/>
 							) : (
 								"No messages with domain '" + this.state.view + "'"
 							)}

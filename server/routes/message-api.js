@@ -30,143 +30,34 @@ const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).
 
 module.exports.Router = function (MessageDB) {
 	var router = express.Router();
-/*
-	// get all new messages
-	// grt
-
-	// // new message
-	// router.post('/', (req, res, next) => {
-	// 	var url = req.body.url,
-	// 		inTitleElem = false,
-	// 		inImgElem = false;
-
-	// 	req.body.domain = Url.parse(url).hostname;
-	// 	req.body.senderId = req.user.id;
-
-	// 	var parser = new htmlparser.WritableStream({
-	// 		onopentag: function (name, attrs) {
-	// 			if (name === 'title') {
-	// 				inTitleElem = true;
-	// 			}
-
-	// 			if (name === 'img') {
-	// 				if (attrs.src) {
-	// 					req.body.imgUrl = req.body.imgUrl ? req.body.imgUrl : attrs.src;
-	// 				}
-	// 			}
-
-	// 			if (name === 'meta') {
-	// 				var prop = attrs.property,
-	// 					nameAttr = attrs.name;
-	// 				if (prop) {
-	// 					switch(prop) {
-	// 						case 'og:image': 
-	// 							req.body.imgUrl = attrs.content;
-	// 							break;
-
-	// 						case 'og:title': 
-	// 							req.body.title = attrs.content;
-	// 							break;
-
-	// 						case 'og:description':
-	// 							req.body.description = attrs.content;
-	// 							break;							
-	// 					}
-	// 				}
-
-	// 				if (nameAttr) {
-	// 					switch(nameAttr) {
-	// 						case 'description':
-	// 							req.body.description = req.body.description ? req.body.description : attrs.content;
-	// 					}
-	// 				}
-
-	// 			}
-	// 		},
-
-	// 		ontext: function (text) {
-	// 			if (inTitleElem) {
-	// 				if (!req.body.title) {
-	// 					req.body.title = text;
-	// 				}
-	// 			}
-	// 		},
-
-	// 		onclosetag: function () {
-	// 			inTitleElem = false;
-	// 		}
-
-	// 	}, {decodeEntities: true});
-
-	// 	request.get(url, {followRedirect: false})
-	// 		.on('error', function () {
-	// 			console.error('error requesting page ' + url);
-	// 		})
-	// 		.on('end', function () {
-	// 			MessageDB.newMessage(req.body)
-	// 				.then(rows => res.json(rows));
-				
-	// 		})
-	// 		.pipe(parser);
-	// });
-
-	// router.get('/', (req, res, next) => {
-	// 	MessageDB.getMessages(req.user.id) 
-	// 		.then(rows => {
-	// 			res.json(mergeOnCategory(rows))
-	// 		})
-	// 		.catch(next);
-	// });
-
-	// router.get('/sent', (req, res, next) => {
-	// 	MessageDB.getSentMessages(req.user.id)
-	// 		.then(rows => res.json(mergeOnCategory(rows)))
-	// 		.catch(next);
-	// });	
-
-	// router.get('/received', (req, res, next) => {
-	// 	MessageDB.getRecievedMessages(req.user.id)
-	// 		.then(rows => res.json(mergeOnCategory(rows)))
-	// 		.catch(next);
-	// });	
-
-	// router.get('/starred', (req, res, next) => {
-	// 	MessageDB.getStarredMessages(req.user.id)
-	// 		.then(rows => {
-				
-	// 			res.json(mergeOnCategory(rows))
-	// 		})
-	// 		.catch(next);
-	// })
-
-	// router.get('/favorite/:messageId', (req, res, next) => {
-	// 	var messageId = req.params.messageId;
-	// 	MessageDB.favoriteMessage(messageId)
-	// 		.then(() => res.json(messageId));
-	// });
-
-	// router.get('/delete/:messageId', (req, res, next) => {
-	// 	var messageId = req.params.messageId;
-	// 	MessageDB.markDeleted(messageId)
-	// 		.then(() => res.json(messageId));
-	// })
-*/
-	router.get('/new', (req, res, next) => {
-		// MessageDB.getUnreadMessages(req.user.user_id)
-
-		const newMsgs = messages.filter(msg => {
-			return !msg.isRead
+	
+	router.post("/search", (req, res, next) => {
+		console.log(req.body)
+		MessageDB.getAllMessages().then(allMessages => {
+			res.json(allMessages)
 		})
-		res.json(newMsgs)		
+	})
+
+	router.get('/new', (req, res, next) => {
+		MessageDB.getUnreadMessages(1).then(messages => {
+			res.json(messages);
+		}).catch(next)
+
+		// const newMsgs = messages.filter(msg => {
+		// 	return !msg.isRead
+		// })
+		// res.json(newMsgs)		
 	})
 
 	router.get('/old', (req, res, next) => {
-		// MessageDB.getReadMessages(req.user.user_id)
+		MessageDB.getReadMessages(1).then(messages => {
+			res.json(messages)
+		}).catch(next)
 
-		const oldMsgs = messages.filter(msg => {
-			return msg.isRead
-		})
-		res.json(oldMsgs)
+		// const oldMsgs = messages.filter(msg => {
+		// 	return msg.isRead
+		// })
+		// res.json(oldMsgs)
 	})
 
 	router.get('/tag/:tag', (req, res, next) => {
@@ -213,17 +104,27 @@ module.exports.Router = function (MessageDB) {
 		res.json(msgs)
 	})
 
-	router.patch('/:messageId', (req, res, next) => {
+	router.patch('/read/:messageId', (req, res, next) => {
 		const messageId = req.params.messageId
-		// MessageDb.markRead(messageId)
-		res.send("marking message with id: " + messageId + " as read")
+		MessageDB.markRead(messageId).then(() => {
+			res.send("marking message with id: " + messageId + " as read")
+		})		
 	})
 
-	router.post('/search', (req, res, next) => {
-		console.log(req.body)
-		res.json(req.body)
+	router.patch("/unread/:messageId", (req, res, next) => {
+		const messageId = req.params.messageId
+		MessageDB.markUnRead(messageId).then(() => {
+			res.send("marking message with id: " + messageId + " as unread")	
+		})		
 	})
-	
+
+	router.delete("/:messageId", (req, res, next) => {
+		const messageId = req.params.messageId
+		MessageDB.markDeleted(messageId).then(() => {
+			res.send("marking message with id: " + messageId + " as deleted")
+		}).catch(next)	
+	})
+
 
 	return router;
 }

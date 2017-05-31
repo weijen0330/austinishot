@@ -11,10 +11,10 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            view: "integration",  
-            facebookChecked: false,
-            slackChecked: false,
-            gmailChecked: false
+            view: "account",  
+            facebookChecked: true,
+            slackChecked: true,
+            gmailChecked: true
         }
 
         this.handleIntegrationClick = this.handleIntegrationClick.bind(this)
@@ -27,17 +27,7 @@ export default class extends React.Component {
     handleIntegrationClick(integration) {
         let clickedOn = !this.state[integration + 'Checked']
         this.setState({[integration + 'Checked']: clickedOn});
-        // turned on integration 
-        if (clickedOn) {
-            fetch('http://localhost:1234/api/auth/' + integration)
-                .then(response => {
-                    return response.text()
-                })
-                .then(console.log)
-                .catch(console.log)
-        } else { // turned off
-            // call another endpoint to turn off
-        }
+        
     }
 
     render() {
@@ -82,12 +72,24 @@ export default class extends React.Component {
                                     onClick={() => this.handleIntegrationClick('gmail')} 
                                     checked={this.state.gmailChecked ? "checked" : ""}
                                 />
-                                <label htmlFor="switch3">&nbsp;</label>                            
+                                <label htmlFor="switch3">&nbsp;</label>
                             </div>
                         </div>                        
                     </div>
                 )
                 break;
+            case "account":
+                content = (
+                    <div style={{textAlign: 'center', marginTop: '50px'}}>
+                        <a 
+                            className="button is-primary"
+                            href="https://lynxapp.me/app/#/login"
+                        >
+                            Sign out
+                        </a> 
+                    </div>
+                )
+                break
         }
 
         return (

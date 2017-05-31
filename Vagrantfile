@@ -12,7 +12,6 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "puphpet/ubuntu1404-x64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -21,7 +20,8 @@ Vagrant.configure(2) do |config|
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
+
+  # accessing "localhost:8080" will access port 80 on the guest machine
   config.vm.network "forwarded_port", guest: 80, host: 1234
 
   # Create a private network, which allows host-only access to the machine
@@ -71,4 +71,17 @@ Vagrant.configure(2) do |config|
   
   # provision box with ./provision.sh 
   config.vm.provision :shell, path: "provision.sh"
+
+  config.vm.define "lynx" do |config|
+    config.vm.provider :digital_ocean do |provider, override|
+      override.ssh.private_key_path = "/Users/Wei-Jen/.ssh/lynx"
+      override.vm.box = "digital_ocean"
+      override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box" 
+      provider.token = ENV["DO_KEY"]
+      provider.image = "ubuntu-14-04-x64"
+      provider.region = "SFO1"
+      provider.size = "512mb"
+      provider.ssh_key_name = "lynx"
+    end
+  end
 end

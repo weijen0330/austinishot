@@ -8,15 +8,9 @@ module.exports.Router = function (DomainDB) {
 	var router = express.Router();
 
 	router.get('/', (req, res, next) => {
-		// DomainDB.getDomains(req.user.id)
-		// 	.then(rows => res.json(_.map(rows, 'name')))
-		// 	.catch(next);
-
-		let domains = []
-		messages.forEach(msg => {
-			domains.push(msg.domainName)
-		})
-		res.json(domains)
+		DomainDB.getDomains(1).then(rows => {
+			res.json(rows)
+		}).catch(next)
 	});
 
 	return router;

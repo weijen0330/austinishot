@@ -1,17 +1,16 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const app = express();
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors')
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
-const server = require('http').createServer(app)
-const io = require('socket.io')(server)
 
 const cookieSigSecret = process.env.SIGSECRET;
 if (!cookieSigSecret) {
@@ -20,6 +19,9 @@ if (!cookieSigSecret) {
 }
 
 app.use(morgan('dev'));
+
+app.use(cors());
+
 app.use(bodyParser.json());
 app.use(session({
     secret: cookieSigSecret,
@@ -45,17 +47,14 @@ module.exports.start = function (connection) {
     //
     passport.use(new LocalStrategy({usernameField: 'email'}, function (email, password, done) {
         UserDB.getUserByEmail(email)
-            .then(function (dbUser) {	                                       
+            .then(function (dbUser) {
                 if (!dbUser) return done(null, false, {message: 'Incorrect credentials.'});
-                
                 bcrypt.compare(password.trim(), dbUser.passwordHash, function (err, matches) {
-                    if (err) return done(err);			
-                    
+                    if (err) return done(err);
                     if (!matches) return done(new Error('incorrect creds'), false);
 
                     return done(null, dbUser);
                 });
-
             }).catch(err => console.log(err));
     }));
 
@@ -81,11 +80,12 @@ module.exports.start = function (connection) {
 
     // public
     app.post('/api/signin', passport.authenticate('local'), function (req, res) {
+        console.log(req.user)
         res.json({message: 'Authenticated'});
     });
 
     // public
-    app.get('/api/signout', function (req, res) {	
+    app.get('/api/signout', function (req, res) {
         req.logout();		
         res.json({message: 'You have been logged out.'});
     });
@@ -110,46 +110,60 @@ module.exports.start = function (connection) {
                 })
                 .catch(next);
         });
-    });    
+    });
+
+    const options = {
+        cert: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/fullchain.pem'),
+        key: fs.readFileSync('/etc/letsencrypt/live/lynxapp.me/privkey.pem')
+    };   
+    const server = https.createServer(options, app);
+    const socketIo = require('socket.io')(server);    
+
+    
+    
+
+    socketIo.on('connection', socket => {
+        
+        socket.on('message', data => {
+            console.log(data);
+        });
+    });
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
-    
-    // un comment this later
+    //
     // app.use(function (req, res, next) {
-    //     if (req.isAuthenticated()) {
-    //         return next();
-    //     } else {
-    //         res.status(401).json({message: 'Must sign in.'});		
-    //     }
+        // redirect is messing up api routes...
+        // if (!req.secure) {
+        //     return res.redirect(['https://', req.get('Host'), req.url].join(''));
+        // }
+        
+        // if (req.isAuthenticated()) {
+            
+        //     return next();
+        // } else {
+        //     res.status(401).json({message: 'Must sign in.'});
+        // }
     // });
+
 
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
         messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
-        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
-        authApi = require(__base + 'routes/auth-api.js');
+        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB, socketIo),
+        authApi = require(__base + 'routes/auth-api.js').Router(MessageDB, socketIo);
 
     app.use('/api/users', usersApi);
     app.use('/api/domains', domainApi);
     app.use('/api/messages', messageApi);    
     app.use('/api/tags', tagApi);
-    app.use('/api/auth', authApi.Router());
+    app.use('/api/auth', authApi);
 
     app.use(function (err, req, res, next) {
         console.error(err.stack);
         res.status(err.status || 500).send({message: err.message});
-    });
+    });     
 
-    
-    io.on('connection', socket => {
-        socket.on('message', data => {
-            console.log(data)
-        })
-    })
-    
-
-    server.listen(80, () => {
-        console.log('listening at http://localhost:1234 (mapped from :80)');
-    });    
+    server.listen(443);
+    app.listen(80);
 };

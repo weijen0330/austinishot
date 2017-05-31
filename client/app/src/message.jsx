@@ -8,14 +8,25 @@ export default class extends React.Component {
         super(props);
         this.state = {
             editing: false,
-            tags: (this.props.msg ? this.props.msg.tags : [])
+            tags: [],
+            isRead: Number(this.props.msg.isRead)
 		}
+     
     }
 
     componentDidMount() {
         if (this.addTagInput) {
             this.addTagInput.focus()
         }
+
+        fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(response => {
+            if (response.ok) {
+                return response.json()
+            } 
+            return []
+        }).then(tags => {            
+            this.setState({tags: tags})
+        })
     }
 
     openAddTag() {
@@ -27,11 +38,65 @@ export default class extends React.Component {
         var tags = this.state.tags;
         tags = tags.concat(value)
         this.setState({editing: false, tags: tags}) 
+        console.log(tags)
+
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+        fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({tags: tags})
+        }).then(response => {
+            if (response.ok) {
+                console.log("added tags to db ok")
+            }
+        })
+    }
+
+    handleSeenButtonClicked() {
+        const isRead = !this.state.isRead
+        this.setState({isRead: isRead})
+        
+        let url = "https://lynxapp.me/api/messages/read/" + this.props.msg.messageId
+        if (!isRead) { 
+            url = "https://lynxapp.me/api/messages/unread/" + this.props.msg.messageId
+        } 
+
+        fetch(url, {
+            method: "PATCH"            
+        }).then(response => {
+            if (response.ok) {
+                console.log("msg mofifies")
+            } else {
+                console.log("error editing message")
+            }
+        })
+        
+        this.props.msg.isRead = isRead
+        this.props.updateSeenStatus(this.props.msg)
+    }
+    
+    handleDeleteMessageClick() {
+        fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
+            method: "DELETE"            
+        }).then(response => {
+            if (response.ok) {
+                console.log("msg deleted")
+            } else {
+                throw new Error()
+            }
+        }).catch(console.log)
+
+        this.props.removeMessageFromUi({
+            messageId: this.props.msg.messageId,
+            type: this.props.msg.type,
+            isRead: this.state.isRead
+        })
     }
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = [], addTags = ""
+        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {
                 return (
@@ -78,38 +143,79 @@ export default class extends React.Component {
                 </a>
             )
         }
+        
+        if (urlData.title.length > 0) {
+            titleAndDesc = (
+                <div style={{marginBottom: '10px'}}>
+                    <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.title}</a></h3>
+                    <p>
+                        {urlData.description} &nbsp;                                
+                        <small >from {urlData.domainName}</small>
+                    </p>
+                </div>
+            )
+        } else {
+            titleAndDesc = <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.url}</a></h3>
+        }
+        
+
+        if (urlData.imageUrl.length > 0) {
+            mediaLeft = (
+                <div className="media-left" style={{width: '25%'}}>
+                    <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>
+                        <img src={urlData.imageUrl} alt="" />
+                    </figure>
+                </div>
+            )
+        }
+
+        if (urlData.timeSent) {
+            time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString()
+        }
+
+
 
         return (
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
+               
+               {/*unread and delete btns*/}
+               <div style={{textAlign: 'right'}}>
+                   <div 
+                        className={this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread"}
+                        onClick={this.handleSeenButtonClicked.bind(this)}
+                    ></div>                   
+               </div>
+
                <article className="media" style={{marginBottom: '5px'}}>
 
-                   <div className="media-left" style={{width: '25%'}}>
-                       <figure className="image" style={{maxHeight: '100%', maxWidth: '100%'}}>
-                           <img src={urlData.imageUrl} alt="" />
-                       </figure>
-                   </div>
+                   {mediaLeft}
 
                    <div className="media-content">
                        <div className="content">                           
-                           <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.title}</a></h3>
-                           <p>
-                                {urlData.description} 
-                                <br /> 
-                                <small >from {urlData.domainName}</small>
-                            </p>
+                           {titleAndDesc}
+
                            <p style={{marginBottom: '5px'}}>
-                               <strong>{urlData.sender}</strong>
+                               <strong>{urlData.sender.length > 0 ? urlData.sender : "A friend"}</strong>
                                 <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>
-                                <small style={{marginLeft: '5px'}}>{urlData.timeSent} ago</small>                                
+                                <small style={{marginLeft: '5px'}}>{time}</small>                                
                            </p>
-                           <p>{urlData.note}</p>
+                           <p>"{urlData.note}"</p>
                        </div>
                    </div>
                </article>
 
-               <div>{tags}</div>
+               <div>{tags}</div>               
 
-               {addTags}                
+               {addTags}        
+
+                <div style={{textAlign: "right"}}>
+                    <span 
+                        onClick={this.handleDeleteMessageClick.bind(this)}
+                        className="icon message-delete"
+                    >
+                        <i className="fa fa-trash-o"></i>
+                    </span>
+                </div>        
            </div>
         )
     }

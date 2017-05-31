@@ -17,14 +17,17 @@ export default class extends React.Component {
             activeTab: "browse",
             modal:"false" 
         }
-
+        this.ws = io("https://lynxapp.me");
     }
 
-    componentDidMount() {
-        let ws = io("http://localhost:1234")
-        // example of how to send data - if needed
-        ws.emit("message", "this is some data")
-    }
+    // componentDidMount() {
+    //     let ws = io("https://lynxapp.me")
+    //     // example of how to send data - if needed
+    //     // ws.emit("message", "this is some data")
+    //     ws.on("new_message", data => {
+    //         console.log(data)
+    //     })
+    // }
 
     handleTabClick(e, newTab) {
         console.log("tab click")
@@ -44,7 +47,7 @@ export default class extends React.Component {
         let content;
         switch (this.state.activeTab) {
             case "browse":
-                content = <Browse />
+                content = <Browse ws={this.ws}/>
                 break;
             case "search":
                 content = <SearchPage />

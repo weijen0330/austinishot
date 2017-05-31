@@ -228,7 +228,7 @@ var MessageDB = {
 					tags
 				*/
 				let hitCriteria = false
-				let result = true
+				let result = false
 
 				if (keywords.length) {					
 					if (message.note.includes(keywords) ||
@@ -238,32 +238,49 @@ var MessageDB = {
 							message.url.includes(keywords) ||
 							message.domainName.includes(keywords) ||
 							message.tags.includes(keywords)) {
-						hitCriteria = true
-						result = result && true
+						if (!hitCriteria) {
+							hitCriteria = true
+							result = true
+						} else {
+							result = result && true
+						}
+						
 					}
 				}
 				if (tags.length) {
 					if (message.tags.includes(tags)) {
-						hitCriteria = true
-						result = result && true
+						if (!hitCriteria) {
+							hitCriteria = true
+							result = true
+						} else {
+						
 					}
 				}
 				if (platform.length) {
 					if (message.platformName == platform) {
-						hitCriteria = true
-						result = result && true
+						if (!hitCriteria) {
+							hitCriteria = true
+							result = true
+						} else {
+						
 					}
 				}
 				if (type.length) {
 					if (message.type == type) {
-						hitCriteria = true
-						result = result && true
+						if (!hitCriteria) {
+							hitCriteria = true
+							result = true
+						} else {
+						
 					}
 				}
 				if (domain.length) {
 					if (message.domainName.contains(domain)) {
-						hitCriteria = true
-						result = result && true
+						if (!hitCriteria) {
+							hitCriteria = true
+							result = true
+						} else {
+						
 					}
 				}
 				console.log("hit criteria", hitCriteria)

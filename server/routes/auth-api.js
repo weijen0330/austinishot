@@ -477,13 +477,13 @@ module.exports.Router = function (MessageDB, socketIo) {
                         // add the message to the database
                         console.log("link summary:", linkSummary);
                         return MessageDB.insertMessage(1, linkSummary)
-                    }).then((messageId) => {
-                        console.log(messageId);
+                    }).then((message) => {
+                        console.log(message);
 
-                        socketIo.emit("new_message", {message: messageId});
+                        socketIo.emit("new_message", {message: message});
                         // send the added message back to the user through web socket
                         // this should broadcast to users
-                        res.status(200).send(messageId);
+                        res.status(200).send(message);
                     }).catch(console.log)
                 });
                 

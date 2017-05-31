@@ -111,9 +111,10 @@ var MessageDB = {
 			).then(() => {
 				return messageId
 			})
-		}).then((message_id) => {
+		}).then((messageId) => {
 			this._connection.end()
-			return message_id;
+			messageData.messageId = messageId
+			return messageData
 		})
 
 	},

@@ -60,20 +60,20 @@ export default class extends React.Component {
 					videosNew: data.filter(msg => msg.type == "video")
 				})
 			})
-		fetch("https://lynxapp.me/api/messages/old")
-			.then(response => response.json()).then(data => {
-				this.setState({
-					allOld: data,
-					articlesOld: data.filter(msg => msg.type == "article"),
-					imagesOld: data.filter(msg => msg.type == "image"),
-					videosOld: data.filter(msg => msg.type == "video")
-				})
-		})
+		// fetch("https://lynxapp.me/api/messages/old")
+		// 	.then(response => response.json()).then(data => {
+		// 		this.setState({
+		// 			allOld: data,
+		// 			articlesOld: data.filter(msg => msg.type == "article"),
+		// 			imagesOld: data.filter(msg => msg.type == "image"),
+		// 			videosOld: data.filter(msg => msg.type == "video")
+		// 		})
+		// })
 		
-		fetch("https://lynxapp.me/api/domains/")	
-			.then(response => response.json()).then(data => this.setState({domains: data}))
-		fetch("https://lynxapp.me/api/tags/")	
-			.then(response => response.json()).then(data => this.setState({tags: data}))
+		// fetch("https://lynxapp.me/api/domains/")	
+		// 	.then(response => response.json()).then(data => this.setState({domains: data}))
+		// fetch("https://lynxapp.me/api/tags/")	
+		// 	.then(response => response.json()).then(data => this.setState({tags: data}))
 	}
 
 	changeView(view, viewType) {

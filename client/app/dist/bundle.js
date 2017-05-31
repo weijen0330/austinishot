@@ -27987,7 +27987,7 @@
 	            if (urlData.title.length > 0) {
 	                titleAndDesc = _react2.default.createElement(
 	                    "div",
-	                    null,
+	                    { style: { marginBottom: '10px' } },
 	                    _react2.default.createElement(
 	                        "h3",
 	                        { className: "title", style: { marginBottom: 0 } },

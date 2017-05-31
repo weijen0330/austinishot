@@ -96,7 +96,7 @@ module.exports.Router = function (MessageDB, socketIo) {
         const prefix = 'https://info344api.enamarkovic.com/v1/summary?url=';
         return requestProm(prefix + url.href).then(body => {                
             const urlData = JSON.parse(body);
-            linkSummary.type = urlData.type ? urlData.type : "";
+            linkSummary.type = urlData.type && urlData.type.length > 0 ? urlData.type : "article";
             linkSummary.title = urlData.title ? urlData.title : "";
             linkSummary.description = urlData.description ? urlData.description : "";
             linkSummary.imageUrl = urlData.image ? urlData.image : "";

@@ -114,7 +114,7 @@ export default class extends React.Component {
         */
         if (urlData.title.length > 0) {
             titleAndDesc = (
-                <div>
+                <div style={{marginBottom: '10px'}}>
                     <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.title}</a></h3>
                     <p>
                         {urlData.description} &nbsp;                                
@@ -157,7 +157,7 @@ export default class extends React.Component {
                    <div className="media-content">
                        <div className="content">                           
                            {titleAndDesc}
-                           
+
                            <p style={{marginBottom: '5px'}}>
                                <strong>{urlData.sender}</strong>
                                 <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>

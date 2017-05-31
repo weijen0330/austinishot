@@ -202,7 +202,7 @@ var MessageDB = {
 		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []
 		
 		const platform = criteria.integration
-		const type = criteria.type
+		const type = criteria.linkType
 		// might not use this
 		const sentOrReceived = criteria.sentOrReceived
 		const timeSent = criteria.when 

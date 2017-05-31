@@ -34,6 +34,7 @@ var TagDB = {
 				return connection.queryAsync(getLink, {messageId: messageId}).then(rows => {
 					if (rows && rows.length) {
 						const linkId = rows[0]
+						console.log("link rows", rows)
 						return {
 							tagId: tagId,
 							linkId: linkId
@@ -54,11 +55,7 @@ var TagDB = {
 			})
 		})
 
-		return Promise.all(promiseTags).then(values => {
-			console.log(values)
-			connection.end()
-			return values
-		})
+		return Promise.all(promiseTags).then(() => connection.end())
 	}
 }
 

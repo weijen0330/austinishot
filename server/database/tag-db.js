@@ -31,7 +31,7 @@ var TagDB = {
 			return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
 				const tagId = connection.lastInsertId()
 				
-				return connection.queryAsync(getLink, {messageId: messageId}).then(rows => {
+				return connection.queryAsync(getLink, {messageId: messageId}, {useArray: true}).then(rows => {
 					if (rows && rows.length) {
 						const linkId = rows[0]
 						console.log("link rows", rows)

@@ -119,7 +119,7 @@ module.exports.start = function (connection) {
     const server = https.createServer(options, app);
     const socketIo = require('socket.io')(server);    
 
-    console.log(socketIo.emit)
+    socketIo.emit("message", "testing emit")
 
     socketIo.on('connection', socket => {
         app.set("socket", socket)

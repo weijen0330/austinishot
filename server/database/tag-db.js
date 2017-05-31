@@ -18,6 +18,7 @@ var TagDB = {
 
 	addTags(messageId, tags) {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+		console.log(tags)
 
 		const promiseTags = tags.map(tag => {
 			// insert tag

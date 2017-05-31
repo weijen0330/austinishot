@@ -28108,9 +28108,22 @@
 	    _createClass(_class, [{
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
+	            var _this2 = this;
+	
 	            if (this.addTagInput) {
 	                this.addTagInput.focus();
 	            }
+	
+	            fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(function (response) {
+	                if (response.ok) {
+	                    console.log("response was ok");
+	                    return response.json();
+	                }
+	                return [];
+	            }).then(function (tags) {
+	                console.log(tags);
+	                _this2.setState({ tags: tags });
+	            });
 	        }
 	    }, {
 	        key: "openAddTag",
@@ -28188,7 +28201,7 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 	
 	            var urlData = this.props.msg;
 	            var tags = [],
@@ -28215,7 +28228,7 @@
 	                        { className: "control", style: { width: '100%' } },
 	                        _react2.default.createElement("input", {
 	                            ref: function ref(input) {
-	                                return _this2.addTagInput = input;
+	                                return _this3.addTagInput = input;
 	                            },
 	                            className: "input",
 	                            type: "text",

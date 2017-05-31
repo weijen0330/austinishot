@@ -156,10 +156,16 @@ var MessageDB = {
 			'WHERE m.deleted = 0'			
 		)
 
+		connection.queryAsync(getMessages, {}).then(rows => {
+			console.log(rows)
+		})
+
 		connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
 			console.log(rows)
-			connection.end()
+			
 		})
+
+		connection.end()
 	},
 
 	getMessages(whereClause) {

@@ -393,9 +393,7 @@ module.exports.Router = function (MessageDB, socketIo) {
         //          text: 'denver',
         //          ts: '1495684015.632873',
         //          channel: 'D51MCEQ1M',
-        //          event_ts: '1495684015.632873' },
-        
-        socketIo.emit("message", "from slack_incoming")
+        //          event_ts: '1495684015.632873' },    
         
 
         if (req.body.event.text) {            
@@ -430,7 +428,9 @@ module.exports.Router = function (MessageDB, socketIo) {
                         console.log("link summary:", linkSummary)
                         return MessageDB.insertMessage(1, linkSummary)
                     }).then((messageId) => {
-                        
+                        console.log(messageId)
+
+                        socketIo.emit("new_message", {message: messageId})
 
                         // send the added message back to the user through web socket
                         // this should broadcast to users       

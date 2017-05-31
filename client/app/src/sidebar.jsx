@@ -48,7 +48,7 @@ export default class extends React.Component {
 			})
 		}
 
-		if (this.props.tags) {
+		if (this.props.tags && this.props.tags.length) {
             tagsArr = this.props.tags.map(tag => {
                 var selected = ""
                 if (this.props.view == tag) {

@@ -28211,7 +28211,7 @@
 	                });
 	            }
 	
-	            if (this.props.tags) {
+	            if (this.props.tags && this.props.tags.length) {
 	                tagsArr = this.props.tags.map(function (tag) {
 	                    var selected = "";
 	                    if (_this2.props.view == tag) {

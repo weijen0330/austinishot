@@ -28035,6 +28035,7 @@
 	                                "p",
 	                                null,
 	                                urlData.description,
+	                                " \xA0",
 	                                _react2.default.createElement(
 	                                    "small",
 	                                    null,

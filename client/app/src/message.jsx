@@ -149,7 +149,7 @@ export default class extends React.Component {
                        <div className="content">                           
                            <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{title}</a></h3>
                            <p>
-                                {urlData.description}                                 
+                                {urlData.description} &nbsp;                                
                                 <small >from {urlData.domainName}</small>
                             </p>
                            <p style={{marginBottom: '5px'}}>

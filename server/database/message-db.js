@@ -109,8 +109,9 @@ var MessageDB = {
 				"INSERT INTO USER_MESSAGES (user_id, message_id) VALUES (:userId, :messageId)",
 				{userId: userId, messageId: messageId}
 			)
-		}).then(() => {
+		}).then((data) => {
 			this._connection.end()
+			return data;
 		})
 
 	},

@@ -28174,7 +28174,8 @@
 	
 	            var typesArr = [],
 	                tagsArr = [],
-	                domainsArr = [];
+	                domainsArr = [],
+	                tagArea;
 	
 	            if (this.props.types && this.props.allNew && this.props.articlesNew && this.props.imagesNew && this.props.videosNew) {
 	                typesArr = Object.keys(this.props.types).map(function (key) {
@@ -28210,7 +28211,7 @@
 	                });
 	            }
 	
-	            if (this.props.tags) {
+	            if (this.props.tags.length > 0) {
 	                tagsArr = this.props.tags.map(function (tag) {
 	                    var selected = "";
 	                    if (_this2.props.view == tag) {
@@ -28230,6 +28231,21 @@
 	                        _this2.capitalizeString(tag)
 	                    );
 	                });
+	
+	                tagArea = _react2.default.createElement(
+	                    "dl",
+	                    null,
+	                    _react2.default.createElement(
+	                        "dt",
+	                        null,
+	                        _react2.default.createElement(
+	                            "h2",
+	                            { className: "title is-5" },
+	                            "Tags"
+	                        )
+	                    ),
+	                    tagsArr
+	                );
 	            }
 	
 	            if (this.props.domains) {
@@ -28269,20 +28285,7 @@
 	                        "Recent Activity"
 	                    ),
 	                    typesArr,
-	                    _react2.default.createElement(
-	                        "dl",
-	                        null,
-	                        _react2.default.createElement(
-	                            "dt",
-	                            null,
-	                            _react2.default.createElement(
-	                                "h2",
-	                                { className: "title is-5" },
-	                                "Tags"
-	                            )
-	                        ),
-	                        tagsArr
-	                    ),
+	                    tagArea,
 	                    _react2.default.createElement(
 	                        "dl",
 	                        { style: { marginTop: '5px' } },

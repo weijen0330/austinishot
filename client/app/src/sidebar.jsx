@@ -15,7 +15,8 @@ export default class extends React.Component {
     render() {
         var typesArr = [],
 			tagsArr = [],
-			domainsArr = []
+			domainsArr = [],
+            tagArea
         
         if (this.props.types && this.props.allNew && this.props.articlesNew && this.props.imagesNew && this.props.videosNew) {              
 			typesArr = Object.keys(this.props.types).map(key => {
@@ -47,7 +48,7 @@ export default class extends React.Component {
 			})
 		}
 
-		if (this.props.tags) {
+		if (this.props.tags.length > 0) {
             tagsArr = this.props.tags.map(tag => {
                 var selected = ""
                 if (this.props.view == tag) {
@@ -63,6 +64,13 @@ export default class extends React.Component {
                     >{this.capitalizeString(tag)}</dd>
                 )
             })
+
+            tagArea = (
+                 <dl>
+                    <dt><h2 className="title is-5">Tags</h2></dt>
+                    {tagsArr}
+                </dl>	
+            )
 		}
 
 		if (this.props.domains) {
@@ -93,10 +101,7 @@ export default class extends React.Component {
                     <h2 className="title is-5">Recent Activity</h2>		
                     {typesArr}
 
-                    <dl>
-                        <dt><h2 className="title is-5">Tags</h2></dt>
-                        {tagsArr}
-                    </dl>											
+                    {tagArea}										
 
                     <dl style={{marginTop: '5px'}}>
                         <dt><h2 className="title is-5">Domains</h2></dt>

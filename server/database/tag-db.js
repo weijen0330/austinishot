@@ -32,7 +32,7 @@ var TagDB = {
 			
 			connection.queryAsync(getTag, {tagText: tag}, {useArray: true}).then(rows => {
 				if (rows && rows.length) {
-					return row[0]
+					return rows[0]
 				} else {
 					return connection.queryAsync(insertTag, {tagText: tag}, {useArray: true}).then(() => {
 						return connection.lastInsertId()

@@ -125,6 +125,7 @@ var MessageDB = {
 	},
 
 	getAllMessages() {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
 		// get all messages
 		const getMessages = (
 			'SELECT ' +
@@ -157,6 +158,7 @@ var MessageDB = {
 
 		connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
 			console.log(rows)
+			connection.end()
 		})
 	},
 

@@ -211,10 +211,65 @@ var MessageDB = {
 		this.getAllMessages().then(allMessages => {
 			console.log(allMessages)
 			let filteredMessages = allMessages.filter(message => {
-				if (keywords.length) {
-					// message
+				/*
+					messageId
+					sender
+					note
+					timeSent
+					isRead
+					platformName
+					title
+					description
+					type
+					url
+					imgUrl
+					domainName
+					tags
+				*/
+				let hitCriteria = false
+				let result = true
+
+				if (keywords.length) {					
+					if (message.note.includes(keywords) ||
+							message.platformName.includes(keywords) ||
+							message.title.includes(keywords) ||
+							message.description.includes(keywords) ||
+							message.url.includes(keywords) ||
+							message.domainName.includes(keywords) ||
+							message.tags.includes(keywords)) {
+						hitCriteria = true
+						result = result && true
+					}
 				}
+				if (tags.length) {
+					if (message.tags.includes(tags)) {
+						hitCriteria = true
+						result = result && true
+					}
+				}
+				if (platform.length) {
+					if (message.platformName == platform) {
+						hitCriteria = true
+						result = result && true
+					}
+				}
+				if (type.length) {
+					if (message.type == type) {
+						hitCriteria = true
+						result = result && true
+					}
+				}
+				if (domain.length) {
+					if (message.domainName.contains(domain)) {
+						hitCriteria = true
+						result = result && true
+					}
+				}
+
+				return hitCriteria && result
 			})
+
+			console.log(filteredMessages)
 
 		});
 	},

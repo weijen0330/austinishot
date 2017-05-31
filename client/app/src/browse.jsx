@@ -72,6 +72,10 @@ export default class extends React.Component {
 		
 		fetch("https://lynxapp.me/api/domains/")	
 			.then(response => response.json()).then(data => this.setState({domains: data}))
+		this.getAllTags()
+	}
+
+	getAllTags() {
 		fetch("https://lynxapp.me/api/tags/")	
 			.then(response => response.json()).then(data => this.setState({tags: data}))
 	}

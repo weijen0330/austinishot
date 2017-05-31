@@ -26927,10 +26927,17 @@
 				}).then(function (data) {
 					return _this2.setState({ domains: data });
 				});
+				this.getAllTags();
+			}
+		}, {
+			key: "getAllTags",
+			value: function getAllTags() {
+				var _this3 = this;
+	
 				fetch("https://lynxapp.me/api/tags/").then(function (response) {
 					return response.json();
 				}).then(function (data) {
-					return _this2.setState({ tags: data });
+					return _this3.setState({ tags: data });
 				});
 			}
 		}, {
@@ -27089,7 +27096,7 @@
 		}, {
 			key: "render",
 			value: function render() {
-				var _this3 = this;
+				var _this4 = this;
 	
 				var newMessages = [],
 				    oldMessages = [],
@@ -27110,20 +27117,20 @@
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
 							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: newMessages,
 								title: "New links"
 							}) : "",
 							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: oldMessages,
 								title: "Older links"
@@ -27144,20 +27151,20 @@
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
 							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: newMessages,
 								title: "New articles"
 							}) : "",
 							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: oldMessages,
 								title: "Older articles"
@@ -27178,20 +27185,20 @@
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
 							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: newMessages,
 								title: "New images"
 							}) : "",
 							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: oldMessages,
 								title: "Older images"
@@ -27213,20 +27220,20 @@
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
 							newMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: newMessages,
 								title: "New videos"
 							}) : "",
 							oldMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: oldMessages,
 								title: "Older videos"
@@ -27240,12 +27247,12 @@
 					case "tag":
 						if (this.state.allNew) {
 							newMessages = this.state.allNew.filter(function (msg) {
-								return msg.tags.includes(_this3.state.view);
+								return msg.tags.includes(_this4.state.view);
 							});
 						}
 						if (this.state.allOld) {
 							oldMessages = this.state.allOld.filter(function (msg) {
-								return msg.tags.includes(_this3.state.view);
+								return msg.tags.includes(_this4.state.view);
 							});
 						}
 						allMessages = newMessages.concat(oldMessages);
@@ -27255,10 +27262,10 @@
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
 							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: allMessages,
 								title: "Links with tag '" + this.state.view + "'"
@@ -27269,12 +27276,12 @@
 					case "domain":
 						if (this.state.allNew) {
 							newMessages = this.state.allNew.filter(function (msg) {
-								return msg.domainName == _this3.state.view;
+								return msg.domainName == _this4.state.view;
 							});
 						}
 						if (this.state.allOld) {
 							oldMessages = this.state.allOld.filter(function (msg) {
-								return msg.domainName == _this3.state.view;
+								return msg.domainName == _this4.state.view;
 							});
 						}
 						allMessages = newMessages.concat(oldMessages);
@@ -27284,10 +27291,10 @@
 							{ className: "column is-9", style: { height: '100vh', overflowY: 'scroll' } },
 							allMessages.length > 0 ? _react2.default.createElement(_messageArea2.default, {
 								updateSeenStatus: function updateSeenStatus(msg) {
-									return _this3.updateSeenStatus(msg);
+									return _this4.updateSeenStatus(msg);
 								},
 								removeMessageFromUi: function removeMessageFromUi(messageData) {
-									return _this3.removeMessageFromUi(messageData);
+									return _this4.removeMessageFromUi(messageData);
 								},
 								messages: allMessages,
 								title: "Links with domain '" + this.state.view + "'"
@@ -27310,7 +27317,7 @@
 						tags: this.state.tags,
 						domains: this.state.domains,
 						handleViewChange: function handleViewChange(view, viewType) {
-							return _this3.changeView(view, viewType);
+							return _this4.changeView(view, viewType);
 						}
 					}),
 					content

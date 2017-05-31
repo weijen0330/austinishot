@@ -4,7 +4,7 @@ var _ = require('lodash');
 const fs = require("fs")
 const messages = JSON.parse(fs.readFileSync(__dirname + "/data.json", "utf-8")).messages
 
-module.exports.Router = function (TagDB) {
+module.exports.Router = function (TagDB, socketIo) {
 	var router = express.Router();
 
 	router.get('/', (req, res, next) => {
@@ -19,7 +19,8 @@ module.exports.Router = function (TagDB) {
 		const tags = req.body.tags
 
 		if (tags && tags.length) {
-			TagDB.addTags(messageId, tags).then(() => {				
+			TagDB.addTags(messageId, tags).then(() => {	
+				socketIo.emit("tags_added")			
 				res.send("tags added")
 			}).catch(next)
 		} else {

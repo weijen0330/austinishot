@@ -150,7 +150,7 @@ module.exports.start = function (connection) {
     const usersApi = require(__base + 'routes/user-api.js').Router(UserDB),
         domainApi = require(__base + 'routes/domain-api.js').Router(DomainDB),
         messageApi = require(__base + 'routes/message-api.js').Router(MessageDB),
-        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB),
+        tagApi = require(__base + 'routes/tag-api.js').Router(TagDB, socketIo),
         authApi = require(__base + 'routes/auth-api.js').Router(MessageDB, socketIo);
 
     app.use('/api/users', usersApi);

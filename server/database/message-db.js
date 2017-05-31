@@ -201,7 +201,7 @@ var MessageDB = {
 		// tags is an array?
 		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []
 		
-		const platform = criteria.from
+		const platform = criteria.integration
 		const type = criteria.type
 		// might not use this
 		const sentOrReceived = criteria.sentOrReceived

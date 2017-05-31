@@ -161,7 +161,7 @@ module.exports.Router = function (MessageDB, socketIo) {
     });
 
     // Facebook webhook: https://developers.facebook.com/docs/graph-api/webhooks
-    router.post('/facebook_incoming', function(req, res) {
+    router.post('/facebook_incoming', function(facebookReq, facebookRes) {
         // Facebook challenge. Saving just in case.
         // if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
         //     console.log("Validating webhook");
@@ -174,30 +174,31 @@ module.exports.Router = function (MessageDB, socketIo) {
         // changes: [ { field: 'status',
         //              id: '44444444_444444444',
         //              value: 'This is an Example Status.' } ]
-        const newStatus = req.body.entry[0].changes[0];
-        console.log(req.body.entry[0].changes);
+        const newStatus = facebookReq.body.entry[0].changes[0];
+        console.log(facebookReq.body.entry[0].changes);
 
         const fboptions = {
             timeout: 3000,
             pool: { maxSockets:  Infinity },
             headers: { connection:  "keep-alive" }
         };
-
+        // full scope: type,caption,description,link,updated_time,from,message
         const reqParam = {
-            fields: 'type,caption,description,link,updated_time,from'
+            fields: 'type,caption,description,link,updated_time,from,message'
         };
 
         // Grab information about the status via the API
         graph.setOptions(fboptions).get(newStatus.id, reqParam, function(err, res) {
             if (err) {
                 console.log("Error: Unable to get information from a single status from the API");
+                facebookRes.status(200).send();
             } else {
                 var message = res;
                 if (res.type === 'video'|| res.type === 'link') {
                     var linkInfo = {
                         platform: 'facebook',
                         sender: res.from.name,
-                        bodyText: req.body.entry[0].changes[0].value ? req.body.entry[0].changes[0].value : "",
+                        bodyText: facebookReq.body.entry[0].changes[0].value ? facebookReq.body.entry[0].changes[0].value : "",
                         timeStamp: res.updated_time
                     };
                     generateLinkSummary(res.link, linkInfo).then(linkSummary => {

@@ -18,7 +18,7 @@ module.exports.Router = function (TagDB, socketIo) {
 		const messageId = req.params.messageId
 		TagDB.getTagsForMessage(messageId).then(rows => {
 			console.log(rows)
-			res.send("got rows")
+			res.json(rows)
 		})
 	})
 

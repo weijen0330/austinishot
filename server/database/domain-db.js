@@ -9,7 +9,7 @@ var DomainDB = {
 			'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
 			'WHERE ud.user_id = :userId'
 		)
-		return this._connection.queryAsync(query, {userId: 1}).then(rows => {
+		return this._connection.queryAsync(query, {userId: 1}, {useArray: true}).then(rows => {
 			this._connection.end()
 			return rows
 		})

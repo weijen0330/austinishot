@@ -40,7 +40,7 @@ var TagDB = {
 						}						
 					} 
 					return {}
-				}).catch(next)
+				})
 			}).then(linkAndTag => {
 				const link = linkAndTag.linkId
 				const tag = linkAndTag.tagId
@@ -48,11 +48,11 @@ var TagDB = {
 				console.log(linkAndTag)
 
 				if (link && tag) {
-					connection.queryAsync(insertTagLink, {linkId: link, tagId: tag}).catch(next)
-					connection.queryAsync(insertTagUser, {userId: 1, tagId: tag}).catch(next)
+					connection.queryAsync(insertTagLink, {linkId: link, tagId: tag})
+					connection.queryAsync(insertTagUser, {userId: 1, tagId: tag})
 				}
 				connection.end()
-			}).catch(next)
+			})
 		})
 	}
 }

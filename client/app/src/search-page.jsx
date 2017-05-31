@@ -4,6 +4,7 @@ import "whatwg-fetch";
 
 import AdvancedSearch from "./advanced-search.jsx"
 import NormalSearch from "./normal-search.jsx"
+import MessageArea from "./message-area.jsx"
 
 export default class extends React.Component {
     constructor(props) {

@@ -28782,6 +28782,10 @@
 	
 	var _normalSearch2 = _interopRequireDefault(_normalSearch);
 	
+	var _messageArea = __webpack_require__(/*! ./message-area.jsx */ 232);
+	
+	var _messageArea2 = _interopRequireDefault(_messageArea);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28870,7 +28874,7 @@
 	            }
 	
 	            if (this.state.messages && this.state.messages.length) {
-	                messages = _react2.default.createElement(MessageArea, {
+	                messages = _react2.default.createElement(_messageArea2.default, {
 	                    fromSearch: true,
 	                    messages: this.state.messages,
 	                    title: "Search results"

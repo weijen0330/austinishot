@@ -196,6 +196,7 @@ var MessageDB = {
 	},
 
 	searchMessages(criteria) {
+		console.log("criteria", criteria)
 		const keywords = criteria.keywords
 		// tags is an array?
 		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []

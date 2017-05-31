@@ -40,8 +40,6 @@ export default class extends React.Component {
             if (response.ok) {
                 console.log("added tags to db ok")
             }
-        }).then(() => {
-            //fetch all tags... maybe use web socket..
         })
     }
 
@@ -187,7 +185,7 @@ export default class extends React.Component {
                            {titleAndDesc}
 
                            <p style={{marginBottom: '5px'}}>
-                               <strong>{urlData.sender}</strong>
+                               <strong>{urlData.sender.length > 0 ? urlData.sender : "A friend"}</strong>
                                 <small style={{marginLeft: '5px'}}>via {urlData.platformName}</small>
                                 <small style={{marginLeft: '5px'}}>{time}</small>                                
                            </p>

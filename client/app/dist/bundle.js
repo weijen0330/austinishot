@@ -28138,8 +28138,6 @@
 	                if (response.ok) {
 	                    console.log("added tags to db ok");
 	                }
-	            }).then(function () {
-	                //fetch all tags... maybe use web socket..
 	            });
 	        }
 	    }, {
@@ -28341,7 +28339,7 @@
 	                                _react2.default.createElement(
 	                                    "strong",
 	                                    null,
-	                                    urlData.sender
+	                                    urlData.sender.length > 0 ? urlData.sender : "A friend"
 	                                ),
 	                                _react2.default.createElement(
 	                                    "small",

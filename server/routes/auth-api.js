@@ -194,6 +194,8 @@ module.exports.Router = function (MessageDB, socketIo) {
                 facebookRes.status(200).send();
             } else {
                 var message = res;
+                console.log(res);
+
                 if (res.type === 'video'|| res.type === 'link') {
                     var linkInfo = {
                         platform: 'facebook',
@@ -201,19 +203,19 @@ module.exports.Router = function (MessageDB, socketIo) {
                         bodyText: facebookReq.body.entry[0].changes[0].value ? facebookReq.body.entry[0].changes[0].value : "",
                         timeStamp: res.updated_time
                     };
-                    generateLinkSummary(res.link, linkInfo).then(linkSummary => {
-                        // add the message to the database
-                        console.log("link summary:", linkSummary);
-                        return MessageDB.insertMessage(1, linkSummary)
-                    }).then((message) => {
-                        console.log(message);
-
-                        socketIo.emit("new_message", {message: message});
-                        // send the added message back to the user through web socket
-                        // this should broadcast to users
-                        facebookRes.status(200).send(message);
-                    }).catch(console.log);
-                    facebookRes.status(200).send()
+                    // generateLinkSummary(res.link, linkInfo).then(linkSummary => {
+                    //     // add the message to the database
+                    //     console.log("link summary:", linkSummary);
+                    //     return MessageDB.insertMessage(1, linkSummary)
+                    // }).then((message) => {
+                    //     console.log(message);
+                    //
+                    //     socketIo.emit("new_message", {message: message});
+                    //     // send the added message back to the user through web socket
+                    //     // this should broadcast to users
+                    //     facebookRes.status(200).send(message);
+                    // }).catch(console.log);
+                    facebookRes.status(200).send();
                 } else {
                     facebookRes.status(200).send("not a link");
                 }

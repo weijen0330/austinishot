@@ -33,7 +33,7 @@ module.exports.Router = function (TagDB) {
 		// messages.forEach(msg => {
 		// 	tags = tags.concat(msg.tags)
 		// })
-		res.json(tags)
+		// res.json(tags)
 	});	
 
 	return router;

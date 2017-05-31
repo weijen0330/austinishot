@@ -11,7 +11,7 @@ var DomainDB = {
 		)
 		return this._connection.queryAsync(query, {userId: 1}, {useArray: true}).then(rows => {
 			this._connection.end()
-			return rows
+			return rows.map(row => row[0])			
 		})
 		// return this._getObjects(
 		// 	(

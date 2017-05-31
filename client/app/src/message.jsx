@@ -59,7 +59,7 @@ export default class extends React.Component {
 
 	render() {              
         var urlData = this.props.msg 
-        var tags = [], addTags = ""
+        var tags = [], addTags = "", title= ""
         if (this.state.tags) {
             tags = this.state.tags.map((tag, i) => {
                 return (
@@ -107,6 +107,16 @@ export default class extends React.Component {
             )
         }
 
+        /*
+        - if there is no title - use the link as the title
+
+        */
+        if (urlData.title.length > 0) {
+            title = urlData.title
+        } else {
+            title = urlData.url
+        }
+
         return (
            <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
                
@@ -128,7 +138,7 @@ export default class extends React.Component {
 
                    <div className="media-content">
                        <div className="content">                           
-                           <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{urlData.title}</a></h3>
+                           <h3 className="title" style={{marginBottom: 0}}><a target="_blank" href={urlData.url}>{title}</a></h3>
                            <p>
                                 {urlData.description} 
                                 <br /> 

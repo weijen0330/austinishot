@@ -27913,7 +27913,8 @@
 	
 	            var urlData = this.props.msg;
 	            var tags = [],
-	                addTags = "";
+	                addTags = "",
+	                title = "";
 	            if (this.state.tags) {
 	                tags = this.state.tags.map(function (tag, i) {
 	                    return _react2.default.createElement(
@@ -27977,6 +27978,15 @@
 	                );
 	            }
 	
+	            /*
+	            - if there is no title - use the link as the title
+	             */
+	            if (urlData.title.length > 0) {
+	                title = urlData.title;
+	            } else {
+	                title = urlData.url;
+	            }
+	
 	            return _react2.default.createElement(
 	                "div",
 	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
@@ -28012,7 +28022,7 @@
 	                                _react2.default.createElement(
 	                                    "a",
 	                                    { target: "_blank", href: urlData.url },
-	                                    urlData.title
+	                                    title
 	                                )
 	                            ),
 	                            _react2.default.createElement(

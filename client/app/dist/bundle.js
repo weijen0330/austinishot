@@ -29011,7 +29011,7 @@
 	            var _this2 = this;
 	
 	            if (prop === "tags") {
-	                value = this.addTagInput.value.split(',').map(function (str) {
+	                value = value.split(',').map(function (str) {
 	                    return str.trim();
 	                }).filter(function (str) {
 	                    return str.length;

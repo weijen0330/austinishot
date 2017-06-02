@@ -7,11 +7,9 @@ const base64url = require('base64url');
 const URL = require('url').URL;
 
 const google = require('googleapis');
-const googleAuth = require('google-auth-library');
-
 const slackWebClient = require('@slack/client').WebClient;
-
 const graph = require('fbgraph');
+const PubSub = require('@google-cloud/pubsub');
 
 const authTokens = require(__base + 'secret/auth-tokens.json');
 const authConf = {
@@ -26,22 +24,15 @@ const authConf = {
         'clientSecret' : authTokens.gmailClientSecret,
         'scope' : ['https://www.googleapis.com/auth/plus.me',
                    'https://www.googleapis.com/auth/gmail.modify'],
-        'redirectUri' : 'https://lynxapp.me/api/auth/gmail'
+        'redirectUri' : 'https://lynxapp.me/api/auth/gmail_oauth'
     },
     'slack' : {
         'clientID' : authTokens.slackClientID,
         'clientSecret' : authTokens.slackClientSecret,
         'scope': 'users.profile%3Aread+users%3Aread+channels%3Ahistory+channels%3Aread+im%3Aread+im%3Ahistory+mpim%3Aread+mpim%3Ahistory',
-        'redirectUri' : 'https://lynxapp.me/api/auth/slack'
+        'redirectUri' : 'https://lynxapp.me/api/auth/slack_oauth'
     }
 };
-
-const oauth2 = google.auth.OAuth2;
-const oauth2Client = new oauth2(
-    authConf.gmail.clientID,
-    authConf.gmail.clientSecret,
-    authConf.gmail.redirectUri
-);
 
 module.exports.Router = function (MessageDB, socketIo) {
 	const router = express.Router();
@@ -131,6 +122,9 @@ module.exports.Router = function (MessageDB, socketIo) {
                 if (!err && apiTokenRes.statusCode == 200) {
                     const info = JSON.parse(body);
                     graph.setAccessToken(info.access_token);
+                    res.redirect('https://lynxapp.me/app');
+                } else {
+                    console.log('Error: unable to get Facebook API token.');
                 }
             });
         }
@@ -163,7 +157,6 @@ module.exports.Router = function (MessageDB, socketIo) {
                 headers: { connection:  "keep-alive" }
             };
 
-            // full scope: type,caption,description,link,updated_time,from,message
             const reqParam = {
                 fields: 'type,caption,description,link,updated_time,from,message'
             };
@@ -185,39 +178,24 @@ module.exports.Router = function (MessageDB, socketIo) {
                             timeStamp: res.updated_time
                         };
                         console.log("link info", linkInfo);
-                        // generateLinkSummary(res.link, linkInfo).then(linkSummary => {
-                        //     // add the message to the database
-                        //     console.log("link summary:", linkSummary);
-                        //     return MessageDB.insertMessage(1, linkSummary)
-                        // }).then((message) => {
-                        //     console.log(message);
-                        //
-                        //     socketIo.emit("new_message", {message: message});
-                        //     // send the added message back to the user through web socket
-                        //     // this should broadcast to users
-                        //     facebookRes.status(200).send(message);
-                        // }).catch(console.log);
+                        generateLinkSummary(res.link, linkInfo).then(linkSummary => {
+                            // add the message to the database
+                            console.log("link summary:", linkSummary);
+                            return MessageDB.insertMessage(1, linkSummary)
+                        }).then((message) => {
+                            console.log(message);
+
+                            socketIo.emit("new_message", {message: message});
+                            // send the added message back to the user through web socket
+                            // this should broadcast to users
+                            facebookRes.status(200).send(message);
+                        }).catch(console.log);
                         facebookRes.status(200).send();
                     } else {
                         facebookRes.status(200).send("not a link");
                     }
                 }
             });
-
-            // var linkInfo = {
-            //     platform: "facebook",
-            //     sender: "",
-            //     bodyText: statusValue,
-            //     timeStamp: Date.now()
-            // };
-            // generateLinkSummary(links[0], linkInfo).then(linkSummary => {
-            //     return MessageDB.insertMessage(1, linkSummary)
-            // }).then(message => {
-            //     socketIo.emit("new_message", {message: message});
-            //     // send the added message back to the user through web socket
-            //     // this should broadcast to users
-            //     facebookRes.status(200).send(message);
-            // })
         }
     });
 
@@ -228,11 +206,47 @@ module.exports.Router = function (MessageDB, socketIo) {
         + '&redirect_uri' + authConf.gmail.redirectUri
         + '&response_type=code&scope=' + auth.gmail.scope;
         res.redirect(oauthUrl); */
-        const oauthUrl = oauth2Client.generateAuthUrl({
-            access_type: 'offline',
-            scope: authConf.gmail.scope
-        });
-        res.redirect(oauthUrl);
+        const oauth2 = google.auth.OAuth2;
+        const oauth2Client = new oauth2(
+            authConf.gmail.clientID,
+            authConf.gmail.clientSecret,
+            authConf.gmail.redirectUri
+        );
+
+        if (!req.query.code) {
+            const oauthUrl = oauth2Client.generateAuthUrl({
+                access_type: 'offline',
+                scope: authConf.gmail.scope
+            });
+            res.redirect(oauthUrl);
+        } else {
+            oauth2Client.getToken(req.query.code, function(err, tokens) {
+                if (!err) {
+                    oauth2Client.setCredentials(tokens);
+                    const gmail = google.gmail('v1');
+
+                    gmail.users.messages.list({auth: oauth2Client, userId: 'me', maxResults: 100}, function(listErr, listRes) {
+                        if (listErr) {
+                            console.log('The list messages API call returned an error: ' + listErr);
+                            return;
+                        } else {
+                            const emailIDs = listRes.messages;
+                            for (const i in emailIDs) {
+                                gmail.users.messages.get({auth: auth2Client, id: emailIDs[i],userId: 'me'}, function(getErr, getResponse) {
+                                    if (getErr) {
+                                        console.log('The get messages API call returned an error for email with ID: ' + emailIDs[i]);
+                                    } else {
+                                        console.log(getResponse);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    console.log('Getting the API token returned an error: ' + err);
+                }
+            });
+        }
     });
 
     router.get('/gmail', function(gmailReq, gmailRes) {
@@ -268,135 +282,54 @@ module.exports.Router = function (MessageDB, socketIo) {
         gmailRes.redirect('https://lynxapp.me/app');
     });
 
-    // Slack Oauth: https://api.slack.com/docs/oauth
-    router.get('/slack_oauth', function (req, res, next) {
-        const oauthUrl = 'https://slack.com/oauth/authorize?client_id='
-            + authConf.slack.clientID
-            + '&scope=' + authConf.slack.scope
-            + '&redirect_uri=' + authConf.slack.redirectUri;
-        res.redirect(oauthUrl);
-    });
-    
-    router.get('/slack', function(slackReq, slackRes) {
-        const apiTokenUrl = 'https://slack.com/api/oauth.access?client_id='
-            + authConf.slack.clientID
-            + '&client_secret=' + authConf.slack.clientSecret
-            + '&code=' + slackReq.query.code
-            + '&redirect_uri=' + authConf.slack.redirectUri;
+    router.post('/gmail_incoming', function() {
+        const projectId = 'YOUR_PROJECT_ID';
 
-        // Send request to Slack server for an API token
-        request(apiTokenUrl, function (err, res, body) {
-            // If successful, parse the response and save the token so we can call the API multiple times
-            if (!err && res.statusCode == 200) {
-                const info = JSON.parse(body);
-                authConf.slack.accessToken = info.access_token;
-
-                const slackWeb = new slackWebClient(authConf.slack.accessToken);
-
-                // All messages on the public channels
-                slackWeb.channels.list(function(channelListErr, channelListInfo) {
-                    // Get a list of channels first
-                    if (channelListErr || !channelListInfo.ok) {
-                        console.log('Error: Unable to retrieve public channel list.');
-                    } else {
-                        // Use the channel IDs to grab the messages
-                        for (i = 0; i < channelListInfo.channels.length; i++) {
-                            slackWeb.channels.history(channelListInfo.channels[i].id, function(channelHistErr, channelHistInfo) {
-                                if (channelHistErr || !channelHistInfo.ok) {
-                                    console.log('Error: Unable to retrieve messages for channel with ID: ' + channelListInfo.channels[i].id);
-                                } else {
-                                    var linkInfo = {
-                                        platform : 'slack'
-                                    };
-                                    for (j = 0; j < channelHistInfo.messages.length; j++) {
-                                        let links = regParser(channelHistInfo.messages[j].text);
-                                        if (links.length > 0) {
-                                            linkInfo.timeStamp = channelHistInfo.messages[j].ts;
-                                            linkInfo.bodyText = channelHistInfo.messages[j].text;
-
-                                            slackWeb.users.info(channelHistInfo.messages[j].user, function(usersInfoErr, usersInfo) {
-                                                if (usersInfoErr || !usersInfo.ok) {
-                                                    console.log('Error: Unable to identify user while fetching public channel messages.');
-                                                    linkInfo.sender = '';
-                                                } else {
-                                                    linkInfo.sender = usersInfo.user.profile.real_name;
-                                                }
-                                            });
-
-                                            for (k = 0; k < links.length; k++) {
-                                                generateLinkSummary(links[k], linkInfo).then(linkSummary => {
-                                                    // add the message to the database
-                                                    console.log("link summary:", linkSummary);
-                                                    return MessageDB.insertMessage(1, linkSummary)
-                                                }).then((messageId) => {
-
-                                                    // send the added message back to the user through web socket
-                                                    // this should broadcast to users
-                                                    res.status(200).send(messageId);
-                                                }).catch(console.log);
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-
-                // all direct messages
-                slackWeb.im.list(function(imListErr, imListInfo) {
-                    if (imListErr || !imListInfo.ok) {
-                        console.error('Error: Unable to retrieve direct message list.');
-                    } else {
-                        for (i = 0; i < imListInfo.ims.length; i++) {
-                            slackWeb.im.history(imListInfo.ims[i].id, function(imHistErr, imHistInfo) {
-                                if (imHistErr || !imHistInfo.ok) {
-                                    console.log('Error: Unable to retrieve messages for direct message with ID: ' + imListInfo.ims[i].id);
-                                } else {
-
-                                    var linkInfo = {
-                                        platform : 'slack'
-                                    };
-
-                                    for (j = 0; j < imHistInfo.messages.length; j++) {
-
-                                        let links = regParser(imHistInfo.messages[j].text);
-                                        if (links.length > 0) {
-                                            linkInfo.timeStamp = imHistInfo.messages[j].ts;
-                                            linkInfo.bodyText = imHistInfo.messages[j].text;
-
-                                            slackWeb.users.info(imHistInfo.messages[j].user, function(usersInfoErr, usersInfo) {
-                                                if (usersInfoErr || !usersInfo.ok) {
-                                                    console.log('Error: Unable to identify user while fetching public channel messages.');
-                                                    linkInfo.sender = '';
-                                                } else {
-                                                    linkInfo.sender = usersInfo.user.profile.real_name;
-                                                }
-                                            });
-
-                                            for (k = 0; k < links.length; k++) {
-                                                generateLinkSummary(links[k], linkInfo).then(linkSummary => {
-                                                    // add the message to the database
-                                                    console.log("link summary:", linkSummary);
-                                                    return MessageDB.insertMessage(1, linkSummary)
-                                                }).then((messageId) => {
-
-                                                    // send the added message back to the user through web socket
-                                                    // this should broadcast to users
-                                                    res.status(200).send(messageId);
-                                                }).catch(console.log);
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-            } else {
-                console.error('Slack API call error: ' + err);
-            }
+        // Instantiates a client
+        const pubsubClient = PubSub({
+            projectId: projectId
         });
+
+        // The name for the new topic
+        const topicName = 'my-new-topic';
+
+        // Creates the new topic
+        pubsubClient.createTopic(topicName)
+            .then((results) => {
+                const topic = results[0];
+                console.log(`Topic ${topic.name} created.`);
+            })
+            .catch((err) => {
+                console.error('ERROR:', err);
+            });
+    });
+
+    // Slack Oauth: https://api.slack.com/docs/oauth
+    router.get('/slack_oauth', function(req, res) {
+        if (!req.query.code) {
+            const oauthUrl = 'https://slack.com/oauth/authorize?client_id='
+                + authConf.slack.clientID
+                + '&scope=' + authConf.slack.scope
+                + '&redirect_uri=' + authConf.slack.redirectUri;
+            res.redirect(oauthUrl);
+        } else {
+            // Exchanging an authorization code for an API access token
+            const apiTokenUrl = 'https://slack.com/api/oauth.access?client_id='
+                + authConf.slack.clientID
+                + '&client_secret=' + authConf.slack.clientSecret
+                + '&code=' + req.query.code
+                + '&redirect_uri=' + authConf.slack.redirectUri;
+
+            request(apiTokenUrl, function (err, apiTokenRes, body) {
+                if (!err && apiTokenRes.statusCode == 200) {
+                    const info = JSON.parse(body);
+                    // There seems to be no way to set the token after the object is initiated.
+                    // This is the work around.
+                    authConf.slack.accessToken = info.access_token;
+                    res.redirect('https://lynxapp.me/app');
+                }
+            });
+        }
     });
 
     router.post('/slack_incoming', function(req, res) {        

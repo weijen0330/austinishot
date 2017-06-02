@@ -255,9 +255,15 @@ var MessageDB = {
 			whereClause.push('m.sender LIKE \"%' + sender + '%\"')			
 		}
 
+
+		
+		console.log("where clause", whereClause)
 		if (whereClause.length) {
 			whereClauseStr = "WHERE m.deleted = 0"
 		} 
+		if (whereClauseStr.endsWith("AND ")) {
+			whereClauseStr = "WHERE m.deleted = 0"
+		}
 		
 		whereClause.forEach((where, i) => {
 			whereClauseStr += where 

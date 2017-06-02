@@ -158,23 +158,23 @@ var MessageDB = {
 			))
 		} else {
 			if (platform && platform.length) {
-				whereClause.push('p.platform_name LIKE :platform')
-				options.platform = platform
+				whereClause.push('p.platform_name LIKE \"' + platform + '\"')
+				
 			}
 
 			if (type && type.length) {
-				whereClause.push('l.type LIKE :type')
-				options.type = type
+				whereClause.push('l.type LIKE \"' + type + '\"')
+				
 			}
 
 			if (domain && domain.length) {
-				whereClause.push('d.domain_name LIKE :domain')
-				options.domain = domain
+				whereClause.push('d.domain_name LIKE \"' + domain + '\"')
+				
 			}
 
 			if (sender && sender.length) {
-				whereClause.push('m.sender LIKE :sender')
-				options.sender = sender
+				whereClause.push('m.sender LIKE \"' + sender + '\"')
+				
 			}
 
 			// TODO: timesent

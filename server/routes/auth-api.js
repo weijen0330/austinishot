@@ -231,12 +231,12 @@ module.exports.Router = function (MessageDB, socketIo) {
             'topicName' : 'projects/civil-ripple-167409/topics/gmail_incoming'
         };
 
-        request({
+        request.post({
             headers: {
                 'Content-Type': 'application/json'
             },
-            uri: 'https://www.googleapis.com/gmail/v1/users/me/watch'
-            method: 'POST'
+            url: 'https://www.googleapis.com/gmail/v1/users/me/watch',
+
             }, function (err, watchRes, body) {
             if (!err && watchRes.statusCode == 200) {
                 const info = JSON.parse(body);

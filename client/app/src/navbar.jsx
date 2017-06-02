@@ -19,16 +19,16 @@ export default class extends React.Component {
                 settingsClass = "is-active";
                 break;
         }
-        
-        return (            
+        console.log(this.props.handle)
+        return (                 
             <nav className="nav has-shadow">
                     <div className="nav-left">
                         
                             <p className="nav-item" style={{marginLeft: "10px"}}>
                                 <img src="src/logoGreen.png" alt="lynx logo" />                             
                             </p>
-                            <h1 className="nav-item" style={{marginBottom: 0, paddingTop: '9px', marginRight: '22px'}} className="title">Lynx</h1>
-                        
+                            <h1 className="nav-item" style={{marginBottom: 0, paddingTop: '9px', marginRight: '22px'}} className="title">Lynx </h1>
+                            
                         
                         <div className="tabs is-centered" style={{width: '100%'}}>
                             <ul style={{borderBottom: 'none'}}> 
@@ -51,6 +51,13 @@ export default class extends React.Component {
                                     >Settings</a>
                                 </li>
                             </ul>
+                            <button className="button" style={{height: '100%'}}
+                                onClick={e => this.props.handleModalClick(e, "true")}
+                             >
+                                <span className="icon is-small">
+                                      <i className="fa fa-question" aria-hidden="true"></i>
+                                    </span>
+                             </button>
                         </div>    
                         
 

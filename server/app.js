@@ -96,6 +96,7 @@ module.exports.start = function (connection) {
         //field validation will be done on the client.
         const salt = bcrypt.genSaltSync(10);
         bcrypt.hash(req.body.password.trim(), salt, function (err, passwordHash) {
+            console.log("passwordhash", passwordHash)
             if (err) return next(err);
             // if username is already in db, returns error
             // if not, adds new user to db, returns user information

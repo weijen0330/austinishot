@@ -144,7 +144,7 @@ var MessageDB = {
 		let whereClauseStr = "WHERE m.deleted = 0 AND ("
 		let whereClause = []
 		let options = {}
-		
+		console.log(keywords)
 		if(keywords && keywords.length) {
 			whereClause.push((
 				'm.sender LIKE %:keywords% OR ' +

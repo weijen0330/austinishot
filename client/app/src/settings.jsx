@@ -11,10 +11,9 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            view: "account",  
-            facebookChecked: true,
-            slackChecked: true,
-            gmailChecked: true
+            view: "integration",  
+            facebookChecked: false,
+            slackChecked: false
         }
 
         this.handleIntegrationClick = this.handleIntegrationClick.bind(this)
@@ -27,7 +26,10 @@ export default class extends React.Component {
     handleIntegrationClick(integration) {
         let clickedOn = !this.state[integration + 'Checked']
         this.setState({[integration + 'Checked']: clickedOn});
-        
+
+        fetch("https://lynxapp.me/api/auth/" + integration + "_oauth").then(response => {
+            console.log(response)
+        })
     }
 
     render() {
@@ -62,17 +64,6 @@ export default class extends React.Component {
                                     checked={this.state.slackChecked ? "checked" : ""}
                                 />
                                 <label htmlFor="switch2">&nbsp;</label>                            
-                            </div>
-                            <div style={{paddingBottom:'20px'}}>                       
-                                Gmail
-                                <input 
-                                    type="checkbox" 
-                                    id="switch3" 
-                                    className="switch" 
-                                    onClick={() => this.handleIntegrationClick('gmail')} 
-                                    checked={this.state.gmailChecked ? "checked" : ""}
-                                />
-                                <label htmlFor="switch3">&nbsp;</label>
                             </div>
                         </div>                        
                     </div>

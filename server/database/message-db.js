@@ -214,57 +214,49 @@ var MessageDB = {
 		})
 	},
 
-	searchMessages(criteria) {	
+	advancedSearch(criteria) {	
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
 
 		const keywords = criteria.keywords
 		// tags is an array?
 		const tags = criteria.tags		
 		const platform = criteria.integration
-		const type = criteria.linkType
-		// how to use timeSent?
-		const timeSent = criteria.timeSent 
+		const type = criteria.linkType		
 		const domain = criteria.domain
 		const sender = criteria.sender
 
+		// how to use timeSent?
+		const timeSent = criteria.timeSent 
+
 		let whereClauseStr = "WHERE m.deleted = 0 AND ("
 		let whereClause = []
-		let options = {}
 		
 		if(keywords && keywords.length) {
-			whereClause.push((
-				'm.sender LIKE \"%' + keywords + '%\" OR ' +
-				'm.note LIKE \"%' + keywords + '%\" OR ' +
-				'p.platform_name LIKE \"%' + keywords + '%\" OR ' +
+			whereClause.push((				
+				'm.note LIKE \"%' + keywords + '%\" OR ' +				
 				'l.title LIKE \"%' + keywords + '%\" OR ' +
-				'l.description LIKE \"%' + keywords + '%\" OR ' +
-				'l.type LIKE \"%' + keywords + '%\" OR ' +
-				'l.url LIKE \"%' + keywords + '%\" OR ' +
-				'd.domain_name LIKE \"%' + keywords + '%\"'
+				'l.description LIKE \"%' + keywords + '%\" OR ' +				
+				'l.url LIKE \"%' + keywords + '%\"'
 			))
-		} else {
-			if (platform && platform.length) {
-				whereClause.push('p.platform_name LIKE \"' + platform + '\"')
-				
-			}
-
-			if (type && type.length) {
-				whereClause.push('l.type LIKE \"' + type + '\"')
-				
-			}
-
-			if (domain && domain.length) {
-				whereClause.push('d.domain_name LIKE \"%' + domain + '%\"')
-				
-			}
-
-			if (sender && sender.length) {
-				whereClause.push('m.sender LIKE \"%' + sender + '%\"')
-				
-			}
-
-			// TODO: timesent
 		}
+		if (platform && platform.length) {
+			whereClause.push('p.platform_name LIKE \"' + platform + '\"')			
+		}
+
+		if (type && type.length) {
+			whereClause.push('l.type LIKE \"' + type + '\"')			
+		}
+
+		if (domain && domain.length) {
+			whereClause.push('d.domain_name LIKE \"%' + domain + '%\"')			
+		}
+
+		if (sender && sender.length) {
+			whereClause.push('m.sender LIKE \"%' + sender + '%\"')			
+		}
+
+		// TODO: timesent
+		
 		whereClause.forEach((where, i) => {
 			whereClauseStr += where 
 			if (i < whereClause.length - 1) {
@@ -274,65 +266,7 @@ var MessageDB = {
 			}
 		})
 
-		const getMessages = (
-			'SELECT ' +
-				'm.message_id AS messageId, ' +
-				'm.sender, ' +
-				'm.note, ' +
-				'm.timeSent, ' +
-				'm.is_read AS isRead, ' +
-				'p.platform_name AS platformName, ' +
-				'l.title, ' +
-				'l.description, ' +
-				'l.type, ' +
-				'l.url, ' +
-				'l.img_url AS imageUrl, ' +
-				'd.domain_name AS domainName ' +				
-			'FROM MESSAGE m ' + 
-			'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
-			'JOIN LINKS l ON m.link_id = l.link_id ' + 
-			'JOIN DOMAIN d ON l.domain_id = d.domain_id ' +
-			whereClauseStr
-		)
-		console.log("get messages", getMessages)
-
-		const getMessageLinks = (
-			'SELECT m.message_id, t.tag_text FROM MESSAGE m ' + 
-			'JOIN LINKS l on m.link_id = l.link_id ' +
-			'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' + 
-			'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
-			'WHERE m.deleted = 0'			
-		)
-
-		return connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
-			if (rows && rows.length) {
-				let tagsForMessages = {}
-				rows.forEach(row => {
-					let messageId = row[0]
-					let tag = row[1]
-					if (!tagsForMessages[messageId]) {
-						tagsForMessages[messageId] = []
-					}
-					tagsForMessages[messageId].push(tag)
-				})
-				return tagsForMessages
-			}
-			return {}			
-		}).then(tagsForMessages => {
-			return connection.queryAsync(getMessages, {}).then(rows => {
-				if (rows && rows.length) {
-					rows.forEach(row => {						
-						if (tagsForMessages[row.messageId]) {
-							row.tags = tagsForMessages[row.messageId]
-						} else {
-							row.tags = []
-						}
-					})
-					return rows
-				}
-				return []
-			})
-		}).then(allMessages => {
+		return this.getAllMessages(connection, whereClauseStr, {}).then(allMessages => {
 			if (tags && tags.length) {
 				allMessages = allMessages.filter(msg => {
 					tags.forEach(tag => {

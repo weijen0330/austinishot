@@ -8,7 +8,8 @@ var TagDB = {
 		const query = (
 			'SELECT DISTINCT t.tag_text AS tag FROM TAGS t ' +
 			'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
-			'WHERE ut.user_id = :userId'
+			'WHERE ut.user_id = :userId ' + 
+			'ORDER BY tag_text'
 		)
 		return connection.queryAsync(query, {userId: 1}, {useArray: true}).then(rows => {
 			connection.end()

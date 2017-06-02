@@ -29038,7 +29038,7 @@
 	                    ),
 	                    _react2.default.createElement(
 	                        "p",
-	                        { className: "control" },
+	                        { className: "control", style: { paddingBottom: '12px' } },
 	                        _react2.default.createElement("input", {
 	                            className: "input",
 	                            type: "text",

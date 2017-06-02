@@ -228,30 +228,22 @@ module.exports.Router = function (MessageDB, socketIo) {
 
         const request = {
             'labelIds' : ['INBOX'],
-            'topicName' : 'projects/civil-ripple-167409/subscriptions/gmail'
+            'topicName' : 'projects/civil-ripple-167409/topics/gmail_incoming'
         };
 
-        const gmail = google.gmail('v1');
-        gmail.users().watch('me', request).execute();
-
-        
-        // Instantiates a client
-        const pubsubClient = PubSub({
-            projectId: projectId
+        request({
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            uri: 'https://www.googleapis.com/gmail/v1/users/me/watch'
+            method: 'POST'
+            }, function (err, watchRes, body) {
+            if (!err && watchRes.statusCode == 200) {
+                const info = JSON.parse(body);
+                console.log(body)
+            }
         });
 
-        // The name for the new topic
-        const topicName = 'my-new-topic';
-
-        // Creates the new topic
-        pubsubClient.createTopic(topicName)
-            .then((results) => {
-                const topic = results[0];
-                console.log(`Topic ${topic.name} created.`);
-            })
-            .catch((err) => {
-                console.error('ERROR:', err);
-            });
     });
 
     // Slack Oauth: https://api.slack.com/docs/oauth

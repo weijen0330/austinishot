@@ -28883,13 +28883,17 @@
 	                    } });
 	            }
 	
-	            if (this.state.messages && this.state.messages.length) {
-	                console.log("setting messages");
-	                messages = _react2.default.createElement(_messageArea2.default, {
-	                    fromSearch: true,
-	                    messages: this.state.messages,
-	                    title: "Search results"
-	                });
+	            if (this.state.messages) {
+	                if (this.state.messages.length) {
+	                    console.log("setting messages");
+	                    messages = _react2.default.createElement(_messageArea2.default, {
+	                        fromSearch: true,
+	                        messages: this.state.messages,
+	                        title: "Search results"
+	                    });
+	                } else {
+	                    messages = "No messages match your criteria.";
+	                }
 	            }
 	
 	            return _react2.default.createElement(

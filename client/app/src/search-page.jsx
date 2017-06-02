@@ -68,15 +68,19 @@ export default class extends React.Component {
             search = <NormalSearch updateSearchCriteria={(state) => this.updateSearchCriteria(state)}/>
         }
 
-        if (this.state.messages && this.state.messages.length) {
-            console.log("setting messages")
-            messages = (
-                <MessageArea 
-                    fromSearch={true}
-                    messages={this.state.messages} 
-                    title="Search results" 
-                />
-            )
+        if (this.state.messages) {
+            if (this.state.messages.length) {
+                console.log("setting messages")
+                messages = (
+                    <MessageArea 
+                        fromSearch={true}
+                        messages={this.state.messages} 
+                        title="Search results" 
+                    />
+                )
+            } else {
+                messages = "No messages match your criteria."
+            }
         }
 
         return (

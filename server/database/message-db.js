@@ -267,12 +267,13 @@ var MessageDB = {
 		return this.getAllMessages(connection, whereClauseStr, {}).then(allMessages => {
 			if (tags && tags.length) {
 				allMessages = allMessages.filter(msg => {
+					let foundTag = false
 					tags.forEach(tag => {
 						if (msg.tags.includes(tag)) {
-							return true
+							foundTag = true
 						}
 					})
-					return false
+					return foundTag
 				})				
 			}
 			connection.end()

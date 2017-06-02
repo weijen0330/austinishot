@@ -156,7 +156,6 @@ var MessageDB = {
 				'l.url LIKE \"%' + keywords + '%\" OR ' +
 				'd.domain_name LIKE \"%' + keywords + '%\"'
 			))
-			options.keywords = keywords
 		} else {
 			if (platform && platform.length) {
 				whereClause.push('p.platform_name LIKE :platform')
@@ -233,7 +232,7 @@ var MessageDB = {
 			}
 			return {}			
 		}).then(tagsForMessages => {
-			return connection.queryAsync(getMessages, options).then(rows => {
+			return connection.queryAsync(getMessages, {}).then(rows => {
 				if (rows && rows.length) {
 					rows.forEach(row => {						
 						if (tagsForMessages[row.messageId]) {

@@ -29216,44 +29216,27 @@
 	                        "div",
 	                        { className: "column is-half", style: { textAlign: 'right' } },
 	                        _react2.default.createElement(
-	                            "label",
-	                            { className: "label" },
-	                            "Was it"
-	                        ),
-	                        _react2.default.createElement(
 	                            "div",
-	                            null,
+	                            { className: "field", style: { textAlign: 'right' } },
 	                            _react2.default.createElement(
-	                                "a",
-	                                {
-	                                    className: this.state.sentOrReceived == "sent" ? "button is-light" : "button is-white",
-	                                    style: { marginRight: '10px' },
-	                                    onClick: function onClick() {
-	                                        return _this3.setSearchOption("sentOrReceived", "sent");
+	                                "label",
+	                                { className: "label" },
+	                                "Who sent it?"
+	                            ),
+	                            _react2.default.createElement(
+	                                "p",
+	                                { className: "control" },
+	                                _react2.default.createElement("input", {
+	                                    style: { textAlign: 'right' },
+	                                    className: "input",
+	                                    type: "text",
+	                                    placeholder: "Ex. Mary, me",
+	                                    value: this.state.sender,
+	                                    onChange: function onChange(e) {
+	                                        e.preventDefault();
+	                                        _this3.setSearchOption("sender", e.target.value);
 	                                    }
-	                                },
-	                                "Sent"
-	                            ),
-	                            _react2.default.createElement(
-	                                "span",
-	                                { style: { lineHeight: '36px', marginRight: '8px', fontSize: '1rem', fontWeight: 700 } },
-	                                "or"
-	                            ),
-	                            _react2.default.createElement(
-	                                "a",
-	                                {
-	                                    className: this.state.sentOrReceived == "received" ? "button is-light" : "button is-white",
-	                                    style: { marginRight: '10px' },
-	                                    onClick: function onClick() {
-	                                        return _this3.setSearchOption("sentOrReceived", "received");
-	                                    }
-	                                },
-	                                "Received"
-	                            ),
-	                            _react2.default.createElement(
-	                                "span",
-	                                { style: { lineHeight: '36px', fontSize: '1rem', fontWeight: 700 } },
-	                                "?"
+	                                })
 	                            )
 	                        )
 	                    ),
@@ -29319,37 +29302,7 @@
 	                        )
 	                    )
 	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "columns" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "column is-half" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "field" },
-	                            _react2.default.createElement(
-	                                "label",
-	                                { className: "label" },
-	                                "Who sent it?"
-	                            ),
-	                            _react2.default.createElement(
-	                                "p",
-	                                { className: "control" },
-	                                _react2.default.createElement("input", {
-	                                    className: "input",
-	                                    type: "text",
-	                                    placeholder: "Ex. Mary, me",
-	                                    value: this.state.sender,
-	                                    onChange: function onChange(e) {
-	                                        e.preventDefault();
-	                                        _this3.setSearchOption("sender", e.target.value);
-	                                    }
-	                                })
-	                            )
-	                        )
-	                    )
-	                )
+	                _react2.default.createElement("div", { className: "columns" })
 	            );
 	        }
 	    }]);

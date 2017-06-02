@@ -161,26 +161,21 @@ export default class extends React.Component {
                 {/*S||R and when*/}
                 <div className="columns">
                     <div className="column is-half" style={{textAlign: 'right'}}>
-                        <label className="label">Was it</label>
-                        <div>
-                            <a 
-                                className={this.state.sentOrReceived == "sent" ? "button is-light" : "button is-white"}
-                                style={{marginRight: '10px'}}
-                                onClick={() => this.setSearchOption("sentOrReceived", "sent")}
-                            >
-                                Sent
-                            </a>
-                            
-                            <span style={{lineHeight: '36px', marginRight: '8px', fontSize: '1rem', fontWeight: 700}}>or</span>
-                            
-                            <a 
-                                className={this.state.sentOrReceived == "received" ? "button is-light" : "button is-white"}
-                                style={{marginRight: '10px'}}
-                                onClick={() => this.setSearchOption("sentOrReceived", "received")}
-                            >
-                                Received
-                            </a>
-                            <span style={{lineHeight: '36px', fontSize: '1rem', fontWeight: 700}}>?</span>
+                        <div className="field" style={{textAlign: 'right'}}>
+                            <label className="label">Who sent it?</label>
+                            <p className="control">
+                                <input 
+                                    style={{textAlign: 'right'}}
+                                    className="input" 
+                                    type="text" 
+                                    placeholder="Ex. Mary, me" 
+                                    value={this.state.sender}
+                                    onChange={e => {
+                                        e.preventDefault()
+                                        this.setSearchOption("sender", e.target.value)
+                                    }}
+                                />
+                            </p>
                         </div>
                     </div>
                     <div className="column is-half">
@@ -234,23 +229,7 @@ export default class extends React.Component {
                 <div className="columns">
                     
 
-                    <div className="column is-half">
-                        <div className="field">
-                            <label className="label">Who sent it?</label>
-                            <p className="control">
-                                <input 
-                                    className="input" 
-                                    type="text" 
-                                    placeholder="Ex. Mary, me" 
-                                    value={this.state.sender}
-                                    onChange={e => {
-                                        e.preventDefault()
-                                        this.setSearchOption("sender", e.target.value)
-                                    }}
-                                />
-                            </p>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>                
         )

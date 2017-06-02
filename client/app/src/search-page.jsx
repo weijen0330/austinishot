@@ -24,7 +24,7 @@ export default class extends React.Component {
                 domain: "",
                 sender: "",                 
             },    
-            messages: []        
+            messages: null        
         }
     }
     
@@ -33,11 +33,11 @@ export default class extends React.Component {
     }
 
     quickSearchClicked() {
-        this.setState({advancedSearch: false, messages: []})
+        this.setState({advancedSearch: false, messages: null})
     }
 
     advancedSearchClicked() {    
-        this.setState({advancedSearch: true, messages: []})
+        this.setState({advancedSearch: true, messages: null})
     }
     
     handleSubmit() {

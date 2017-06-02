@@ -28821,7 +28821,7 @@
 	                domain: "",
 	                sender: ""
 	            },
-	            messages: []
+	            messages: null
 	        };
 	        return _this;
 	    }
@@ -28834,12 +28834,12 @@
 	    }, {
 	        key: "quickSearchClicked",
 	        value: function quickSearchClicked() {
-	            this.setState({ advancedSearch: false, messages: [] });
+	            this.setState({ advancedSearch: false, messages: null });
 	        }
 	    }, {
 	        key: "advancedSearchClicked",
 	        value: function advancedSearchClicked() {
-	            this.setState({ advancedSearch: true, messages: [] });
+	            this.setState({ advancedSearch: true, messages: null });
 	        }
 	    }, {
 	        key: "handleSubmit",

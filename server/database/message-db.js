@@ -168,12 +168,12 @@ var MessageDB = {
 			}
 
 			if (domain && domain.length) {
-				whereClause.push('d.domain_name LIKE \"' + domain + '\"')
+				whereClause.push('d.domain_name LIKE \"%' + domain + '%\"')
 				
 			}
 
 			if (sender && sender.length) {
-				whereClause.push('m.sender LIKE \"' + sender + '\"')
+				whereClause.push('m.sender LIKE \"%' + sender + '%\"')
 				
 			}
 

@@ -28107,7 +28107,6 @@
 	            tags: _this.props.msg.tags || [],
 	            isRead: Number(_this.props.msg.isRead)
 	        };
-	        console.log(_this.state.tags);
 	        return _this;
 	    }
 	
@@ -28256,8 +28255,8 @@
 	                );
 	            }
 	
-	            if (urlData.tags) {
-	                tags = urlData.tags.map(function (tag, i) {
+	            if (this.state.tags) {
+	                tags = this.state.tags.map(function (tag, i) {
 	                    return _react2.default.createElement(
 	                        "span",
 	                        { key: tag + i, style: { marginLeft: '5px' }, className: "tag is-light" },

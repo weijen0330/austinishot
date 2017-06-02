@@ -11,7 +11,6 @@ export default class extends React.Component {
             tags: this.props.msg.tags || [],
             isRead: Number(this.props.msg.isRead)
 		}
-        console.log(this.state.tags)
     }
 
     componentDidMount() {
@@ -126,8 +125,8 @@ export default class extends React.Component {
             )
         }
 
-        if (urlData.tags) {
-            tags = urlData.tags.map((tag, i) => {
+        if (this.state.tags) {
+            tags = this.state.tags.map((tag, i) => {
                 return (
                     <span key={tag + i} style={{marginLeft: '5px'}} className="tag is-light">{tag}</span>
                 )

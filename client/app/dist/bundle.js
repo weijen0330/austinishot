@@ -28114,20 +28114,9 @@
 	    _createClass(_class, [{
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
-	            var _this2 = this;
-	
 	            if (this.addTagInput) {
 	                this.addTagInput.focus();
 	            }
-	
-	            fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(function (response) {
-	                if (response.ok) {
-	                    return response.json();
-	                }
-	                return [];
-	            }).then(function (tags) {
-	                _this2.setState({ tags: tags });
-	            });
 	        }
 	    }, {
 	        key: "openAddTag",
@@ -28143,16 +28132,14 @@
 	                return str.length;
 	            });
 	            var tags = this.state.tags;
-	            tags = tags.concat(value);
-	            this.setState({ editing: false, tags: tags });
-	            console.log(tags);
+	            this.setState({ editing: false, tags: tags.concat(value) });
 	
 	            var headers = new Headers();
 	            headers.set("Content-Type", "application/json");
 	            fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId, {
 	                method: "POST",
 	                headers: headers,
-	                body: JSON.stringify({ tags: tags })
+	                body: JSON.stringify({ tags: value })
 	            }).then(function (response) {
 	                if (response.ok) {
 	                    console.log("added tags to db ok");
@@ -28205,7 +28192,7 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this3 = this;
+	            var _this2 = this;
 	
 	            var urlData = this.props.msg;
 	            var tags = [],
@@ -28215,15 +28202,6 @@
 	                time,
 	                readBtn = "",
 	                deleteBtn = "";
-	            if (this.state.tags) {
-	                tags = this.state.tags.map(function (tag, i) {
-	                    return _react2.default.createElement(
-	                        "span",
-	                        { key: tag + i, style: { marginLeft: '5px' }, className: "tag is-light" },
-	                        tag
-	                    );
-	                });
-	            }
 	
 	            if (this.state.editing) {
 	                addTags = _react2.default.createElement(
@@ -28234,7 +28212,7 @@
 	                        { className: "control", style: { width: '100%' } },
 	                        _react2.default.createElement("input", {
 	                            ref: function ref(input) {
-	                                return _this3.addTagInput = input;
+	                                return _this2.addTagInput = input;
 	                            },
 	                            className: "input",
 	                            type: "text",
@@ -28276,6 +28254,16 @@
 	                        "Add tags"
 	                    )
 	                );
+	            }
+	
+	            if (urlData.tags) {
+	                tags = urlData.tags.map(function (tag, i) {
+	                    return _react2.default.createElement(
+	                        "span",
+	                        { key: tag + i, style: { marginLeft: '5px' }, className: "tag is-light" },
+	                        tag
+	                    );
+	                });
 	            }
 	
 	            if (urlData.title.length > 0) {

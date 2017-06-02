@@ -18,15 +18,6 @@ export default class extends React.Component {
         if (this.addTagInput) {
             this.addTagInput.focus()
         }
-
-        fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(response => {
-            if (response.ok) {
-                return response.json()
-            } 
-            return []
-        }).then(tags => {            
-            this.setState({tags: tags})
-        })
     }
 
     openAddTag() {
@@ -36,16 +27,14 @@ export default class extends React.Component {
     closeAddTag() {        
         var value = (this.addTagInput.value).split(',').map(str => str.trim()).filter(str => str.length)
         var tags = this.state.tags;
-        tags = tags.concat(value)
-        this.setState({editing: false, tags: tags}) 
-        console.log(tags)
+        this.setState({editing: false, tags: tags.concat(value)}) 
 
         let headers = new Headers()
         headers.set("Content-Type", "application/json")
         fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId, {
             method: "POST",
             headers: headers,
-            body: JSON.stringify({tags: tags})
+            body: JSON.stringify({tags: value})
         }).then(response => {
             if (response.ok) {
                 console.log("added tags to db ok")
@@ -96,14 +85,7 @@ export default class extends React.Component {
 
 	render() {                      
         var urlData = this.props.msg 
-        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time, readBtn = "", deleteBtn = ""
-        if (this.state.tags) {
-            tags = this.state.tags.map((tag, i) => {
-                return (
-                    <span key={tag + i} style={{marginLeft: '5px'}} className="tag is-light">{tag}</span>
-                )
-            })
-        }
+        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time, readBtn = "", deleteBtn = ""        
 
         if (this.state.editing) {
             addTags = (
@@ -142,6 +124,14 @@ export default class extends React.Component {
                     <span>Add tags</span>
                 </a>
             )
+        }
+
+        if (urlData.tags) {
+            tags = urlData.tags.map((tag, i) => {
+                return (
+                    <span key={tag + i} style={{marginLeft: '5px'}} className="tag is-light">{tag}</span>
+                )
+            })
         }
         
         if (urlData.title.length > 0) {

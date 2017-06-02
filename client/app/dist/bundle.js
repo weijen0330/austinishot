@@ -29033,8 +29033,8 @@
 	                    { className: "field" },
 	                    _react2.default.createElement(
 	                        "label",
-	                        { className: "label" },
-	                        "Keywords"
+	                        { className: "label", style: { textAlign: 'center' } },
+	                        "Keywords?"
 	                    ),
 	                    _react2.default.createElement(
 	                        "p",

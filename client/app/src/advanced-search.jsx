@@ -31,7 +31,7 @@ export default class extends React.Component {
             <div style={{marginTop: '30px', marginBottom: '35px'}}>
                 
                 <div className="field">
-                    <label className="label">Keywords</label>
+                    <label className="label" style={{textAlign: 'center'}}>Keywords?</label>
                     <p className="control">
                         <input 
                             className="input" 

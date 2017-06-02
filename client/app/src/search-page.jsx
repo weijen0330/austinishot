@@ -54,6 +54,7 @@ export default class extends React.Component {
             headers: headers,
             body: JSON.stringify(this.state.search)
         }).then(response => response.json()).then(messages => {
+            
             this.setState({messages: messages})
         })
     }

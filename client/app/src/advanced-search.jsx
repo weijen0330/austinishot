@@ -21,6 +21,10 @@ export default class extends React.Component {
     }
 
     setSearchOption(prop, value) {
+        if (prop === "tags") {
+            value = (this.addTagInput.value).split(',').map(str => str.trim()).filter(str => str.length)
+        }
+
         this.setState({[prop]: value}, () => {
             this.props.updateSearchCriteria(this.state)
         });        

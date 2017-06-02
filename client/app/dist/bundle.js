@@ -28849,6 +28849,7 @@
 	            }).then(function (response) {
 	                return response.json();
 	            }).then(function (messages) {
+	
 	                _this2.setState({ messages: messages });
 	            });
 	        }
@@ -29008,6 +29009,14 @@
 	        key: "setSearchOption",
 	        value: function setSearchOption(prop, value) {
 	            var _this2 = this;
+	
+	            if (prop === "tags") {
+	                value = this.addTagInput.value.split(',').map(function (str) {
+	                    return str.trim();
+	                }).filter(function (str) {
+	                    return str.length;
+	                });
+	            }
 	
 	            this.setState(_defineProperty({}, prop, value), function () {
 	                _this2.props.updateSearchCriteria(_this2.state);

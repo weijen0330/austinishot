@@ -128,16 +128,17 @@ var MessageDB = {
 
 	},
 
-	searchMessages(criteria) {		
+	searchMessages(criteria) {	
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+
 		const keywords = criteria.keywords
 		// tags is an array?
-		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []		
+		const tags = criteria.tags		
 		const platform = criteria.integration
 		const type = criteria.linkType
 		// how to use timeSent?
 		const timeSent = criteria.timeSent 
 		const domain = criteria.domain
-		// might now use this
 		const sender = criteria.sender
 
 		let whereClauseStr = "WHERE m.deleted = 0 AND ("

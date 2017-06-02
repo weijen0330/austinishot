@@ -26897,6 +26897,7 @@
 				fetch("https://lynxapp.me/api/messages/new").then(function (response) {
 					return response.json();
 				}).then(function (data) {
+					console.log(data);
 					_this2.setState({
 						allNew: data,
 						articlesNew: data.filter(function (msg) {

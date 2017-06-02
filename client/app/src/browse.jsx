@@ -58,6 +58,7 @@ export default class extends React.Component {
 
 		fetch("https://lynxapp.me/api/messages/new")
 			.then(response => response.json()).then(data => {
+				console.log(data)
 				this.setState({
 					allNew: data,
 					articlesNew: data.filter(msg => msg.type == "article"),

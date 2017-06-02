@@ -272,8 +272,8 @@ var MessageDB = {
 							return true
 						}
 					})
-				})
-				return false
+					return false
+				})				
 			}
 			connection.end()
 			return allMessages

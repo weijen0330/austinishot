@@ -228,15 +228,15 @@ var MessageDB = {
 		// how to use timeSent?
 		const timeSent = criteria.timeSent 
 
-		let whereClauseStr = "WHERE m.deleted = 0 AND ("
+		let whereClauseStr = "WHERE m.deleted = 0 AND "
 		let whereClause = []
 		
 		if(keywords && keywords.length) {
 			whereClause.push((				
-				'm.note LIKE \"%' + keywords + '%\" OR ' +				
+				'(m.note LIKE \"%' + keywords + '%\" OR ' +				
 				'l.title LIKE \"%' + keywords + '%\" OR ' +
 				'l.description LIKE \"%' + keywords + '%\" OR ' +				
-				'l.url LIKE \"%' + keywords + '%\"'
+				'l.url LIKE \"%' + keywords + '%\")'
 			))
 		}
 		if (platform && platform.length) {

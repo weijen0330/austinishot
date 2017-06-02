@@ -29,17 +29,19 @@ export default class extends React.Component {
     render() {
         return (
             <div style={{marginTop: '30px', marginBottom: '35px'}}>
-                
-                <div className="field" style={{marginTop: '30px', marginBottom: '35px'}}>
-                    <p className="control">
-                        <input 
-                            className="input" 
-                            type="text" 
-                            placeholder="Ex. Seattle activities" 
-                            onChange={e => this.setSearchOption("keywords", e.target.value)}
-                            value={this.state.keywords}
-                        />
-                    </p>
+                <div className="columns">
+                    <div className="field">
+                        <label className="label">Keywords</label>
+                        <p className="control">
+                            <input 
+                                className="input" 
+                                type="text" 
+                                placeholder="Ex. Seattle activities" 
+                                onChange={e => this.setSearchOption("keywords", e.target.value)}
+                                value={this.state.keywords}
+                            />
+                        </p>
+                    </div>
                 </div>
 
                 {/*keywords and tags*/}

@@ -29030,19 +29030,28 @@
 	                { style: { marginTop: '30px', marginBottom: '35px' } },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "field", style: { marginTop: '30px', marginBottom: '35px' } },
+	                    { className: "columns" },
 	                    _react2.default.createElement(
-	                        "p",
-	                        { className: "control" },
-	                        _react2.default.createElement("input", {
-	                            className: "input",
-	                            type: "text",
-	                            placeholder: "Ex. Seattle activities",
-	                            onChange: function onChange(e) {
-	                                return _this3.setSearchOption("keywords", e.target.value);
-	                            },
-	                            value: this.state.keywords
-	                        })
+	                        "div",
+	                        { className: "field" },
+	                        _react2.default.createElement(
+	                            "label",
+	                            { className: "label" },
+	                            "Keywords"
+	                        ),
+	                        _react2.default.createElement(
+	                            "p",
+	                            { className: "control" },
+	                            _react2.default.createElement("input", {
+	                                className: "input",
+	                                type: "text",
+	                                placeholder: "Ex. Seattle activities",
+	                                onChange: function onChange(e) {
+	                                    return _this3.setSearchOption("keywords", e.target.value);
+	                                },
+	                                value: this.state.keywords
+	                            })
+	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(

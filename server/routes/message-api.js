@@ -50,7 +50,7 @@ module.exports.Router = function (MessageDB) {
 	})
 
 	router.get('/old', (req, res, next) => {
-		MessageDB.getReadMessages(1).then(messages => {
+		MessageDB.getReadMessages().then(messages => {
 			res.json(messages)
 		}).catch(next)
 	})

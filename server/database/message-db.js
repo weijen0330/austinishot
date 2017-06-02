@@ -147,14 +147,14 @@ var MessageDB = {
 		
 		if(keywords && keywords.length) {
 			whereClause.push((
-				'm.sender LIKE %:keywords% OR ' +
-				'm.note LIKE %:keywords% OR ' +
-				'p.platform_name LIKE %:keywords% OR ' +
-				'l.title LIKE %:keywords% OR ' +
-				'l.description LIKE %:keywords% OR ' +
-				'l.type LIKE %:keywords% OR ' +
-				'l.url LIKE %:keywords% OR ' +
-				'd.domain_name LIKE %:keywords%'
+				'm.sender LIKE \"%:keywords%\" OR ' +
+				'm.note LIKE \"%:keywords%\" OR ' +
+				'p.platform_name LIKE \"%:keywords%\" OR ' +
+				'l.title LIKE \"%:keywords%\" OR ' +
+				'l.description LIKE \"%:keywords%\" OR ' +
+				'l.type LIKE \"%:keywords%\" OR ' +
+				'l.url LIKE \"%:keywords%\" OR ' +
+				'd.domain_name LIKE \"%:keywords%\"'
 			))
 			options.keywords = keywords
 		} else {

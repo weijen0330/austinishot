@@ -195,109 +195,25 @@ var MessageDB = {
 		
 	},
 
-	searchMessages(criteria) {
-		console.log("criteria", criteria)
+	searchMessages(criteria) {		
 		const keywords = criteria.keywords
 		// tags is an array?
-		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []
-		
+		const tags = criteria.tags && criteria.tags.length ? criteria.tags : []		
 		const platform = criteria.integration
 		const type = criteria.linkType
 		// might not use this
 		const sentOrReceived = criteria.sentOrReceived
-		const timeSent = criteria.when 
+		const timeSent = criteria.timeSent 
 		const domain = criteria.domain
 		// might now use this
-		const sender = criteria.senderOrReceiver
+		const sender = criteria.sender
 
-		return this.getAllMessages().then(allMessages => {			
-			let filteredMessages = allMessages.filter(message => {
-				/*
-					messageId
-					sender
-					note
-					timeSent
-					isRead
-					platformName
-					title
-					description
-					type
-					url
-					imgUrl
-					domainName
-					tags
-				*/
-				let hitCriteria = false
-				let result = false
-
-				if (keywords && keywords.length) {					
-					if (message.note.includes(keywords) ||
-							message.platformName.includes(keywords) ||
-							message.title.includes(keywords) ||
-							message.description.includes(keywords) ||
-							message.url.includes(keywords) ||
-							message.domainName.includes(keywords) ||
-							message.tags.includes(keywords)) {
-						if (!hitCriteria) {
-							hitCriteria = true
-							result = true
-						} else {
-							result = result && true
-						}
-						
-					}
-				}
-				if (tags && tags.length) {
-					if (message.tags.includes(tags)) {
-						if (!hitCriteria) {
-							hitCriteria = true
-							result = true
-						} else {
-							result = result && true
-						}
-						
-					}
-				}
-				if (platform && platform.length) {
-					if (message.platformName == platform) {
-						if (!hitCriteria) {
-							hitCriteria = true
-							result = true
-						} else {
-							result = result && true
-						}
-						
-					}
-				}
-				if (type && type.length) {
-					if (message.type == type) {
-						if (!hitCriteria) {
-							hitCriteria = true
-							result = true
-						} else {
-							result = result && true
-						}
-						
-					}
-				}
-				if (domain && domain.length) {
-					if (message.domainName.contains(domain)) {
-						if (!hitCriteria) {
-							hitCriteria = true
-							result = true
-						} else {
-							result = result && true
-						}
-						
-					}
-				}
-				console.log("hit criteria", hitCriteria)
-				console.log("hit result", result)
-				return hitCriteria && result
-			})
+		let whereClause = "WHERE "
+		
+		if(keywords && keywords.length) {
 			
-			return filteredMessages
-		});
+		}
+
 	},
 
 	getMessages(whereClause) {

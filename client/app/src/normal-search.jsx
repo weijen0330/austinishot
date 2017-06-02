@@ -9,14 +9,14 @@ export default class extends React.Component {
             keywords: "",
             tags: "",
 
-            from: "",          
-            type: "",
+            integration: "",          
+            linkType: "",
 
             sentOrReceived: "",            
-            when: "",
+            timeSent: "",
 
             domain: "",
-            senderOrReceiver: "",            
+            sender: "",            
         }
     }
 

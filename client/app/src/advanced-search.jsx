@@ -13,12 +13,11 @@ export default class extends React.Component {
             linkType: "",
 
             sentOrReceived: "",            
-            when: "",
+            timeSent: "",
 
             domain: "",
-            people: "",            
-        }
-        
+            sender: "",            
+        }        
     }
 
     setSearchOption(prop, value) {
@@ -32,19 +31,20 @@ export default class extends React.Component {
             <div style={{marginTop: '30px', marginBottom: '35px'}}>
                 {/*keywords and tags*/}
                 <div className="columns">
-                    <div className="column is-half">
+                    
+                    <div className="column is-half" style={{textAlign: 'right'}}>
                         <div className="field" style={{textAlign: 'right'}}>
-                            <label className="label">What keywords might be in your link?</label>
+                            <label className="label">What site was it from?</label>
                             <p className="control">
                                 <input 
                                     style={{textAlign: 'right'}}
                                     className="input" 
                                     type="text" 
-                                    placeholder="Ex. Seattle activities" 
-                                    value={this.state.keywords}
+                                    placeholder="Ex. buzzfeed" 
+                                    value={this.state.domain}
                                     onChange={e => {
                                         e.preventDefault()
-                                        this.setSearchOption("keywords", e.target.value)
+                                        this.setSearchOption("domain", e.target.value)
                                     }}
                                 />
                             </p>
@@ -187,41 +187,41 @@ export default class extends React.Component {
                         <label className="label">How long ago?</label>
                         <div>
                             <a 
-                                className={this.state.when == "days" ? "button is-light" : "button is-white"}
+                                className={this.state.timeSent == "days" ? "button is-light" : "button is-white"}
                                 style={{marginRight: '10px'}}
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    this.setSearchOption("when", "days")
+                                    this.setSearchOption("timeSent", "days")
                                 }}
                             >
                                 Days
                             </a>
                             <a 
-                                className={this.state.when == "weeks" ? "button is-light" : "button is-white"}
+                                className={this.state.timeSent == "weeks" ? "button is-light" : "button is-white"}
                                 style={{marginRight: '10px'}}
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    this.setSearchOption("when", "weeks")
+                                    this.setSearchOption("timeSent", "weeks")
                                 }}
                             >
                                 Weeks
                             </a>
                             <a 
-                                className={this.state.when == "months" ? "button is-light" : "button is-white"} 
+                                className={this.state.timeSent == "months" ? "button is-light" : "button is-white"} 
                                 style={{marginRight: '10px'}}
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    this.setSearchOption("when", "months")
+                                    this.setSearchOption("timeSent", "months")
                                 }}
                             >
                                 Months
                             </a>
                             <a 
-                                className={this.state.when == "years" ? "button is-light" : "button is-white"}
+                                className={this.state.timeSent == "years" ? "button is-light" : "button is-white"}
                                 style={{marginRight: '10px'}}
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    this.setSearchOption("when", "years")
+                                    this.setSearchOption("timeSent", "years")
                                 }}
                             >
                                 Years
@@ -232,24 +232,7 @@ export default class extends React.Component {
 
                 {/*domain and ppl*/}
                 <div className="columns">
-                    <div className="column is-half" style={{textAlign: 'right'}}>
-                        <div className="field" style={{textAlign: 'right'}}>
-                            <label className="label">What site was it from?</label>
-                            <p className="control">
-                                <input 
-                                    style={{textAlign: 'right'}}
-                                    className="input" 
-                                    type="text" 
-                                    placeholder="Ex. buzzfeed" 
-                                    value={this.state.domain}
-                                    onChange={e => {
-                                        e.preventDefault()
-                                        this.setSearchOption("domain", e.target.value)
-                                    }}
-                                />
-                            </p>
-                        </div>
-                    </div>
+                    
 
                     <div className="column is-half">
                         <div className="field">
@@ -259,10 +242,10 @@ export default class extends React.Component {
                                     className="input" 
                                     type="text" 
                                     placeholder="Ex. Mary, me" 
-                                    value={this.state.people}
+                                    value={this.state.sender}
                                     onChange={e => {
                                         e.preventDefault()
-                                        this.setSearchOption("people", e.target.value)
+                                        this.setSearchOption("sender", e.target.value)
                                     }}
                                 />
                             </p>

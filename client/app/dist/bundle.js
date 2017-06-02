@@ -28812,14 +28812,14 @@
 	                keywords: "",
 	                tags: "",
 	
-	                from: "",
-	                type: "",
+	                integration: "",
+	                linkType: "",
 	
 	                sentOrReceived: "",
-	                when: "",
+	                timeSent: "",
 	
 	                domain: "",
-	                senderOrReceiver: "",
+	                sender: "",
 	
 	                messages: []
 	            }
@@ -28998,12 +28998,11 @@
 	            linkType: "",
 	
 	            sentOrReceived: "",
-	            when: "",
+	            timeSent: "",
 	
 	            domain: "",
-	            people: ""
+	            sender: ""
 	        };
-	
 	        return _this;
 	    }
 	
@@ -29029,14 +29028,14 @@
 	                    { className: "columns" },
 	                    _react2.default.createElement(
 	                        "div",
-	                        { className: "column is-half" },
+	                        { className: "column is-half", style: { textAlign: 'right' } },
 	                        _react2.default.createElement(
 	                            "div",
 	                            { className: "field", style: { textAlign: 'right' } },
 	                            _react2.default.createElement(
 	                                "label",
 	                                { className: "label" },
-	                                "What keywords might be in your link?"
+	                                "What site was it from?"
 	                            ),
 	                            _react2.default.createElement(
 	                                "p",
@@ -29045,11 +29044,11 @@
 	                                    style: { textAlign: 'right' },
 	                                    className: "input",
 	                                    type: "text",
-	                                    placeholder: "Ex. Seattle activities",
-	                                    value: this.state.keywords,
+	                                    placeholder: "Ex. buzzfeed",
+	                                    value: this.state.domain,
 	                                    onChange: function onChange(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("keywords", e.target.value);
+	                                        _this3.setSearchOption("domain", e.target.value);
 	                                    }
 	                                })
 	                            )
@@ -29272,11 +29271,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "days" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "days" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "days");
+	                                        _this3.setSearchOption("timeSent", "days");
 	                                    }
 	                                },
 	                                "Days"
@@ -29284,11 +29283,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "weeks" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "weeks" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "weeks");
+	                                        _this3.setSearchOption("timeSent", "weeks");
 	                                    }
 	                                },
 	                                "Weeks"
@@ -29296,11 +29295,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "months" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "months" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "months");
+	                                        _this3.setSearchOption("timeSent", "months");
 	                                    }
 	                                },
 	                                "Months"
@@ -29308,11 +29307,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "years" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "years" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "years");
+	                                        _this3.setSearchOption("timeSent", "years");
 	                                    }
 	                                },
 	                                "Years"
@@ -29323,34 +29322,6 @@
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "columns" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "column is-half", style: { textAlign: 'right' } },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "field", style: { textAlign: 'right' } },
-	                            _react2.default.createElement(
-	                                "label",
-	                                { className: "label" },
-	                                "What site was it from?"
-	                            ),
-	                            _react2.default.createElement(
-	                                "p",
-	                                { className: "control" },
-	                                _react2.default.createElement("input", {
-	                                    style: { textAlign: 'right' },
-	                                    className: "input",
-	                                    type: "text",
-	                                    placeholder: "Ex. buzzfeed",
-	                                    value: this.state.domain,
-	                                    onChange: function onChange(e) {
-	                                        e.preventDefault();
-	                                        _this3.setSearchOption("domain", e.target.value);
-	                                    }
-	                                })
-	                            )
-	                        )
-	                    ),
 	                    _react2.default.createElement(
 	                        "div",
 	                        { className: "column is-half" },
@@ -29369,10 +29340,10 @@
 	                                    className: "input",
 	                                    type: "text",
 	                                    placeholder: "Ex. Mary, me",
-	                                    value: this.state.people,
+	                                    value: this.state.sender,
 	                                    onChange: function onChange(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("people", e.target.value);
+	                                        _this3.setSearchOption("sender", e.target.value);
 	                                    }
 	                                })
 	                            )
@@ -29433,14 +29404,14 @@
 	            keywords: "",
 	            tags: "",
 	
-	            from: "",
-	            type: "",
+	            integration: "",
+	            linkType: "",
 	
 	            sentOrReceived: "",
-	            when: "",
+	            timeSent: "",
 	
 	            domain: "",
-	            senderOrReceiver: ""
+	            sender: ""
 	        };
 	        return _this;
 	    }

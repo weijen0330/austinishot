@@ -38,7 +38,7 @@ module.exports.Router = function (MessageDB) {
 	})
 
 	router.post("/simple-search", (req, res, next) => {
-		MessageDB.simpleSearch(criteria).then(allMsgs => {
+		MessageDB.simpleSearch(req.body).then(allMsgs => {
 			res.json(allMsgs)
 		})
 	})

@@ -23,7 +23,7 @@ const authConf = {
         'clientID': authTokens.gmailClientID,
         'clientSecret' : authTokens.gmailClientSecret,
         'scope' : ['https://www.googleapis.com/auth/plus.me',
-                   'https://www.googleapis.com/auth/gmail.modify'],
+                   'https://www.googleapis.com/auth/gmail.readonly'],
         'redirectUri' : 'https://lynxapp.me/api/auth/gmail_oauth'
     },
     'slack' : {
@@ -217,63 +217,10 @@ module.exports.Router = function (MessageDB, socketIo) {
             oauth2Client.getToken(req.query.code, function(err, tokens) {
                 if (!err) {
                     oauth2Client.setCredentials(tokens);
-                    const gmail = google.gmail('v1');
-
-                    gmail.users.messages.list({auth: oauth2Client, userId: 'me', maxResults: 100}, function(listErr, listRes) {
-                        if (listErr) {
-                            console.log('The list messages API call returned an error: ' + listErr);
-                            return;
-                        } else {
-                            const emailIDs = listRes.messages;
-                            for (const i in emailIDs) {
-                                gmail.users.messages.get({auth: auth2Client, id: emailIDs[i],userId: 'me'}, function(getErr, getResponse) {
-                                    if (getErr) {
-                                        console.log('The get messages API call returned an error for email with ID: ' + emailIDs[i]);
-                                    } else {
-                                        console.log(getResponse);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                } else {
-                    console.log('Getting the API token returned an error: ' + err);
+                    res.redirect('https://lynxapp.me/app');
                 }
             });
         }
-    });
-
-    router.get('/gmail', function(gmailReq, gmailRes) {
-        console.log('in /api/auth/gmail');
-
-        oauth2Client.getToken(gmailReq.query.code, function(err, tokens) {
-            if (!err) {
-                oauth2Client.setCredentials(tokens);
-                const gmail = google.gmail('v1');
-
-                gmail.users.messages.list({auth: oauth2Client, userId: 'me', maxResults: 100}, function(listErr, listRes) {
-                    if (listErr) {
-                        console.log('The list messages API call returned an error: ' + listErr);
-                        return;
-                    } else {
-                        const emailIDs = listRes.messages;
-                        for (const i in emailIDs) {
-                            gmail.users.messages.get({auth: auth2Client, id: emailIDs[i],userId: 'me'}, function(getErr, getResponse) {
-                                if (getErr) {
-                                    console.log('The get messages API call returned an error for email with ID: ' + emailIDs[i]);
-                                } else {
-                                    console.log(getResponse);
-                                }
-                            });
-                        }
-                    }
-                });
-            } else {
-                console.log('Getting the API token returned an error: ' + err);
-            }
-        });
-        // When we are done, redirects back the main page
-        gmailRes.redirect('https://lynxapp.me/app');
     });
 
     router.post('/gmail_incoming', function() {

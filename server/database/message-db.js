@@ -183,9 +183,9 @@ var MessageDB = {
 		whereClause.forEach((where, i) => {
 			whereClauseStr += where 
 			if (i < whereClause.length - 1) {
-				whereClause += ' OR '
+				whereClauseStr += ' OR '
 			} else {
-				whereClause += ')'
+				whereClauseStr += ')'
 			}
 		})
 

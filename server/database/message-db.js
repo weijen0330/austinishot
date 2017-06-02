@@ -144,8 +144,9 @@ var MessageDB = {
 		let whereClauseStr = "WHERE m.deleted = 0 AND ("
 		let whereClause = []
 		let options = {}
-		console.log(keywords)
+		
 		if(keywords && keywords.length) {
+			console.log("inside keywords")
 			whereClause.push((
 				'm.sender LIKE %:keywords% OR ' +
 				'm.note LIKE %:keywords% OR ' +
@@ -188,8 +189,8 @@ var MessageDB = {
 				whereClause += ')'
 			}
 		})
-
-		console.log(whereClauseStr)
+		console.log("where clause", whereClause)
+		console.log("where clause str", whereClauseStr)
 
 		const getMessages = (
 			'SELECT ' +

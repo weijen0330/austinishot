@@ -146,7 +146,6 @@ var MessageDB = {
 		let options = {}
 		
 		if(keywords && keywords.length) {
-			console.log("inside keywords")
 			whereClause.push((
 				'm.sender LIKE %:keywords% OR ' +
 				'm.note LIKE %:keywords% OR ' +
@@ -182,15 +181,13 @@ var MessageDB = {
 			// TODO: timesent
 		}
 		whereClause.forEach((where, i) => {
-			whereClause += where 
+			whereClauseStr += where 
 			if (i < whereClause.length - 1) {
 				whereClause += ' OR '
 			} else {
 				whereClause += ')'
 			}
 		})
-		console.log("where clause", whereClause)
-		console.log("where clause str", whereClauseStr)
 
 		const getMessages = (
 			'SELECT ' +

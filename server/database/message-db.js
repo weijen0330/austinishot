@@ -255,7 +255,9 @@ var MessageDB = {
 			whereClause.push('m.sender LIKE \"%' + sender + '%\"')			
 		}
 
-		// TODO: timesent
+		if (whereClause.length) {
+			whereClauseStr = "WHERE m.deleted = 0"
+		} 
 		
 		whereClause.forEach((where, i) => {
 			whereClauseStr += where 

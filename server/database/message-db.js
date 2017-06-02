@@ -208,6 +208,7 @@ var MessageDB = {
 			'JOIN DOMAIN d ON l.domain_id = d.domain_id ' +
 			whereClauseStr
 		)
+		console.log("get messages", getMessages)
 
 		const getMessageLinks = (
 			'SELECT m.message_id, t.tag_text FROM MESSAGE m ' + 

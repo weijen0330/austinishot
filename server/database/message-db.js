@@ -157,7 +157,7 @@ var MessageDB = {
 			'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
 			'WHERE m.deleted = 0'			
 		)
-
+		console.log("query", getMessages)
 		return connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
 			if (rows && rows.length) {
 				let tagsForMessages = {}

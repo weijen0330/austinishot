@@ -224,8 +224,17 @@ module.exports.Router = function (MessageDB, socketIo) {
     });
 
     router.post('/gmail_incoming', function() {
-        const projectId = 'YOUR_PROJECT_ID';
+        const projectId = 'civil-ripple-167409';
 
+        const request = {
+            'labelIds' : ['INBOX'],
+            'topicName' : 'projects/civil-ripple-167409/subscriptions/gmail'
+        };
+
+        const gmail = google.gmail('v1');
+        gmail.users().watch('me', request).execute();
+
+        
         // Instantiates a client
         const pubsubClient = PubSub({
             projectId: projectId

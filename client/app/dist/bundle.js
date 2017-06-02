@@ -28885,7 +28885,6 @@
 	
 	            if (this.state.messages) {
 	                if (this.state.messages.length) {
-	                    console.log("setting messages");
 	                    messages = _react2.default.createElement(_messageArea2.default, {
 	                        fromSearch: true,
 	                        messages: this.state.messages,
@@ -28894,7 +28893,7 @@
 	                } else {
 	                    messages = _react2.default.createElement(
 	                        "p",
-	                        { style: { textAlign: 'center', marginTop: '10px' } },
+	                        { style: { textAlign: 'center', marginTop: '25px' } },
 	                        "No messages match your criteria."
 	                    );
 	                }

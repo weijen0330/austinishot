@@ -70,7 +70,6 @@ export default class extends React.Component {
 
         if (this.state.messages) {
             if (this.state.messages.length) {
-                console.log("setting messages")
                 messages = (
                     <MessageArea 
                         fromSearch={true}
@@ -79,7 +78,7 @@ export default class extends React.Component {
                     />
                 )
             } else {
-                messages = <p style={{textAlign: 'center', marginTop: '10px'}}>No messages match your criteria.</p>
+                messages = <p style={{textAlign: 'center', marginTop: '25px'}}>No messages match your criteria.</p>
             }
         }
 

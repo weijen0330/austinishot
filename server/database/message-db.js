@@ -189,6 +189,8 @@ var MessageDB = {
 			}
 		})
 
+		console.log(whereClauseStr)
+
 		const getMessages = (
 			'SELECT ' +
 				'm.message_id AS messageId, ' +

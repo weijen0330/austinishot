@@ -79,7 +79,7 @@ export default class extends React.Component {
                     />
                 )
             } else {
-                messages = "No messages match your criteria."
+                messages = <p style={{textAlign: 'center', marginTop: '10px'}}>No messages match your criteria.</p>
             }
         }
 

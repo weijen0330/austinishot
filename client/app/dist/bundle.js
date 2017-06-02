@@ -28892,7 +28892,11 @@
 	                        title: "Search results"
 	                    });
 	                } else {
-	                    messages = "No messages match your criteria.";
+	                    messages = _react2.default.createElement(
+	                        "p",
+	                        { style: { textAlign: 'center', marginTop: '10px' } },
+	                        "No messages match your criteria."
+	                    );
 	                }
 	            }
 	

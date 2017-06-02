@@ -22,10 +22,9 @@ export default class extends React.Component {
                 timeSent: "",
 
                 domain: "",
-                sender: "", 
-
-                messages: []
-            }                       
+                sender: "",                 
+            },    
+            messages: []        
         }
     }
     
@@ -34,11 +33,11 @@ export default class extends React.Component {
     }
 
     quickSearchClicked() {
-        this.setState({advancedSearch: false})
+        this.setState({advancedSearch: false, messages: []})
     }
 
     advancedSearchClicked() {    
-        this.setState({advancedSearch: true})
+        this.setState({advancedSearch: true, messages: []})
     }
     
     handleSubmit() {
@@ -55,7 +54,6 @@ export default class extends React.Component {
             headers: headers,
             body: JSON.stringify(this.state.search)
         }).then(response => response.json()).then(messages => {
-            console.log(messages)
             this.setState({messages: messages})
         })
     }

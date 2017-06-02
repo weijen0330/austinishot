@@ -28819,10 +28819,9 @@
 	                timeSent: "",
 	
 	                domain: "",
-	                sender: "",
-	
-	                messages: []
-	            }
+	                sender: ""
+	            },
+	            messages: []
 	        };
 	        return _this;
 	    }
@@ -28835,12 +28834,12 @@
 	    }, {
 	        key: "quickSearchClicked",
 	        value: function quickSearchClicked() {
-	            this.setState({ advancedSearch: false });
+	            this.setState({ advancedSearch: false, messages: [] });
 	        }
 	    }, {
 	        key: "advancedSearchClicked",
 	        value: function advancedSearchClicked() {
-	            this.setState({ advancedSearch: true });
+	            this.setState({ advancedSearch: true, messages: [] });
 	        }
 	    }, {
 	        key: "handleSubmit",
@@ -28862,7 +28861,6 @@
 	            }).then(function (response) {
 	                return response.json();
 	            }).then(function (messages) {
-	                console.log(messages);
 	                _this2.setState({ messages: messages });
 	            });
 	        }

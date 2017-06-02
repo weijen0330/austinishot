@@ -297,7 +297,9 @@ var MessageDB = {
 		})
 	},	
 
-	getReadMessages(userId) {				
+	getReadMessages(userId) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
+		
 		const whereClause = (
 			'WHERE m.recipient_id = 1 ' + 
 			'AND m.is_read = 1 ' + 

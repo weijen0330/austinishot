@@ -42,10 +42,15 @@ export default class extends React.Component {
     }
     
     handleSubmit() {
+        let url = "https://lynxapp.me/api/messages/simple-search"
+        if (this.state.advancedSearch) {
+            url = "https://lynxapp.me/api/messages/advanced-search"
+        }
+
         var headers = new Headers()
-        headers.append("Content-Type", "application/json")
-        console.log(this.state)
-        fetch("https://lynxapp.me/api/messages/search", {
+        headers.append("Content-Type", "application/json")        
+
+        fetch(url, {
             method: "POST",
             headers: headers,
             body: JSON.stringify(this.state.search)

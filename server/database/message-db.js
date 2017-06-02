@@ -308,7 +308,7 @@ var MessageDB = {
 				'WHERE m.recipient_id = :userId ' + 
 				'AND m.is_read = :isRead ' + 
 				'AND m.deleted = :deleted '
-		)
+		)		
 		
 		return connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0}).then(messages => {
 			connection.end()

@@ -28847,10 +28847,15 @@
 	        value: function handleSubmit() {
 	            var _this2 = this;
 	
+	            var url = "https://lynxapp.me/api/messages/simple-search";
+	            if (this.state.advancedSearch) {
+	                url = "https://lynxapp.me/api/messages/advanced-search";
+	            }
+	
 	            var headers = new Headers();
 	            headers.append("Content-Type", "application/json");
-	            console.log(this.state);
-	            fetch("https://lynxapp.me/api/messages/search", {
+	
+	            fetch(url, {
 	                method: "POST",
 	                headers: headers,
 	                body: JSON.stringify(this.state.search)
@@ -29023,6 +29028,23 @@
 	            return _react2.default.createElement(
 	                "div",
 	                { style: { marginTop: '30px', marginBottom: '35px' } },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "field", style: { marginTop: '30px', marginBottom: '35px' } },
+	                    _react2.default.createElement(
+	                        "p",
+	                        { className: "control" },
+	                        _react2.default.createElement("input", {
+	                            className: "input",
+	                            type: "text",
+	                            placeholder: "Ex. Seattle activities",
+	                            onChange: function onChange(e) {
+	                                return _this3.setSearchOption("keywords", e.target.value);
+	                            },
+	                            value: this.state.keywords
+	                        })
+	                    )
+	                ),
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "columns" },

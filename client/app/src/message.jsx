@@ -34,10 +34,6 @@ export default class extends React.Component {
             method: "POST",
             headers: headers,
             body: JSON.stringify({tags: value})
-        }).then(response => {
-            if (response.ok) {
-                console.log("added tags to db ok")
-            }
         })
     }
 
@@ -52,12 +48,6 @@ export default class extends React.Component {
 
         fetch(url, {
             method: "PATCH"            
-        }).then(response => {
-            if (response.ok) {
-                console.log("msg mofified")
-            } else {
-                console.log("error editing message")
-            }
         })
         
         this.props.msg.isRead = isRead
@@ -68,9 +58,7 @@ export default class extends React.Component {
         fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
             method: "DELETE"            
         }).then(response => {
-            if (response.ok) {
-                console.log("msg deleted")
-            } else {
+            if (!response.ok) {
                 throw new Error()
             }
         }).catch(console.log)

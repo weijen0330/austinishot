@@ -19,7 +19,6 @@ export default class extends React.Component {
                 settingsClass = "is-active";
                 break;
         }
-        console.log(this.props.handle)
         return (                 
             <nav className="nav has-shadow">
                     <div className="nav-left">

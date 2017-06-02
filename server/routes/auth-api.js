@@ -42,16 +42,13 @@ module.exports.Router = function (MessageDB, socketIo) {
     function regParser(message) {
         // Resource: https://gist.github.com/dperini/729294
         // defensive
-        console.log("message in reg parser", message);
         if (message) {            
             // Slack puts brackets around their links, so we need to remove them.
             var words = message.replace(/[<>]/g,'').split(' ');
 
             var urls = [];
 
-            for (i = 0; i < words.length; i++) {
-                console.log('The word is: ' + words[i]);
-                                
+            for (i = 0; i < words.length; i++) {                                
                 // if it is a link, we will call the link summary API
                 try {
                     const url = new URL(words[i]);
@@ -169,36 +166,36 @@ module.exports.Router = function (MessageDB, socketIo) {
     });
 
     // Gmail Oauth: https://developers.google.com/identity/protocols/OAuth2WebServer
-    router.get('/gmail_oauth', function(req, res) {
-        /* const oauthUrl = 'https://accounts.google.com/o/oauth2/v2/auth?client_id='
-         + authConf.gmail.clientID
-         + '&redirect_uri' + authConf.gmail.redirectUri
-         + '&response_type=code&scope=' + auth.gmail.scope;
-         res.redirect(oauthUrl); */
-        const oauth2 = google.auth.OAuth2;
-        const oauth2Client = new oauth2(
-            authConf.gmail.clientID,
-            authConf.gmail.clientSecret,
-            authConf.gmail.redirectUri
-        );
+    // router.get('/gmail_oauth', function(req, res) {
+    //     /* const oauthUrl = 'https://accounts.google.com/o/oauth2/v2/auth?client_id='
+    //      + authConf.gmail.clientID
+    //      + '&redirect_uri' + authConf.gmail.redirectUri
+    //      + '&response_type=code&scope=' + auth.gmail.scope;
+    //      res.redirect(oauthUrl); */
+    //     const oauth2 = google.auth.OAuth2;
+    //     const oauth2Client = new oauth2(
+    //         authConf.gmail.clientID,
+    //         authConf.gmail.clientSecret,
+    //         authConf.gmail.redirectUri
+    //     );
 
-        if (!req.query.code) {
-            const oauthUrl = oauth2Client.generateAuthUrl({
-                access_type: 'offline',
-                scope: authConf.gmail.scope
-            });
-            res.redirect(oauthUrl);
-        } else {
-            oauth2Client.getToken(req.query.code, function (err, tokens) {
-                if (!err) {
-                    oauth2Client.setCredentials(tokens);
-                    res.redirect('https://lynxapp.me/app');
-                } else {
-                    console.log('Error: unable to get Gmail API token.');
-                }
-            });
-        }
-    });
+    //     if (!req.query.code) {
+    //         const oauthUrl = oauth2Client.generateAuthUrl({
+    //             access_type: 'offline',
+    //             scope: authConf.gmail.scope
+    //         });
+    //         res.redirect(oauthUrl);
+    //     } else {
+    //         oauth2Client.getToken(req.query.code, function (err, tokens) {
+    //             if (!err) {
+    //                 oauth2Client.setCredentials(tokens);
+    //                 res.redirect('https://lynxapp.me/app');
+    //             } else {
+    //                 console.log('Error: unable to get Gmail API token.');
+    //             }
+    //         });
+    //     }
+    // });
 
     // Slack Oauth: https://api.slack.com/docs/oauth
     router.get('/slack_oauth', function(req, res) {
@@ -272,10 +269,8 @@ module.exports.Router = function (MessageDB, socketIo) {
                     // generate link summary is expecting url object ( new URL() )
                     generateLinkSummary(links[0], linkInfo).then(linkSummary => {
                         // add the message to the database
-                        console.log("link summary:", linkSummary);
                         return MessageDB.insertMessage(1, linkSummary)
                     }).then((message) => {
-                        console.log(message);
 
                         socketIo.emit("new_message", {message: message});
                         // send the added message back to the user through web socket

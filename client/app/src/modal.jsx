@@ -12,7 +12,6 @@ export default class extends React.Component {
     increaseIndex(e, amount, max) {
         e.preventDefault()
         var next = this.state.tab + amount;
-        console.log(this.state.tab);
         if((amount > 0 && this.state.tab < max - 1) || (amount < 0 && this.state.tab > 0)){
             this.setState({tab: next});
         }

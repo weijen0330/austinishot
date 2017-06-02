@@ -13,7 +13,7 @@ export default class extends React.Component {
         this.state = {
             view: "integration",  
             facebookChecked: false,
-            slackChecked: false
+            slackChecked: true
         }
 
         this.handleIntegrationClick = this.handleIntegrationClick.bind(this)
@@ -26,10 +26,6 @@ export default class extends React.Component {
     handleIntegrationClick(integration) {
         let clickedOn = !this.state[integration + 'Checked']
         this.setState({[integration + 'Checked']: clickedOn});
-
-        fetch("https://lynxapp.me/api/auth/" + integration + "_oauth").then(response => {
-            console.log(response)
-        })
     }
 
     render() {

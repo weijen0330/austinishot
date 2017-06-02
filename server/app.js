@@ -118,16 +118,6 @@ module.exports.start = function (connection) {
     const server = https.createServer(options, app);
     const socketIo = require('socket.io')(server);    
 
-    
-    
-
-    socketIo.on('connection', socket => {
-        
-        socket.on('message', data => {
-            console.log(data);
-        });
-    });
-
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Api endpoints - only authenticated users reach past this point
     //

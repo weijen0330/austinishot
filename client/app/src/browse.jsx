@@ -325,7 +325,6 @@ export default class extends React.Component {
 
 				break;
 			case "videos":
-				console.log(this.state)
 				if (this.state.videosNew) {
 					newMessages = this.state.videosNew
 				}

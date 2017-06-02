@@ -20,23 +20,12 @@ export default class extends React.Component {
         this.ws = io("https://lynxapp.me");
     }
 
-    // componentDidMount() {
-    //     let ws = io("https://lynxapp.me")
-    //     // example of how to send data - if needed
-    //     // ws.emit("message", "this is some data")
-    //     ws.on("new_message", data => {
-    //         console.log(data)
-    //     })
-    // }
-
     handleTabClick(e, newTab) {
-        console.log("tab click")
         e.preventDefault()
         this.setState({activeTab: newTab})
     }
 
     handleModalClick(e, modalState) {
-        console.log('clikced')
         e.preventDefault()
         this.setState({modal: modalState})
     }

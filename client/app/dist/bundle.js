@@ -26743,26 +26743,15 @@
 	        return _this;
 	    }
 	
-	    // componentDidMount() {
-	    //     let ws = io("https://lynxapp.me")
-	    //     // example of how to send data - if needed
-	    //     // ws.emit("message", "this is some data")
-	    //     ws.on("new_message", data => {
-	    //         console.log(data)
-	    //     })
-	    // }
-	
 	    _createClass(_class, [{
 	        key: "handleTabClick",
 	        value: function handleTabClick(e, newTab) {
-	            console.log("tab click");
 	            e.preventDefault();
 	            this.setState({ activeTab: newTab });
 	        }
 	    }, {
 	        key: "handleModalClick",
 	        value: function handleModalClick(e, modalState) {
-	            console.log('clikced');
 	            e.preventDefault();
 	            this.setState({ modal: modalState });
 	        }
@@ -27228,7 +27217,6 @@
 	
 						break;
 					case "videos":
-						console.log(this.state);
 						if (this.state.videosNew) {
 							newMessages = this.state.videosNew;
 						}
@@ -28154,10 +28142,6 @@
 	                method: "POST",
 	                headers: headers,
 	                body: JSON.stringify({ tags: value })
-	            }).then(function (response) {
-	                if (response.ok) {
-	                    console.log("added tags to db ok");
-	                }
 	            });
 	        }
 	    }, {
@@ -28173,12 +28157,6 @@
 	
 	            fetch(url, {
 	                method: "PATCH"
-	            }).then(function (response) {
-	                if (response.ok) {
-	                    console.log("msg mofified");
-	                } else {
-	                    console.log("error editing message");
-	                }
 	            });
 	
 	            this.props.msg.isRead = isRead;
@@ -28190,9 +28168,7 @@
 	            fetch("https://lynxapp.me/api/messages/" + this.props.msg.messageId, {
 	                method: "DELETE"
 	            }).then(function (response) {
-	                if (response.ok) {
-	                    console.log("msg deleted");
-	                } else {
+	                if (!response.ok) {
 	                    throw new Error();
 	                }
 	            }).catch(console.log);
@@ -28677,7 +28653,6 @@
 	                    settingsClass = "is-active";
 	                    break;
 	            }
-	            console.log(this.props.handle);
 	            return _react2.default.createElement(
 	                "nav",
 	                { className: "nav has-shadow" },
@@ -29521,7 +29496,7 @@
 	        _this.state = {
 	            view: "integration",
 	            facebookChecked: false,
-	            slackChecked: false
+	            slackChecked: true
 	        };
 	
 	        _this.handleIntegrationClick = _this.handleIntegrationClick.bind(_this);
@@ -29538,10 +29513,6 @@
 	        value: function handleIntegrationClick(integration) {
 	            var clickedOn = !this.state[integration + 'Checked'];
 	            this.setState(_defineProperty({}, integration + 'Checked', clickedOn));
-	
-	            fetch("https://lynxapp.me/api/auth/" + integration + "_oauth").then(function (response) {
-	                console.log(response);
-	            });
 	        }
 	    }, {
 	        key: "render",
@@ -30251,7 +30222,6 @@
 	        value: function increaseIndex(e, amount, max) {
 	            e.preventDefault();
 	            var next = this.state.tab + amount;
-	            console.log(this.state.tab);
 	            if (amount > 0 && this.state.tab < max - 1 || amount < 0 && this.state.tab > 0) {
 	                this.setState({ tab: next });
 	            }

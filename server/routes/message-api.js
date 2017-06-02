@@ -37,6 +37,12 @@ module.exports.Router = function (MessageDB) {
 		})
 	})
 
+	router.post("/simple-search", (req, res, next) => {
+		MessageDB.simpleSearch(criteria).then(allMsgs => {
+			res.json(allMsgs)
+		})
+	})
+
 	router.get('/new', (req, res, next) => {
 		MessageDB.getUnreadMessages(1).then(messages => {
 			res.json(messages);

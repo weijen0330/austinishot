@@ -128,6 +128,92 @@ var MessageDB = {
 
 	},
 
+	// connection gets passed in, connection must be closed by caller
+	getAllMessages(connection, whereClauseStr, options) {
+		const getMessages = (
+			'SELECT ' +
+				'm.message_id AS messageId, ' +
+				'm.sender, ' +
+				'm.note, ' +
+				'm.timeSent, ' +
+				'm.is_read AS isRead, ' +
+				'p.platform_name AS platformName, ' +
+				'l.title, ' +
+				'l.description, ' +
+				'l.type, ' +
+				'l.url, ' +
+				'l.img_url AS imageUrl, ' +
+				'd.domain_name AS domainName ' +				
+			'FROM MESSAGE m ' + 
+			'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
+			'JOIN LINKS l ON m.link_id = l.link_id ' + 
+			'JOIN DOMAIN d ON l.domain_id = d.domain_id ' +
+			whereClauseStr
+		)
+		const getMessageLinks = (
+			'SELECT m.message_id, t.tag_text FROM MESSAGE m ' + 
+			'JOIN LINKS l on m.link_id = l.link_id ' +
+			'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' + 
+			'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
+			'WHERE m.deleted = 0'			
+		)
+
+		return connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
+			if (rows && rows.length) {
+				let tagsForMessages = {}
+				rows.forEach(row => {
+					let messageId = row[0]
+					let tag = row[1]
+					if (!tagsForMessages[messageId]) {
+						tagsForMessages[messageId] = []
+					}
+					tagsForMessages[messageId].push(tag)
+				})
+				return tagsForMessages
+			}
+			return {}			
+		}).then(tagsForMessages => {
+			return connection.queryAsync(getMessages, options).then(rows => {
+				if (rows && rows.length) {
+					rows.forEach(row => {						
+						if (tagsForMessages[row.messageId]) {
+							row.tags = tagsForMessages[row.messageId]
+						} else {
+							row.tags = []
+						}
+					})
+					return rows
+				}
+				return []
+			})
+		})
+
+	},
+
+	simpleSearch(criteria) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
+		const keywords = criteria.keywords
+
+		let whereClauseStr = "WHERE m.deleted = 0"
+		if (keywords && keywords.length) {
+			whereClauseStr += (
+				'AND (m.sender LIKE \"%' + keywords + '%\" OR ' +
+				'm.note LIKE \"%' + keywords + '%\" OR ' +
+				'p.platform_name LIKE \"%' + keywords + '%\" OR ' +
+				'l.title LIKE \"%' + keywords + '%\" OR ' +
+				'l.description LIKE \"%' + keywords + '%\" OR ' +
+				'l.type LIKE \"%' + keywords + '%\" OR ' +
+				'l.url LIKE \"%' + keywords + '%\" OR ' +
+				'd.domain_name LIKE \"%' + keywords + '%\")' 
+			)
+		}
+
+		return this.getAllMessages(connection, whereClauseStr, {}).then(allMessages => {
+			connection.end()
+			return allMessages
+		})
+	},
+
 	searchMessages(criteria) {	
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
 

@@ -217,32 +217,35 @@ module.exports.Router = function (MessageDB, socketIo) {
             oauth2Client.getToken(req.query.code, function(err, tokens) {
                 if (!err) {
                     oauth2Client.setCredentials(tokens);
+                    const params = {
+                        'labelIds' : ['INBOX'],
+                        'topicName' : 'projects/civil-ripple-167409/topics/gmail_incoming'
+                    };
+
+                    request.post({
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        url: 'https://www.googleapis.com/gmail/v1/users/me/watch',
+                        form: params
+                    }, function (err, watchRes, body) {
+                        if (!err && watchRes.statusCode == 200) {
+                            const info = JSON.parse(body);
+                            console.log(body)
+                        }
+                    });
+                    
                     res.redirect('https://lynxapp.me/app');
                 }
             });
         }
     });
 
-    router.post('/gmail_incoming', function() {
+    router.post('/gmail_incoming', function(req, res) {
         const projectId = 'civil-ripple-167409';
+        console.log("Gmail works!");
+        console.log(req);
 
-        const request = {
-            'labelIds' : ['INBOX'],
-            'topicName' : 'projects/civil-ripple-167409/topics/gmail_incoming'
-        };
-
-        request.post({
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            url: 'https://www.googleapis.com/gmail/v1/users/me/watch',
-
-            }, function (err, watchRes, body) {
-            if (!err && watchRes.statusCode == 200) {
-                const info = JSON.parse(body);
-                console.log(body)
-            }
-        });
 
     });
 

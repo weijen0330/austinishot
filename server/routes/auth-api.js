@@ -151,55 +151,30 @@ module.exports.Router = function (MessageDB, socketIo) {
         const links = regParser(statusValue);
 
         if (links && links.length) {
-            const reqParam = {
-                fields: 'type,caption,description,link,updated_time,from,message'
+            var linkInfo = {
+                platform: "facebook",
+                sender: "",
+                bodyText: statusValue,
+                timeStamp: Date.now()
             };
-
-            // Grab information about the status via the API
-            graph.get(newStatus.id, reqParam, function(err, res) {
-                if (err) {
-                    console.log("Error: not authorized with Facebook");
-                    facebookRes.redirect('/facebook_oauth');
-                } else {
-                    var message = res;
-                    console.log(message);
-
-                    if (message.type === 'video'|| message.type === 'link') {
-                        var linkInfo = {
-                            platform: 'facebook',
-                            sender: message.from.name,
-                            bodyText: facebookReq.body.entry[0].changes[0].value ? facebookReq.body.entry[0].changes[0].value : "",
-                            timeStamp: message.updated_time
-                        };
-                        console.log("link info", linkInfo);
-                        console.log("link", message.link);
-                        generateLinkSummary(message.link, linkInfo).then(linkSummary => {
-                            // add the message to the database
-                            console.log("link summary:", linkSummary);
-                            return MessageDB.insertMessage(1, linkSummary)
-                        }).then((message) => {
-                            console.log(message);
-
-                            socketIo.emit("new_message", {message: message});
-                            // send the added message back to the user through web socket
-                            // this should broadcast to users
-                            facebookRes.status(200).send(message);
-                        }).catch(console.log);
-                    } else {
-                        facebookRes.status(200).send("not a link");
-                    }
-                }
-            });
+            generateLinkSummary(links[0], linkInfo).then(linkSummary => {
+                return MessageDB.insertMessage(1, linkSummary)
+            }).then(message => {
+                socketIo.emit("new_message", {message: message});
+                // send the added message back to the user through web socket
+                // this should broadcast to users
+                facebookRes.status(200).send(message);
+            })
         }
     });
 
     // Gmail Oauth: https://developers.google.com/identity/protocols/OAuth2WebServer
     router.get('/gmail_oauth', function(req, res) {
         /* const oauthUrl = 'https://accounts.google.com/o/oauth2/v2/auth?client_id='
-        + authConf.gmail.clientID
-        + '&redirect_uri' + authConf.gmail.redirectUri
-        + '&response_type=code&scope=' + auth.gmail.scope;
-        res.redirect(oauthUrl); */
+         + authConf.gmail.clientID
+         + '&redirect_uri' + authConf.gmail.redirectUri
+         + '&response_type=code&scope=' + auth.gmail.scope;
+         res.redirect(oauthUrl); */
         const oauth2 = google.auth.OAuth2;
         const oauth2Client = new oauth2(
             authConf.gmail.clientID,
@@ -214,39 +189,15 @@ module.exports.Router = function (MessageDB, socketIo) {
             });
             res.redirect(oauthUrl);
         } else {
-            oauth2Client.getToken(req.query.code, function(err, tokens) {
+            oauth2Client.getToken(req.query.code, function (err, tokens) {
                 if (!err) {
                     oauth2Client.setCredentials(tokens);
-                    const params = {
-                        'labelIds' : ['INBOX'],
-                        'topicName' : 'projects/civil-ripple-167409/topics/gmail_incoming'
-                    };
-
-                    request.post({
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        url: 'https://www.googleapis.com/gmail/v1/users/me/watch',
-                        form: params
-                    }, function (err, watchRes, body) {
-                        if (!err && watchRes.statusCode == 200) {
-                            const info = JSON.parse(body);
-                            console.log(body)
-                        }
-                    });
-                    
                     res.redirect('https://lynxapp.me/app');
+                } else {
+                    console.log('Error: unable to get Gmail API token.');
                 }
             });
         }
-    });
-
-    router.post('/gmail_incoming', function(req, res) {
-        const projectId = 'civil-ripple-167409';
-        console.log("Gmail works!");
-        console.log(req);
-
-
     });
 
     // Slack Oauth: https://api.slack.com/docs/oauth
@@ -272,6 +223,8 @@ module.exports.Router = function (MessageDB, socketIo) {
                     // This is the work around.
                     authConf.slack.accessToken = info.access_token;
                     res.redirect('https://lynxapp.me/app');
+                } else {
+                    console.log('Error: unable to get Slack API token.');
                 }
             });
         }

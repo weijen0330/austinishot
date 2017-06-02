@@ -261,8 +261,6 @@ var MessageDB = {
 			whereClauseStr += where 
 			if (i < whereClause.length - 1) {
 				whereClauseStr += ' AND '
-			} else {
-				whereClauseStr += ')'
 			}
 		})
 

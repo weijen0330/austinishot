@@ -8,25 +8,15 @@ export default class extends React.Component {
         super(props);
         this.state = {
             editing: false,
-            tags: [],
+            tags: this.props.msg.tags || [],
             isRead: Number(this.props.msg.isRead)
 		}
-     
     }
 
     componentDidMount() {
         if (this.addTagInput) {
             this.addTagInput.focus()
         }
-
-        fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(response => {
-            if (response.ok) {
-                return response.json()
-            } 
-            return []
-        }).then(tags => {            
-            this.setState({tags: tags})
-        })
     }
 
     openAddTag() {
@@ -36,16 +26,14 @@ export default class extends React.Component {
     closeAddTag() {        
         var value = (this.addTagInput.value).split(',').map(str => str.trim()).filter(str => str.length)
         var tags = this.state.tags;
-        tags = tags.concat(value)
-        this.setState({editing: false, tags: tags}) 
-        console.log(tags)
+        this.setState({editing: false, tags: tags.concat(value)}) 
 
         let headers = new Headers()
         headers.set("Content-Type", "application/json")
         fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId, {
             method: "POST",
             headers: headers,
-            body: JSON.stringify({tags: tags})
+            body: JSON.stringify({tags: value})
         }).then(response => {
             if (response.ok) {
                 console.log("added tags to db ok")
@@ -66,7 +54,7 @@ export default class extends React.Component {
             method: "PATCH"            
         }).then(response => {
             if (response.ok) {
-                console.log("msg mofifies")
+                console.log("msg mofified")
             } else {
                 console.log("error editing message")
             }
@@ -94,16 +82,9 @@ export default class extends React.Component {
         })
     }
 
-	render() {              
+	render() {                      
         var urlData = this.props.msg 
-        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time
-        if (this.state.tags) {
-            tags = this.state.tags.map((tag, i) => {
-                return (
-                    <span key={tag + i} style={{marginLeft: '5px'}} className="tag is-light">{tag}</span>
-                )
-            })
-        }
+        var tags = [], addTags = "", titleAndDesc = "", mediaLeft = "", time, readBtn = "", deleteBtn = ""        
 
         if (this.state.editing) {
             addTags = (
@@ -143,6 +124,14 @@ export default class extends React.Component {
                 </a>
             )
         }
+
+        if (this.state.tags) {
+            tags = this.state.tags.map((tag, i) => {
+                return (
+                    <span key={tag + i} style={{marginLeft: '5px'}} className="tag is-light">{tag}</span>
+                )
+            })
+        }
         
         if (urlData.title.length > 0) {
             titleAndDesc = (
@@ -173,18 +162,34 @@ export default class extends React.Component {
             time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString()
         }
 
-
-
-        return (
-           <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
-               
-               {/*unread and delete btns*/}
-               <div style={{textAlign: 'right'}}>
+        if (!this.props.fromSearch) {
+            readBtn = (
+                <div style={{textAlign: 'right'}}>
                    <div 
                         className={this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread"}
                         onClick={this.handleSeenButtonClicked.bind(this)}
                     ></div>                   
                </div>
+            )
+
+            deleteBtn = (
+                <div style={{textAlign: "right"}}>
+                    <span 
+                        onClick={this.handleDeleteMessageClick.bind(this)}
+                        className="icon message-delete"
+                    >
+                        <i className="fa fa-trash-o"></i>
+                    </span>
+                </div> 
+            )
+        }
+
+
+
+        return (
+           <div className="box" style={{minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px'}}>
+               
+               {readBtn}
 
                <article className="media" style={{marginBottom: '5px'}}>
 
@@ -206,16 +211,9 @@ export default class extends React.Component {
 
                <div>{tags}</div>               
 
-               {addTags}        
+                {addTags}        
 
-                <div style={{textAlign: "right"}}>
-                    <span 
-                        onClick={this.handleDeleteMessageClick.bind(this)}
-                        className="icon message-delete"
-                    >
-                        <i className="fa fa-trash-o"></i>
-                    </span>
-                </div>        
+                {deleteBtn}       
            </div>
         )
     }

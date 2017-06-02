@@ -80,7 +80,6 @@ module.exports.start = function (connection) {
 
     // public
     app.post('/api/signin', passport.authenticate('local'), function (req, res) {
-        console.log(req.user)
         res.json({message: 'Authenticated'});
     });
 

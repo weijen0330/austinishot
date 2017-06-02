@@ -8,7 +8,8 @@ var TagDB = {
 		const query = (
 			'SELECT DISTINCT t.tag_text AS tag FROM TAGS t ' +
 			'JOIN USER_TAGS ut ON t.tag_id = ut.tag_id ' +
-			'WHERE ut.user_id = :userId'
+			'WHERE ut.user_id = :userId ' + 
+			'ORDER BY tag_text'
 		)
 		return connection.queryAsync(query, {userId: 1}, {useArray: true}).then(rows => {
 			connection.end()
@@ -34,7 +35,6 @@ var TagDB = {
 
 	addTags(messageId, tags) {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
-		console.log(tags)
 
 		const promiseTags = tags.map(tag => {
 			// insert tag
@@ -53,7 +53,6 @@ var TagDB = {
 				return connection.queryAsync(getLink, {messageId: messageId}, {useArray: true}).then(rows => {
 					if (rows && rows.length) {
 						const linkId = rows[0]
-						console.log("link rows", rows)
 						return {
 							tagId: tagId,
 							linkId: linkId
@@ -64,8 +63,6 @@ var TagDB = {
 			}).then(linkAndTag => {
 				const link = linkAndTag.linkId
 				const tag = linkAndTag.tagId
-
-				console.log(linkAndTag)
 
 				if (link && tag) {
 					connection.queryAsync(insertTagLink, {linkId: link, tagId: tag})

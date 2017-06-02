@@ -4,6 +4,7 @@ import "whatwg-fetch";
 
 import AdvancedSearch from "./advanced-search.jsx"
 import NormalSearch from "./normal-search.jsx"
+import MessageArea from "./message-area.jsx"
 
 export default class extends React.Component {
     constructor(props) {
@@ -14,15 +15,16 @@ export default class extends React.Component {
                 keywords: "",
                 tags: "",
 
-                from: "",          
-                type: "",
+                integration: "",          
+                linkType: "",
 
                 sentOrReceived: "",            
-                when: "",
+                timeSent: "",
 
                 domain: "",
-                senderOrReceiver: "", 
-            }                       
+                sender: "",                 
+            },    
+            messages: null        
         }
     }
     
@@ -31,30 +33,52 @@ export default class extends React.Component {
     }
 
     quickSearchClicked() {
-        this.setState({advancedSearch: false})
+        this.setState({advancedSearch: false, messages: null})
     }
 
     advancedSearchClicked() {    
-        this.setState({advancedSearch: true})
+        this.setState({advancedSearch: true, messages: null})
     }
     
     handleSubmit() {
-        var headers = new Headers()
-        headers.append("Content-Type", "application/json")
+        let url = "https://lynxapp.me/api/messages/simple-search"
+        if (this.state.advancedSearch) {
+            url = "https://lynxapp.me/api/messages/advanced-search"
+        }
 
-        fetch("https://lynxapp.me/api/messages/search", {
+        var headers = new Headers()
+        headers.append("Content-Type", "application/json")        
+
+        fetch(url, {
             method: "POST",
             headers: headers,
             body: JSON.stringify(this.state.search)
-        }).then(response => response.json()).then(console.log)
+        }).then(response => response.json()).then(messages => {
+            
+            this.setState({messages: messages})
+        })
     }
 
     render() {
-        let search;
+        let search, messages;
         if (this.state.advancedSearch) {
             search = <AdvancedSearch updateSearchCriteria={(state) => this.updateSearchCriteria(state)}/>
         } else {
             search = <NormalSearch updateSearchCriteria={(state) => this.updateSearchCriteria(state)}/>
+        }
+
+        if (this.state.messages) {
+            if (this.state.messages.length) {
+                messages = (
+                    <MessageArea 
+                        fromSearch={true}
+                        messages={this.state.messages} 
+                        title="Search results" 
+                    />
+                )
+            } else {
+                messages = <p style={{textAlign: 'center', marginTop: '25px'}}>No messages match your criteria.</p>
+            }
         }
 
         return (
@@ -94,6 +118,8 @@ export default class extends React.Component {
                         Submit
                     </a> 
                 </div>
+
+                {messages}
             </div>
         )
     }

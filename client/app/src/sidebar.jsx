@@ -101,13 +101,13 @@ export default class extends React.Component {
                     <h2 className="title is-5">Recent Activity</h2>		
                     {typesArr}
 
-                    {tagArea}										
+                    {tagArea}									
 
                     <dl style={{marginTop: '5px'}}>
                         <dt><h2 className="title is-5">Domains</h2></dt>
                         {domainsArr}
                     </dl>
-                    
+                    	                    
                 </div>
             </div>
         )

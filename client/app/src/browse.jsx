@@ -29,7 +29,6 @@ export default class extends React.Component {
 	componentDidMount() {
 		if (this.props.ws) {
 			this.props.ws.on("new_message", data => {
-				console.log("got a new message!")
 				const msg = data.message
 				
 				let all = [msg].concat(this.state.allNew)
@@ -51,7 +50,6 @@ export default class extends React.Component {
 			})
 
 			this.props.ws.on("tags_added", data => {
-				console.log("tags added, webhook")
 				this.getAllTags()
 			})
 		}
@@ -358,14 +356,22 @@ export default class extends React.Component {
 
 				break;			
 		}
-
-		switch (this.state.viewType) {
+		
+		switch (this.state.viewType) {			
 			case "tag":
 				if (this.state.allNew) {
-					newMessages = this.state.allNew.filter(msg => msg.tags.includes(this.state.view))					
+					newMessages = this.state.allNew.filter(msg => {
+						if (msg.tags) {
+							return msg.tags.includes(this.state.view)
+						}						
+					})					
 				}
 				if (this.state.allOld) {
-					oldMessages = this.state.allOld.filter(msg => msg.tags.includes(this.state.view))
+					oldMessages = this.state.allOld.filter(msg => {
+						if (msg.tags) {
+							return msg.tags.includes(this.state.view)
+						}
+					})						
 				}
 				allMessages = newMessages.concat(oldMessages)
 

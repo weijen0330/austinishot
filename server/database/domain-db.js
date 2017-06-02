@@ -12,7 +12,8 @@ var DomainDB = {
 		const query = (
 			'SELECT DISTINCT d.domain_name AS domain FROM DOMAIN d ' +
 			'JOIN USER_DOMAINS ud ON d.domain_id = ud.domain_id ' + 
-			'WHERE ud.user_id = :userId'
+			'WHERE ud.user_id = :userId ' + 
+			'ORDER BY domain_name'
 		)
 		return connection.queryAsync(query, {userId: 1}, {useArray: true}).then(rows => {
 			connection.end()

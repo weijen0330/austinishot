@@ -26605,7 +26605,6 @@
 	
 				if (this.props.ws) {
 					this.props.ws.on("new_message", function (data) {
-						console.log("got a new message!");
 						var msg = data.message;
 	
 						var all = [msg].concat(_this2.state.allNew);
@@ -26627,7 +26626,6 @@
 					});
 	
 					this.props.ws.on("tags_added", function (data) {
-						console.log("tags added, webhook");
 						_this2.getAllTags();
 					});
 				}
@@ -26990,12 +26988,16 @@
 					case "tag":
 						if (this.state.allNew) {
 							newMessages = this.state.allNew.filter(function (msg) {
-								return msg.tags.includes(_this4.state.view);
+								if (msg.tags) {
+									return msg.tags.includes(_this4.state.view);
+								}
 							});
 						}
 						if (this.state.allOld) {
 							oldMessages = this.state.allOld.filter(function (msg) {
-								return msg.tags.includes(_this4.state.view);
+								if (msg.tags) {
+									return msg.tags.includes(_this4.state.view);
+								}
 							});
 						}
 						allMessages = newMessages.concat(oldMessages);
@@ -27761,6 +27763,7 @@
 	            if (this.props.messages) {
 	                messages = this.props.messages.map(function (msg) {
 	                    return _react2.default.createElement(_message2.default, {
+	                        fromSearch: _this2.props.fromSearch,
 	                        key: msg.messageId,
 	                        removeMessageFromUi: _this2.props.removeMessageFromUi,
 	                        updateSeenStatus: _this2.props.updateSeenStatus,
@@ -27836,30 +27839,18 @@
 	
 	        _this.state = {
 	            editing: false,
-	            tags: [],
+	            tags: _this.props.msg.tags || [],
 	            isRead: Number(_this.props.msg.isRead)
 	        };
-	
 	        return _this;
 	    }
 	
 	    _createClass(_class, [{
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
-	            var _this2 = this;
-	
 	            if (this.addTagInput) {
 	                this.addTagInput.focus();
 	            }
-	
-	            fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId).then(function (response) {
-	                if (response.ok) {
-	                    return response.json();
-	                }
-	                return [];
-	            }).then(function (tags) {
-	                _this2.setState({ tags: tags });
-	            });
 	        }
 	    }, {
 	        key: "openAddTag",
@@ -27875,16 +27866,14 @@
 	                return str.length;
 	            });
 	            var tags = this.state.tags;
-	            tags = tags.concat(value);
-	            this.setState({ editing: false, tags: tags });
-	            console.log(tags);
+	            this.setState({ editing: false, tags: tags.concat(value) });
 	
 	            var headers = new Headers();
 	            headers.set("Content-Type", "application/json");
 	            fetch("https://lynxapp.me/api/tags/" + this.props.msg.messageId, {
 	                method: "POST",
 	                headers: headers,
-	                body: JSON.stringify({ tags: tags })
+	                body: JSON.stringify({ tags: value })
 	            }).then(function (response) {
 	                if (response.ok) {
 	                    console.log("added tags to db ok");
@@ -27906,7 +27895,7 @@
 	                method: "PATCH"
 	            }).then(function (response) {
 	                if (response.ok) {
-	                    console.log("msg mofifies");
+	                    console.log("msg mofified");
 	                } else {
 	                    console.log("error editing message");
 	                }
@@ -27937,23 +27926,16 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this3 = this;
+	            var _this2 = this;
 	
 	            var urlData = this.props.msg;
 	            var tags = [],
 	                addTags = "",
 	                titleAndDesc = "",
 	                mediaLeft = "",
-	                time;
-	            if (this.state.tags) {
-	                tags = this.state.tags.map(function (tag, i) {
-	                    return _react2.default.createElement(
-	                        "span",
-	                        { key: tag + i, style: { marginLeft: '5px' }, className: "tag is-light" },
-	                        tag
-	                    );
-	                });
-	            }
+	                time,
+	                readBtn = "",
+	                deleteBtn = "";
 	
 	            if (this.state.editing) {
 	                addTags = _react2.default.createElement(
@@ -27964,7 +27946,7 @@
 	                        { className: "control", style: { width: '100%' } },
 	                        _react2.default.createElement("input", {
 	                            ref: function ref(input) {
-	                                return _this3.addTagInput = input;
+	                                return _this2.addTagInput = input;
 	                            },
 	                            className: "input",
 	                            type: "text",
@@ -28006,6 +27988,16 @@
 	                        "Add tags"
 	                    )
 	                );
+	            }
+	
+	            if (this.state.tags) {
+	                tags = this.state.tags.map(function (tag, i) {
+	                    return _react2.default.createElement(
+	                        "span",
+	                        { key: tag + i, style: { marginLeft: '5px' }, className: "tag is-light" },
+	                        tag
+	                    );
+	                });
 	            }
 	
 	            if (urlData.title.length > 0) {
@@ -28062,17 +28054,34 @@
 	                time = new Date(Number(urlData.timeSent) * 1000).toLocaleDateString();
 	            }
 	
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
-	                _react2.default.createElement(
+	            if (!this.props.fromSearch) {
+	                readBtn = _react2.default.createElement(
 	                    "div",
 	                    { style: { textAlign: 'right' } },
 	                    _react2.default.createElement("div", {
 	                        className: this.state.isRead ? "message-seen-button message-read" : "message-seen-button message-unread",
 	                        onClick: this.handleSeenButtonClicked.bind(this)
 	                    })
-	                ),
+	                );
+	
+	                deleteBtn = _react2.default.createElement(
+	                    "div",
+	                    { style: { textAlign: "right" } },
+	                    _react2.default.createElement(
+	                        "span",
+	                        {
+	                            onClick: this.handleDeleteMessageClick.bind(this),
+	                            className: "icon message-delete"
+	                        },
+	                        _react2.default.createElement("i", { className: "fa fa-trash-o" })
+	                    )
+	                );
+	            }
+	
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "box", style: { minHeight: '200px', width: '70%', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '12px' } },
+	                readBtn,
 	                _react2.default.createElement(
 	                    "article",
 	                    { className: "media", style: { marginBottom: '5px' } },
@@ -28120,18 +28129,7 @@
 	                    tags
 	                ),
 	                addTags,
-	                _react2.default.createElement(
-	                    "div",
-	                    { style: { textAlign: "right" } },
-	                    _react2.default.createElement(
-	                        "span",
-	                        {
-	                            onClick: this.handleDeleteMessageClick.bind(this),
-	                            className: "icon message-delete"
-	                        },
-	                        _react2.default.createElement("i", { className: "fa fa-trash-o" })
-	                    )
-	                )
+	                deleteBtn
 	            );
 	        }
 	    }]);
@@ -28524,6 +28522,10 @@
 	
 	var _normalSearch2 = _interopRequireDefault(_normalSearch);
 	
+	var _messageArea = __webpack_require__(/*! ./message-area.jsx */ 232);
+	
+	var _messageArea2 = _interopRequireDefault(_messageArea);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28546,15 +28548,16 @@
 	                keywords: "",
 	                tags: "",
 	
-	                from: "",
-	                type: "",
+	                integration: "",
+	                linkType: "",
 	
 	                sentOrReceived: "",
-	                when: "",
+	                timeSent: "",
 	
 	                domain: "",
-	                senderOrReceiver: ""
-	            }
+	                sender: ""
+	            },
+	            messages: null
 	        };
 	        return _this;
 	    }
@@ -28567,41 +28570,68 @@
 	    }, {
 	        key: "quickSearchClicked",
 	        value: function quickSearchClicked() {
-	            this.setState({ advancedSearch: false });
+	            this.setState({ advancedSearch: false, messages: null });
 	        }
 	    }, {
 	        key: "advancedSearchClicked",
 	        value: function advancedSearchClicked() {
-	            this.setState({ advancedSearch: true });
+	            this.setState({ advancedSearch: true, messages: null });
 	        }
 	    }, {
 	        key: "handleSubmit",
 	        value: function handleSubmit() {
+	            var _this2 = this;
+	
+	            var url = "https://lynxapp.me/api/messages/simple-search";
+	            if (this.state.advancedSearch) {
+	                url = "https://lynxapp.me/api/messages/advanced-search";
+	            }
+	
 	            var headers = new Headers();
 	            headers.append("Content-Type", "application/json");
 	
-	            fetch("https://lynxapp.me/api/messages/search", {
+	            fetch(url, {
 	                method: "POST",
 	                headers: headers,
 	                body: JSON.stringify(this.state.search)
 	            }).then(function (response) {
 	                return response.json();
-	            }).then(console.log);
+	            }).then(function (messages) {
+	
+	                _this2.setState({ messages: messages });
+	            });
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 	
-	            var search = void 0;
+	            var search = void 0,
+	                messages = void 0;
 	            if (this.state.advancedSearch) {
 	                search = _react2.default.createElement(_advancedSearch2.default, { updateSearchCriteria: function updateSearchCriteria(state) {
-	                        return _this2.updateSearchCriteria(state);
+	                        return _this3.updateSearchCriteria(state);
 	                    } });
 	            } else {
 	                search = _react2.default.createElement(_normalSearch2.default, { updateSearchCriteria: function updateSearchCriteria(state) {
-	                        return _this2.updateSearchCriteria(state);
+	                        return _this3.updateSearchCriteria(state);
 	                    } });
+	            }
+	
+	            if (this.state.messages) {
+	                if (this.state.messages.length) {
+	                    messages = _react2.default.createElement(_messageArea2.default, {
+	                        fromSearch: true,
+	                        messages: this.state.messages,
+	                        title: "Search results"
+	                    });
+	                } else {
+	                    messages = _react2.default.createElement(
+	                        "p",
+	                        { style: { textAlign: 'center', marginTop: '25px' } },
+	                        "No messages match your criteria."
+	                    );
+	                }
 	            }
 	
 	            return _react2.default.createElement(
@@ -28653,7 +28683,8 @@
 	                        },
 	                        "Submit"
 	                    )
-	                )
+	                ),
+	                messages
 	            );
 	        }
 	    }]);
@@ -28714,12 +28745,11 @@
 	            linkType: "",
 	
 	            sentOrReceived: "",
-	            when: "",
+	            timeSent: "",
 	
 	            domain: "",
-	            people: ""
+	            sender: ""
 	        };
-	
 	        return _this;
 	    }
 	
@@ -28727,6 +28757,14 @@
 	        key: "setSearchOption",
 	        value: function setSearchOption(prop, value) {
 	            var _this2 = this;
+	
+	            if (prop === "tags") {
+	                value = value.split(',').map(function (str) {
+	                    return str.trim();
+	                }).filter(function (str) {
+	                    return str.length;
+	                });
+	            }
 	
 	            this.setState(_defineProperty({}, prop, value), function () {
 	                _this2.props.updateSearchCriteria(_this2.state);
@@ -28742,17 +28780,39 @@
 	                { style: { marginTop: '30px', marginBottom: '35px' } },
 	                _react2.default.createElement(
 	                    "div",
+	                    { className: "field" },
+	                    _react2.default.createElement(
+	                        "label",
+	                        { className: "label", style: { textAlign: 'center' } },
+	                        "Keywords?"
+	                    ),
+	                    _react2.default.createElement(
+	                        "p",
+	                        { className: "control", style: { paddingBottom: '12px' } },
+	                        _react2.default.createElement("input", {
+	                            className: "input",
+	                            type: "text",
+	                            placeholder: "Ex. Seattle activities",
+	                            onChange: function onChange(e) {
+	                                return _this3.setSearchOption("keywords", e.target.value);
+	                            },
+	                            value: this.state.keywords
+	                        })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    "div",
 	                    { className: "columns" },
 	                    _react2.default.createElement(
 	                        "div",
-	                        { className: "column is-half" },
+	                        { className: "column is-half", style: { textAlign: 'right' } },
 	                        _react2.default.createElement(
 	                            "div",
 	                            { className: "field", style: { textAlign: 'right' } },
 	                            _react2.default.createElement(
 	                                "label",
 	                                { className: "label" },
-	                                "What keywords might be in your link?"
+	                                "What site was it from?"
 	                            ),
 	                            _react2.default.createElement(
 	                                "p",
@@ -28761,11 +28821,11 @@
 	                                    style: { textAlign: 'right' },
 	                                    className: "input",
 	                                    type: "text",
-	                                    placeholder: "Ex. Seattle activities",
-	                                    value: this.state.keywords,
+	                                    placeholder: "Ex. buzzfeed",
+	                                    value: this.state.domain,
 	                                    onChange: function onChange(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("keywords", e.target.value);
+	                                        _this3.setSearchOption("domain", e.target.value);
 	                                    }
 	                                })
 	                            )
@@ -28933,44 +28993,27 @@
 	                        "div",
 	                        { className: "column is-half", style: { textAlign: 'right' } },
 	                        _react2.default.createElement(
-	                            "label",
-	                            { className: "label" },
-	                            "Was it"
-	                        ),
-	                        _react2.default.createElement(
 	                            "div",
-	                            null,
+	                            { className: "field", style: { textAlign: 'right' } },
 	                            _react2.default.createElement(
-	                                "a",
-	                                {
-	                                    className: this.state.sentOrReceived == "sent" ? "button is-light" : "button is-white",
-	                                    style: { marginRight: '10px' },
-	                                    onClick: function onClick() {
-	                                        return _this3.setSearchOption("sentOrReceived", "sent");
+	                                "label",
+	                                { className: "label" },
+	                                "Who sent it?"
+	                            ),
+	                            _react2.default.createElement(
+	                                "p",
+	                                { className: "control" },
+	                                _react2.default.createElement("input", {
+	                                    style: { textAlign: 'right' },
+	                                    className: "input",
+	                                    type: "text",
+	                                    placeholder: "Ex. Mary, me",
+	                                    value: this.state.sender,
+	                                    onChange: function onChange(e) {
+	                                        e.preventDefault();
+	                                        _this3.setSearchOption("sender", e.target.value);
 	                                    }
-	                                },
-	                                "Sent"
-	                            ),
-	                            _react2.default.createElement(
-	                                "span",
-	                                { style: { lineHeight: '36px', marginRight: '8px', fontSize: '1rem', fontWeight: 700 } },
-	                                "or"
-	                            ),
-	                            _react2.default.createElement(
-	                                "a",
-	                                {
-	                                    className: this.state.sentOrReceived == "received" ? "button is-light" : "button is-white",
-	                                    style: { marginRight: '10px' },
-	                                    onClick: function onClick() {
-	                                        return _this3.setSearchOption("sentOrReceived", "received");
-	                                    }
-	                                },
-	                                "Received"
-	                            ),
-	                            _react2.default.createElement(
-	                                "span",
-	                                { style: { lineHeight: '36px', fontSize: '1rem', fontWeight: 700 } },
-	                                "?"
+	                                })
 	                            )
 	                        )
 	                    ),
@@ -28988,11 +29031,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "days" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "days" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "days");
+	                                        _this3.setSearchOption("timeSent", "days");
 	                                    }
 	                                },
 	                                "Days"
@@ -29000,11 +29043,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "weeks" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "weeks" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "weeks");
+	                                        _this3.setSearchOption("timeSent", "weeks");
 	                                    }
 	                                },
 	                                "Weeks"
@@ -29012,11 +29055,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "months" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "months" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "months");
+	                                        _this3.setSearchOption("timeSent", "months");
 	                                    }
 	                                },
 	                                "Months"
@@ -29024,11 +29067,11 @@
 	                            _react2.default.createElement(
 	                                "a",
 	                                {
-	                                    className: this.state.when == "years" ? "button is-light" : "button is-white",
+	                                    className: this.state.timeSent == "years" ? "button is-light" : "button is-white",
 	                                    style: { marginRight: '10px' },
 	                                    onClick: function onClick(e) {
 	                                        e.preventDefault();
-	                                        _this3.setSearchOption("when", "years");
+	                                        _this3.setSearchOption("timeSent", "years");
 	                                    }
 	                                },
 	                                "Years"
@@ -29036,65 +29079,7 @@
 	                        )
 	                    )
 	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "columns" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "column is-half", style: { textAlign: 'right' } },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "field", style: { textAlign: 'right' } },
-	                            _react2.default.createElement(
-	                                "label",
-	                                { className: "label" },
-	                                "What site was it from?"
-	                            ),
-	                            _react2.default.createElement(
-	                                "p",
-	                                { className: "control" },
-	                                _react2.default.createElement("input", {
-	                                    style: { textAlign: 'right' },
-	                                    className: "input",
-	                                    type: "text",
-	                                    placeholder: "Ex. buzzfeed",
-	                                    value: this.state.domain,
-	                                    onChange: function onChange(e) {
-	                                        e.preventDefault();
-	                                        _this3.setSearchOption("domain", e.target.value);
-	                                    }
-	                                })
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "column is-half" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "field" },
-	                            _react2.default.createElement(
-	                                "label",
-	                                { className: "label" },
-	                                "Who sent it?"
-	                            ),
-	                            _react2.default.createElement(
-	                                "p",
-	                                { className: "control" },
-	                                _react2.default.createElement("input", {
-	                                    className: "input",
-	                                    type: "text",
-	                                    placeholder: "Ex. Mary, me",
-	                                    value: this.state.people,
-	                                    onChange: function onChange(e) {
-	                                        e.preventDefault();
-	                                        _this3.setSearchOption("people", e.target.value);
-	                                    }
-	                                })
-	                            )
-	                        )
-	                    )
-	                )
+	                _react2.default.createElement("div", { className: "columns" })
 	            );
 	        }
 	    }]);
@@ -29149,14 +29134,14 @@
 	            keywords: "",
 	            tags: "",
 	
-	            from: "",
-	            type: "",
+	            integration: "",
+	            linkType: "",
 	
 	            sentOrReceived: "",
-	            when: "",
+	            timeSent: "",
 	
 	            domain: "",
-	            senderOrReceiver: ""
+	            sender: ""
 	        };
 	        return _this;
 	    }

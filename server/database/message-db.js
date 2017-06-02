@@ -44,10 +44,11 @@ var MessageDB = {
 				//check if domain exists
 				return connection.queryAsync(
 					"SELECT domain_id FROM DOMAIN WHERE domain_name = :domain",
-					{domain: messageData.domainName}
+					{domain: messageData.domainName},
+					{useArray: true}
 				).then(domainRows => {
-					if (domainRows && domainRows.length > 0) {
-						return domainRows[0].domainId
+					if (domainRows && domainRows.length) {
+						return domainRows[0][0]
 					} else {
 						return connection.queryAsync(
 							"INSERT INTO DOMAIN (domain_name) VALUES (:domain)",
@@ -124,9 +125,8 @@ var MessageDB = {
 
 	},
 
-	getAllMessages() {
-		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
-		// get all messages
+	// connection gets passed in, connection must be closed by caller
+	getMessages(connection, whereClauseStr, options) {
 		const getMessages = (
 			'SELECT ' +
 				'm.message_id AS messageId, ' +
@@ -139,15 +139,15 @@ var MessageDB = {
 				'l.description, ' +
 				'l.type, ' +
 				'l.url, ' +
-				'l.img_url AS imgUrl, ' +
+				'l.img_url AS imageUrl, ' +
 				'd.domain_name AS domainName ' +				
 			'FROM MESSAGE m ' + 
 			'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
 			'JOIN LINKS l ON m.link_id = l.link_id ' + 
 			'JOIN DOMAIN d ON l.domain_id = d.domain_id ' +
-			'WHERE m.deleted = 0'
+			whereClauseStr +
+			'ORDER BY m.message_id DESC'
 		)
-
 		const getMessageLinks = (
 			'SELECT m.message_id, t.tag_text FROM MESSAGE m ' + 
 			'JOIN LINKS l on m.link_id = l.link_id ' +
@@ -155,7 +155,7 @@ var MessageDB = {
 			'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
 			'WHERE m.deleted = 0'			
 		)
-
+		console.log("query", getMessages)
 		return connection.queryAsync(getMessageLinks, {}, {useArray: true}).then(rows => {
 			if (rows && rows.length) {
 				let tagsForMessages = {}
@@ -171,7 +171,7 @@ var MessageDB = {
 			}
 			return {}			
 		}).then(tagsForMessages => {
-			return connection.queryAsync(getMessages, {}).then(rows => {
+			return connection.queryAsync(getMessages, options).then(rows => {
 				if (rows && rows.length) {
 					rows.forEach(row => {						
 						if (tagsForMessages[row.messageId]) {
@@ -184,178 +184,132 @@ var MessageDB = {
 				}
 				return []
 			})
-		}).then(allMessages => {
+		})
+
+	},
+
+	simpleSearch(criteria) {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
+		const keywords = criteria.keywords
+
+		let whereClauseStr = "WHERE m.deleted = 0 "
+		if (keywords && keywords.length) {
+			whereClauseStr += (
+				'AND (m.sender LIKE \"%' + keywords + '%\" OR ' +
+				'm.note LIKE \"%' + keywords + '%\" OR ' +
+				'p.platform_name LIKE \"%' + keywords + '%\" OR ' +
+				'l.title LIKE \"%' + keywords + '%\" OR ' +
+				'l.description LIKE \"%' + keywords + '%\" OR ' +
+				'l.type LIKE \"%' + keywords + '%\" OR ' +
+				'l.url LIKE \"%' + keywords + '%\" OR ' +
+				'd.domain_name LIKE \"%' + keywords + '%\") ' 
+			)
+		}
+
+		return this.getMessages(connection, whereClauseStr, {}).then(allMessages => {
 			connection.end()
 			return allMessages
 		})
+	},
+
+	advancedSearch(criteria) {	
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
+
+		const keywords = criteria.keywords
+		// tags is an array?
+		const tags = criteria.tags		
+		const platform = criteria.integration
+		const type = criteria.linkType		
+		const domain = criteria.domain
+		const sender = criteria.sender
+
+		// how to use timeSent?
+		const timeSent = criteria.timeSent 
+
+		let whereClauseStr = "WHERE m.deleted = 0 AND "
+		let whereClause = []
 		
-	},
+		if(keywords && keywords.length) {
+			whereClause.push((				
+				'(m.note LIKE \"%' + keywords + '%\" OR ' +				
+				'l.title LIKE \"%' + keywords + '%\" OR ' +
+				'l.description LIKE \"%' + keywords + '%\" OR ' +				
+				'l.url LIKE \"%' + keywords + '%\") '
+			))
+		}
+		if (platform && platform.length) {
+			whereClause.push('p.platform_name LIKE \"' + platform + '\" ')			
+		}
 
-	searchMessages(criteria) {
-		this.getAllMessages().then(allMessages => {
-			
-		});
-	},
+		if (type && type.length) {
+			whereClause.push('l.type LIKE \"' + type + '\" ')			
+		}
 
-	getMessages(whereClause) {
-		return this._getObjects(
-			(
-				'SELECT ' +
-					'm.message_id AS messageId, ' +
-					'm.sender, ' +
-					'm.note, ' +
-					'm.timeSent, ' +
-					'm.is_read AS isRead, ' +
-					'p.platform_name AS platformName, ' +
-					'l.title, ' +
-					'l.description, ' +
-					'l.type, ' +
-					'l.url, ' +
-					'l.img_url AS imgUrl, ' +
-					'd.domain_name AS domainName ' +
-					// 't.tag_text AS tag ' + 
-				'FROM MESSAGE m ' + 
-				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
-				'JOIN LINKS l ON m.link_id = l.link_id ' + 
-				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
-				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
-				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
-				whereClause
-			), 
-			options
-		)
-	},
+		if (domain && domain.length) {
+			whereClause.push('d.domain_name LIKE \"%' + domain + '%\" ')			
+		}
 
-	getUnreadMessages(userId) {
-		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
-		const query = (
-			'SELECT ' +
-					'm.message_id AS messageId, ' +
-					'm.sender, ' +
-					'm.note, ' +
-					'm.timeSent, ' +
-					'm.is_read AS isRead, ' +
-					'p.platform_name AS platformName, ' +
-					'l.title, ' +
-					'l.description, ' +
-					'l.type, ' +
-					'l.url, ' +
-					'l.img_url AS imageUrl, ' +
-					'd.domain_name AS domainName ' +
-					// 't.tag_text AS tag ' + 
-				'FROM MESSAGE m ' + 
-				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
-				'JOIN LINKS l ON m.link_id = l.link_id ' + 
-				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
-				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
-				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
-				'WHERE m.recipient_id = :userId ' + 
-				'AND m.is_read = :isRead ' + 
-				'AND m.deleted = :deleted '
-		)
+		if (sender && sender.length) {
+			whereClause.push('m.sender LIKE \"%' + sender + '%\" ')			
+		}
+
+		if (!whereClause.length) {
+			whereClauseStr = "WHERE m.deleted = 0 "
+		} 
 		
-		return connection.queryAsync(query, {userId: 1, isRead: 0, deleted: 0}).then(messages => {
+		whereClause.forEach((where, i) => {
+			whereClauseStr += where 
+			if (i < whereClause.length - 1) {
+				whereClauseStr += ' AND '
+			}
+		})
+
+		return this.getMessages(connection, whereClauseStr, {}).then(allMessages => {
+			if (tags && tags.length) {
+				allMessages = allMessages.filter(msg => {
+					let foundTag = false
+					tags.forEach(tag => {
+						if (msg.tags.includes(tag)) {
+							foundTag = true
+						}
+					})
+					return foundTag
+				})				
+			}
 			connection.end()
-			return messages
+			return allMessages
+		})
+
+	},
+
+	getUnreadMessages() {
+		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
+		
+		const whereClause = (
+			'WHERE m.recipient_id = 1 ' + 
+			'AND m.is_read = 0 ' + 
+			'AND m.deleted = 0 '
+		)		
+
+		return this.getMessages(connection, whereClause, {}).then(allMessages => {
+			connection.end()
+			return allMessages
 		})
 	},	
 
 	getReadMessages(userId) {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
-		const query = (
-			'SELECT ' +
-					'm.message_id AS messageId, ' +
-					'm.sender, ' +
-					'm.note, ' +
-					'm.timeSent, ' +
-					'm.is_read AS isRead, ' +
-					'p.platform_name AS platformName, ' +
-					'l.title, ' +
-					'l.description, ' +
-					'l.type, ' +
-					'l.url, ' +
-					'l.img_url AS imageUrl, ' +
-					'd.domain_name AS domainName ' +
-					// 't.tag_text AS tag ' + 
-				'FROM MESSAGE m ' + 
-				'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
-				'JOIN LINKS l ON m.link_id = l.link_id ' + 
-				'JOIN DOMAIN d ON l.domain_id = d.domain_id ' + 
-				// 'JOIN LINKS_TAGS lt ON l.link_id = lt.link_id ' +
-				// 'JOIN TAGS t ON lt.tag_id = t.tag_id ' +
-				'WHERE m.recipient_id = :userId ' + 
-				'AND m.is_read = :isRead ' + 
-				'AND m.deleted = :deleted '
-		)
 		
-		return connection.queryAsync(query, {userId: 1, isRead: 1, deleted: 0}).then(messages => {
+		const whereClause = (
+			'WHERE m.recipient_id = 1 ' + 
+			'AND m.is_read = 1 ' + 
+			'AND m.deleted = 0 '
+		)		
+
+		return this.getMessages(connection, whereClause, {}).then(allMessages => {
 			connection.end()
-			return messages
+			return allMessages
 		})
-	},
-
-	getMessageWithTag(userId, tag) {
-		return this.getMessages(
-			(
-				'WHERE m.recipient_id = :userId ' +
-				'AND t.tag_text = :tag ' + 
-				'AND m.deleted = :isDeleted'
-			),
-			{
-				userId: userId,
-				tag: tag,
-				isDeleted: false
-			}
-		)
-	},
-
-	getMessagesWithDomain(userId, domain) {
-		return this.getMessages(
-			(
-				'WHERE m.recipient_id = :userId ' +
-				'AND d.domain_name = :domain ' + 
-				'AND m.deleted = :isDeleted'
-			),
-			{
-				userId: userId,
-				domain: domain,
-				isDeleted: false
-			}
-		)
-	},
-
-	getNewMessagesWithType(userId, type) {
-		return this.getMessages(
-			(
-				'WHERE m.recipient_id = :userId ' +
-				'AND m.is_read = :isRead ' + 
-				'AND l.type = :type ' + 
-				'AND m.deleted = :isDeleted'
-			),
-			{
-				userId: userId,
-				isRead: false,
-				type: type,
-				isDeleted: false
-			}
-		)
-	},
-
-	getOldMessagesWithType(userId, type) {
-		return this.getMessages(
-			(
-				'WHERE m.recipient_id = :userId ' +
-				'AND m.is_read = :isRead ' + 
-				'AND l.type = :type ' + 
-				'AND m.deleted = :isDeleted'
-			),
-			{
-				userId: userId,
-				isRead: true,
-				type: type,
-				isDeleted: false
-			}
-		)
 	},
 
 	markRead(messageId) {
@@ -364,7 +318,6 @@ var MessageDB = {
 			'UPDATE MESSAGE SET is_read = 1 WHERE message_id = :messageId',
 			{messageId: messageId}
 		).then((info) => {
-			console.log(info)
 			connection.end()
 		})
 	},
@@ -375,7 +328,6 @@ var MessageDB = {
 			'UPDATE MESSAGE SET is_read = 0 WHERE message_id = :messageId',
 			{messageId: messageId}
 		).then((info) => {
-			console.log(info)
 			connection.end()
 		})
 	},
@@ -389,93 +341,6 @@ var MessageDB = {
 			connection.end()
 		})
 	},
-
-	// TODO: this probably has to be modified too
-/*
-	newMessage(data) {
-		//data =>senderId, url, recipientEmail, note, imgUrl, title, domain, description
-		var recipientId,
-			checkLink = this._connection.queryAsync('SELECT link_id FROM LINKS WHERE url = :url', {url: data.url}),
-			getRecipient = this._connection.queryAsync('SELECT user_id FROM USERS WHERE email = :email', {email: data.recipientEmail});
-
-		return Promise.all([checkLink, getRecipient])
-			.then(values => {
-				recipientId = values[1][0].id;
-
-				var link = values[0];
-
-				if (link && link.length > 0) {
-					return this._connection.queryAsync(
-						'INSERT INTO MESSAGE (link_id, sender_id, recipient_id, note) ' +
-						'VALUES (:linkId, :senderId, :recipientId, :note)',
-						{
-							linkId: link[0].id,
-							senderId: data.senderId,
-							recipientId: recipientId,
-							note: data.note	
-						})						
-				} else {
-					return this._connection.queryAsync(
-						'SELECT id FROM domain WHERE name = :name', 
-						{name: data.domain})
-						.then(domainRows => {				
-							if (domainRows && domainRows.length > 0) {								
-								return domainRows[0].id;
-							} else {
-								return this._connection.queryAsync(
-									'INSERT INTO domain (name) VALUES (:name)',
-									{name: data.domain})	
-									.then(insertData => {
-										return insertData.info.insertId;
-									})
-							}
-						})
-						.then(domainId => {											
-							return this._connection.queryAsync(
-								'INSERT INTO link (domainId, url, title, description, imgUrl) ' + 
-								'VALUES (:domainId, :url, :title, :description, :imgUrl)',
-								{
-									domainId: domainId,
-									url: data.url,
-									title: data.title,
-									description: data.description,
-									imgUrl: data.imgUrl
-								})
-						})
-						.then(insertData => {
-							var linkId = insertData.info.insertId;							
-							return this._connection.queryAsync(
-								'INSERT INTO message (linkId, senderId, recipientId, note) ' +
-								'VALUES (:linkId, :senderId, :recipientId, :note)',
-								{
-									linkId: linkId,
-									senderId: data.senderId,
-									recipientId: recipientId,
-									note: data.note
-								})								
-						});
-				}
-			});
-				
-	},
-*/
-	// Given connection, query and params, returns a promise containing query contents
-	// If query returns no results, returns a promise containing null
-	_getSingleObject(query, params) {
-		return this._connection
-			.queryAsync(query, {id: params.id || '', email: params.email || ''})
-			.then(rows => {
-				return rows && rows.length > 0 ? rows[0] : null;
-			});
-	},
-
-	_getObjects(query, params) {
-		return this._connection
-			.queryAsync(query, {id: params.id})
-			.then(rows => {
-				return rows && rows.length > 0 ? rows : null;
-			});
-	}
 }
 
 module.exports = function (connection) {
@@ -483,38 +348,3 @@ module.exports = function (connection) {
 	messageDB._connection = connection;
 	return messageDB;
 }
-
-/*
-	getSearchResults (keyword, platform, direction, type, time, domain, friend, tags)
-		return this._getObjects(
-			(
-				SELECT * FROM MESSAGE m
-				JOIN LINKS l ON m.link_id = l.link_id
-				JOIN LINKS_TAGS lt ON l.link_id = lt.link_id
-				JOIN TAGS t ON lt.tag_id = t.tag_link 
-				JOIN DOMAIN d ON l.domain_id = d.domain_id
-				JOIN PLATFORM p ON l.platform_id = p.platform_id
-				WHERE CONTAINS(m.note, :key)
-				AND CONTAINS (t.tag_text, @tags)
-				AND p.platform_id = :platform_id
-				//Need to get platform id
-				//direction
-				AND l.type == :type 
-				//time
-				AND d.domain_name = :domain
-				AND m.sender_id = :friend OR m.recipient_id = :friend
-				// Need to retrieve friend id
-			),
-			{
-				keyword: keyword,
-				platform: platform,
-				direction: direction,
-				type: type,
-				time: time,
-				domain: domain,
-				friend: friend,
-				tags: tags
-			}
-		);
-	},
-	*/

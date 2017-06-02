@@ -194,7 +194,7 @@ var MessageDB = {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));
 		const keywords = criteria.keywords
 
-		let whereClauseStr = "WHERE m.deleted = 0"
+		let whereClauseStr = "WHERE m.deleted = 0 "
 		if (keywords && keywords.length) {
 			whereClauseStr += (
 				'AND (m.sender LIKE \"%' + keywords + '%\" OR ' +

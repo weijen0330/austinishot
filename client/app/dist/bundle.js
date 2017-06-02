@@ -28104,10 +28104,10 @@
 	
 	        _this.state = {
 	            editing: false,
-	            tags: [],
+	            tags: _this.props.msg.tags || [],
 	            isRead: Number(_this.props.msg.isRead)
 	        };
-	
+	        console.log(_this.state.tags);
 	        return _this;
 	    }
 	

@@ -365,14 +365,14 @@ export default class extends React.Component {
 				if (this.state.allNew) {
 					newMessages = this.state.allNew.filter(msg => {
 						if (msg.tags) {
-							msg.tags.includes(this.state.view)
+							return msg.tags.includes(this.state.view)
 						}						
 					})					
 				}
 				if (this.state.allOld) {
 					oldMessages = this.state.allOld.filter(msg => {
 						if (msg.tags) {
-							msg.tags.includes(this.state.view)
+							return msg.tags.includes(this.state.view)
 						}
 					})						
 				}

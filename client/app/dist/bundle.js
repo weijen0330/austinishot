@@ -27254,14 +27254,14 @@
 						if (this.state.allNew) {
 							newMessages = this.state.allNew.filter(function (msg) {
 								if (msg.tags) {
-									msg.tags.includes(_this4.state.view);
+									return msg.tags.includes(_this4.state.view);
 								}
 							});
 						}
 						if (this.state.allOld) {
 							oldMessages = this.state.allOld.filter(function (msg) {
 								if (msg.tags) {
-									msg.tags.includes(_this4.state.view);
+									return msg.tags.includes(_this4.state.view);
 								}
 							});
 						}

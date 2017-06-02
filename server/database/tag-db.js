@@ -34,7 +34,6 @@ var TagDB = {
 
 	addTags(messageId, tags) {
 		const connection = bluebird.promisifyAll(new MariaSql(dbConfig));	
-		console.log(tags)
 
 		const promiseTags = tags.map(tag => {
 			// insert tag
@@ -53,7 +52,6 @@ var TagDB = {
 				return connection.queryAsync(getLink, {messageId: messageId}, {useArray: true}).then(rows => {
 					if (rows && rows.length) {
 						const linkId = rows[0]
-						console.log("link rows", rows)
 						return {
 							tagId: tagId,
 							linkId: linkId
@@ -64,8 +62,6 @@ var TagDB = {
 			}).then(linkAndTag => {
 				const link = linkAndTag.linkId
 				const tag = linkAndTag.tagId
-
-				console.log(linkAndTag)
 
 				if (link && tag) {
 					connection.queryAsync(insertTagLink, {linkId: link, tagId: tag})

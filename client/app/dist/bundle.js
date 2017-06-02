@@ -26867,7 +26867,6 @@
 	
 				if (this.props.ws) {
 					this.props.ws.on("new_message", function (data) {
-						console.log("got a new message!");
 						var msg = data.message;
 	
 						var all = [msg].concat(_this2.state.allNew);
@@ -26889,7 +26888,6 @@
 					});
 	
 					this.props.ws.on("tags_added", function (data) {
-						console.log("tags added, webhook");
 						_this2.getAllTags();
 					});
 				}
@@ -26897,7 +26895,6 @@
 				fetch("https://lynxapp.me/api/messages/new").then(function (response) {
 					return response.json();
 				}).then(function (data) {
-					console.log(data);
 					_this2.setState({
 						allNew: data,
 						articlesNew: data.filter(function (msg) {
@@ -28160,7 +28157,7 @@
 	                method: "PATCH"
 	            }).then(function (response) {
 	                if (response.ok) {
-	                    console.log("msg mofifies");
+	                    console.log("msg mofified");
 	                } else {
 	                    console.log("error editing message");
 	                }

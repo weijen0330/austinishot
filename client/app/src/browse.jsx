@@ -29,7 +29,6 @@ export default class extends React.Component {
 	componentDidMount() {
 		if (this.props.ws) {
 			this.props.ws.on("new_message", data => {
-				console.log("got a new message!")
 				const msg = data.message
 				
 				let all = [msg].concat(this.state.allNew)
@@ -51,14 +50,12 @@ export default class extends React.Component {
 			})
 
 			this.props.ws.on("tags_added", data => {
-				console.log("tags added, webhook")
 				this.getAllTags()
 			})
 		}
 
 		fetch("https://lynxapp.me/api/messages/new")
 			.then(response => response.json()).then(data => {
-				console.log(data)
 				this.setState({
 					allNew: data,
 					articlesNew: data.filter(msg => msg.type == "article"),

@@ -48,7 +48,6 @@ var MessageDB = {
 					{useArray: true}
 				).then(domainRows => {
 					if (domainRows && domainRows.length) {
-						console.log("print domain rows", domainRows[0][0])
 						return domainRows[0][0]
 					} else {
 						return connection.queryAsync(
@@ -67,8 +66,6 @@ var MessageDB = {
 					}
 				}).then(domainId => {
 					// insert link, return id
-
-					// console.log("inserting link, domain id", domainId) domain id is undefined
 					return connection.queryAsync(
 						"INSERT INTO LINKS (title, description, type, domain_id, url, img_url) " +
 						"VALUES (:title, :description, :type, :domainId, :url, :imgUrl)",
@@ -148,7 +145,8 @@ var MessageDB = {
 			'JOIN PLATFORM p ON m.platform_id = p.platform_id ' + 
 			'JOIN LINKS l ON m.link_id = l.link_id ' + 
 			'JOIN DOMAIN d ON l.domain_id = d.domain_id ' +
-			whereClauseStr
+			whereClauseStr +
+			'ORDER BY m.message_id DESC'
 		)
 		const getMessageLinks = (
 			'SELECT m.message_id, t.tag_text FROM MESSAGE m ' + 
@@ -204,7 +202,7 @@ var MessageDB = {
 				'l.description LIKE \"%' + keywords + '%\" OR ' +
 				'l.type LIKE \"%' + keywords + '%\" OR ' +
 				'l.url LIKE \"%' + keywords + '%\" OR ' +
-				'd.domain_name LIKE \"%' + keywords + '%\")' 
+				'd.domain_name LIKE \"%' + keywords + '%\") ' 
 			)
 		}
 
@@ -236,27 +234,27 @@ var MessageDB = {
 				'(m.note LIKE \"%' + keywords + '%\" OR ' +				
 				'l.title LIKE \"%' + keywords + '%\" OR ' +
 				'l.description LIKE \"%' + keywords + '%\" OR ' +				
-				'l.url LIKE \"%' + keywords + '%\")'
+				'l.url LIKE \"%' + keywords + '%\") '
 			))
 		}
 		if (platform && platform.length) {
-			whereClause.push('p.platform_name LIKE \"' + platform + '\"')			
+			whereClause.push('p.platform_name LIKE \"' + platform + '\" ')			
 		}
 
 		if (type && type.length) {
-			whereClause.push('l.type LIKE \"' + type + '\"')			
+			whereClause.push('l.type LIKE \"' + type + '\" ')			
 		}
 
 		if (domain && domain.length) {
-			whereClause.push('d.domain_name LIKE \"%' + domain + '%\"')			
+			whereClause.push('d.domain_name LIKE \"%' + domain + '%\" ')			
 		}
 
 		if (sender && sender.length) {
-			whereClause.push('m.sender LIKE \"%' + sender + '%\"')			
+			whereClause.push('m.sender LIKE \"%' + sender + '%\" ')			
 		}
 
 		if (!whereClause.length) {
-			whereClauseStr = "WHERE m.deleted = 0"
+			whereClauseStr = "WHERE m.deleted = 0 "
 		} 
 		
 		whereClause.forEach((where, i) => {

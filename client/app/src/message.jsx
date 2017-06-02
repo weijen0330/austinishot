@@ -54,7 +54,7 @@ export default class extends React.Component {
             method: "PATCH"            
         }).then(response => {
             if (response.ok) {
-                console.log("msg mofifies")
+                console.log("msg mofified")
             } else {
                 console.log("error editing message")
             }

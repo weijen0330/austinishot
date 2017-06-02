@@ -76,4 +76,4 @@ INSERT INTO PLATFORM VALUES (2, 'facebook');
 INSERT INTO PLATFORM VALUES (3, 'gmail');
 
 -- password = "lynx capstone password"
-INSERT INTO USERS VALUES (1, 'Test', 'Account', 'lynx capstone password', '$2a$10$qs01k1sjr82kMj1MX4EkQOyffV.KQfo35JBds2gA9XStAeHQShCYG')
+INSERT INTO USERS VALUES (1, 'Test', 'Account', 'lynxcapstone@gmail.com', '$2a$10$qs01k1sjr82kMj1MX4EkQOyffV.KQfo35JBds2gA9XStAeHQShCYG')

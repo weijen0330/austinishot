@@ -151,34 +151,29 @@ module.exports.Router = function (MessageDB, socketIo) {
         const links = regParser(statusValue);
 
         if (links && links.length) {
-            const fboptions = {
-                timeout: 3000,
-                pool: { maxSockets:  Infinity },
-                headers: { connection:  "keep-alive" }
-            };
-
             const reqParam = {
                 fields: 'type,caption,description,link,updated_time,from,message'
             };
 
             // Grab information about the status via the API
-            graph.setOptions(fboptions).get(newStatus.id, reqParam, function(err, res) {
+            graph.get(newStatus.id, reqParam, function(err, res) {
                 if (err) {
                     console.log("Error: not authorized with Facebook");
-                    res.redirect('/facebook_oauth');
+                    facebookRes.redirect('/facebook_oauth');
                 } else {
                     var message = res;
-                    console.log(res);
+                    console.log(message);
 
-                    if (res.type === 'video'|| res.type === 'link') {
+                    if (message.type === 'video'|| message.type === 'link') {
                         var linkInfo = {
                             platform: 'facebook',
-                            sender: res.from.name,
+                            sender: message.from.name,
                             bodyText: facebookReq.body.entry[0].changes[0].value ? facebookReq.body.entry[0].changes[0].value : "",
-                            timeStamp: res.updated_time
+                            timeStamp: message.updated_time
                         };
                         console.log("link info", linkInfo);
-                        generateLinkSummary(res.link, linkInfo).then(linkSummary => {
+                        console.log("link", message.link);
+                        generateLinkSummary(message.link, linkInfo).then(linkSummary => {
                             // add the message to the database
                             console.log("link summary:", linkSummary);
                             return MessageDB.insertMessage(1, linkSummary)
@@ -190,7 +185,6 @@ module.exports.Router = function (MessageDB, socketIo) {
                             // this should broadcast to users
                             facebookRes.status(200).send(message);
                         }).catch(console.log);
-                        facebookRes.status(200).send();
                     } else {
                         facebookRes.status(200).send("not a link");
                     }
